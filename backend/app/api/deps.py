@@ -7,4 +7,5 @@ def get_db() -> Generator:
         db = SessionMaker()
         yield db
     finally:
-        db.close()
+        ...
+        # db.close()

@@ -1,5 +1,7 @@
 import os
+import pretty_errors
 
+pretty_errors.replace_stderr()
 
 class Config():
     __name__ = 'config'
