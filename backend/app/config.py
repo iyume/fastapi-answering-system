@@ -12,7 +12,7 @@ else:
 class Config():
     __name__ = 'config'
 
-    access_token_exp_hours = 24 * 8
+    access_token_exp_hours = 24 * 8 # exp in eight days
 
     db_dir = 'db'
     db_name = 'all.db'
