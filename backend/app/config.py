@@ -1,20 +1,39 @@
 import os
-import pretty_errors
+import secrets
 
-pretty_errors.replace_stderr()
+try:
+    import pretty_errors
+except ImportError:
+    ...
+else:
+    pretty_errors.replace_stderr()
+
 
 class Config():
     __name__ = 'config'
 
+    access_token_exp_hours = 24 * 8
+
     db_dir = 'db'
     db_name = 'all.db'
 
+    secret_key = secrets.token_urlsafe(32) or 'ND87artiLDGlsGpRdsLasyVR_XBIi7tkefnS_1aqhbo'
+
     @property
-    def CURRENT_PATH(self):
+    def ACCESS_TOKEN_EXP_HOURS(self) -> int:
+        return self.access_token_exp_hours
+
+    @property
+    def CURRENT_PATH(self) -> str:
         return os.path.dirname(os.path.realpath(__file__))
 
     @property
-    def DATABASE_URI(self):
+    def DATABASE_URI(self) -> str:
         return f'sqlite:///{os.path.join(self.CURRENT_PATH, self.db_dir, self.db_name)}'
+
+    @property
+    def SECRET_KEY(self) -> str:
+        return self.secret_key
+
 
 config = Config()

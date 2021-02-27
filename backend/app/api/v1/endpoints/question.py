@@ -14,7 +14,7 @@ async def get_question(
     subject: Optional[str] = None
 ):
     if subject:
-        question = crud.item.get_by_random_onesubject(db, subject=subject)
+        question = crud.item.get_by_random(db, subject=subject)
     else:
-        question = crud.item.get_by_random_allsubject(db)
+        question = crud.item.get_by_random(db)
     return question
