@@ -6,10 +6,15 @@ pretty_errors.replace_stderr()
 class Config():
     __name__ = 'config'
 
+    db_dir = 'db'
+    db_name = 'all.db'
+
+    @property
+    def CURRENT_PATH(self):
+        return os.path.dirname(os.path.realpath(__file__))
+
     @property
     def DATABASE_URI(self):
-        current_path = os.path.dirname(os.path.realpath(__file__))
-        db_name = 'db/all.db'
-        return f'sqlite:///{os.path.join(current_path, db_name)}'
+        return f'sqlite:///{os.path.join(self.CURRENT_PATH, self.db_dir, self.db_name)}'
 
 config = Config()

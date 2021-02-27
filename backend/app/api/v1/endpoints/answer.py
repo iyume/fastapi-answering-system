@@ -1,9 +1,9 @@
-from app import crud
 from typing import Optional
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
+from app import crud
 from app.api import deps
 
 router = APIRouter(prefix='/answer')
