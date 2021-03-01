@@ -18,14 +18,14 @@ def verify_password(plain_pwd: str, hashed_pwd: Optional[str]) -> bool:
 def encrypt_password(pwd: str) -> str:
     return pwd_cryptor.encrypt(pwd)
 
-def validate(name: str, plain_pwd: str):
+def validate(name: str, plain_pwd: str) -> bool:
     db: Session = next(get_db())
     hashed_pwd = crud.user.get_by_name(db, name)
     db.close()
     is_valid = verify_password(plain_pwd, hashed_pwd)
     return is_valid
 
-def jwt_decode(token: str):
+def jwt_decode(token: str) -> dict:
     payload = jwt.decode(
         token, config.SECRET_KEY, algorithms=ALG
     )

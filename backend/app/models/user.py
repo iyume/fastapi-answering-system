@@ -29,28 +29,30 @@ class User():
             self.is_authenticated = self.validate_user(password)
 
     def validate_user(self, plain_password: str) -> bool:
+        if not self.current_user:
+            return False
         return func.verify_password(plain_password, self.hashed_password)
 
     @property
-    def name(self) -> str:
-        return self.current_user.name
+    def name(self) -> Optional[str]:
+        return getattr(self.current_user, 'name', None)
 
     @property
-    def email(self) -> str:
-        return self.current_user.email
+    def email(self) -> Optional[str]:
+        return getattr(self.current_user, 'name', None)
 
     @property
-    def wechat(self) -> str:
-        return self.current_user.wechat
+    def wechat(self) -> Optional[str]:
+        return getattr(self.current_user, 'wechat', None)
 
     @property
-    def hashed_password(self) -> str:
-        return self.current_user.hashed_password
+    def hashed_password(self) -> Optional[str]:
+        return getattr(self.current_user, 'hashed_password', None)
 
     @property
     def is_active(self) -> bool:
-        return self.current_user.is_active or True
+        return getattr(self.current_user, 'is_active', True)
 
     @property
     def is_superuser(self) -> bool:
-        return self.current_user.is_superuser or False
+        return getattr(self.current_user, 'is_superuser', False)

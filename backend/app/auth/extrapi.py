@@ -6,20 +6,18 @@ from sqlalchemy.orm.session import Session
 
 from app import crud
 from app.auth import deps, func
-from app.models.user import User
 
 
 router = APIRouter(tags=['test resource'])
 
 @router.post('/user')
-async def list_users(
-    db: Session = Depends(deps.get_db)
-):
-    return crud.user.get_all(db)
+async def list_users(db: Session = Depends(deps.get_db)):
+    result = crud.user.get_all(db)
+    return result
 
 @router.post('/user/{name}')
-async def inspect_user(name: str):
-    result = User(name)
+async def inspect_user(name: str, db: Session = Depends(deps.get_db)):
+    result = crud.user.get_by_name(db, name)
     return result
 
 @router.post('/test-token')

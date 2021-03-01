@@ -18,9 +18,9 @@ async def access_token(
     password: str
 ):
     user = User(name, password)
-    if not user.is_active:
-        return 'inactive user'
     if user.is_authenticated:
+        if not user.is_active:
+            return 'inactive user'
         token = jwt.create_access_token(
             UserJWT(
                 name = user.name,
@@ -31,7 +31,7 @@ async def access_token(
         return {
             "access-token": token
         }
-    return 'incorrect email or name'
+    return 'incorrect name or password'
 
 @router.post('/refresh-token')
 async def refresh_token():
