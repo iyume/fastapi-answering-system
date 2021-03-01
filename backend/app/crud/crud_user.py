@@ -31,7 +31,7 @@ class CRUDUser():
         obj_in: UserCreate,
         is_superuser: Optional[bool] = False
     ) -> Optional[model]:
-        if result := self.get_by_name(db, obj_in.name):
+        if result := self.get_by_email(db, obj_in.email):
             return result
         else:
             db_obj = self.model(
@@ -44,6 +44,7 @@ class CRUDUser():
             db.add(db_obj)
             db.commit()
             db.refresh(db_obj)
+            result = self.get_by_email(db, db_obj.email)
             return db_obj
 
 

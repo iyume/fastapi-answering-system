@@ -19,6 +19,7 @@ def create_access_token(
     payload = {
         'iss': user.name,
         'email': user.email,
+        'is_superuser': user.is_superuser,
         'exp': exp
     }
     encoded_jwt = jwt.encode(payload, config.SECRET_KEY, algorithm=ALG)

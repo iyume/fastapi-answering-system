@@ -7,11 +7,11 @@ class UserBase(BaseModel):
     is_active: bool = True
     is_superuser: bool = False
 
-class UserJWT(BaseModel):
+class UserJWT(UserBase):
     name: str
     email: EmailStr
 
-class UserCreate(BaseModel):
+class UserCreate(UserBase):
     name: str
     email: EmailStr
     password: str

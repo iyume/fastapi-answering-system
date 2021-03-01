@@ -33,7 +33,7 @@ async def register(
     return user
 
 
-@router.get('/test')
+@router.get('/{name}')
 async def test(name: str):
     result = User(name)
     return result
