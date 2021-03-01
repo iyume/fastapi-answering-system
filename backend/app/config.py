@@ -17,7 +17,7 @@ class Config():
     db_dir = 'db'
     db_name = 'all.db'
 
-    secret_key = secrets.token_urlsafe(32) or 'ND87artiLDGlsGpRdsLasyVR_XBIi7tkefnS_1aqhbo'
+    secret_key = 'ND87artiLDGlsGpRdsLasyVR_XBIi7tkefnS_1aqhbo'
 
     @property
     def ACCESS_TOKEN_EXP_HOURS(self) -> int:

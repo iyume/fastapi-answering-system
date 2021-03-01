@@ -1,10 +1,11 @@
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.config import config
 
 engine = create_engine(
     config.DATABASE_URI,
+    echo=True,
     connect_args={
         'check_same_thread': False
     }

@@ -7,22 +7,24 @@ from app.models.item import Item
 
 
 class CRUDQuestion():
+    model = Item
+
     def get_by_random(
         self,
         db: Session,
         subject: Optional[str] = None
-    ) -> Optional[Item]:
+    ) -> Optional[model]:
         if subject:
-            return db.query(Item).filter(Item.subject == subject).order_by(random()).first()
+            return db.query(self.model).filter(self.model.subject == subject).order_by(random()).first()
         else:
-            return db.query(Item).order_by(random()).first()
+            return db.query(self.model).order_by(random()).first()
 
     def get_by_id(
         self,
         db: Session,
         id: str
-    ) -> Optional[Item]:
-        return db.query(Item).filter(Item.id == id).first()
+    ) -> Optional[model]:
+        return db.query(self.model).filter(self.model.id == id).first()
 
 
 item = CRUDQuestion()

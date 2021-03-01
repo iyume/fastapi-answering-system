@@ -1,47 +1,39 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+
+from sqlalchemy.orm.session import Session
+
+from app import schema, crud
+from app.models.user import User
+from app.auth import deps
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
 @router.post('/access-token')
-async def login_access():
-    """Authenticate user and return ``access_token``, ``refresh_token``
-
-    ---
-    Handshake Example:
-      - requestBody `content: application/json`
-        > schema:
-            type: object
-            properties:
-              username:
-                type: string
-                required: true
-              password:
-                type: string
-                required: true
-      - responses
-        - 200 `content: application/json`
-          > schema:
-              type: object
-              properties:
-                access_token:
-                  type: string
-                  example: xx.xx.xx
-                refresh_token:
-                  type: string
-                  example: xx.xx.xx
-        - 400
-          > description: bad request
-    """
+async def access_token():
     ...
 
-@router.post('/refresh')
-async def refresh():
+@router.post('/refresh-token')
+async def refresh_token():
     ...
 
-@router.post('/revoke_access')
+@router.post('/revoke-access')
 async def revoke_access():
     ...
 
-@router.post('/revoke_refresh')
+@router.post('/revoke-refresh')
 async def revoke_refresh():
     ...
+
+@router.post('/register')
+async def register(
+    user_in: schema.UserCreate,
+    db: Session = Depends(deps.get_db)
+):
+    user = crud.user.create(db, user_in)
+    return user
+
+
+@router.get('/test')
+async def test(name: str):
+    result = User(name)
+    return result
