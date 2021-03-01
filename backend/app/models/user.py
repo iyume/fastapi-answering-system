@@ -2,7 +2,7 @@ from sqlalchemy import Column, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 
 from app import crud
-from app.db.load_db import SessionMaker
+from app.auth.deps import get_db
 
 
 Base = declarative_base()
@@ -21,9 +21,20 @@ class UserDB(Base):
 
 class User():
     def __init__(self, name: str) -> None:
-        db = SessionMaker()
+        db = next(get_db())
         self.current_user = crud.user.get_by_name(db, name)
-        db.close()
+
+    @property
+    def email(self) -> str:
+        return self.current_user.email
+
+    @property
+    def wechat(self) -> str:
+        return self.current_user.wechat
+
+    @property
+    def hashed_password(self) -> str:
+        return self.current_user.hashed_password
 
     @property
     def is_active(self) -> bool:
