@@ -4,7 +4,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from app.config import templates
-from app.api import question_random
+from app.api import apifunc
 
 router = APIRouter(prefix='/paper')
 
@@ -19,7 +19,7 @@ info = {
 @router.get('/fb', response_class=HTMLResponse)
 async def tiku_paper_fb(request: Request, type: str):
     if type == 'random':
-        question = await question_random('fb')
+        question = await apifunc.get_question_by_subject('fb')
         return templates.TemplateResponse(
             'tiku/paper/fb.jinja2', {
                 'request': request,

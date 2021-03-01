@@ -4,13 +4,13 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from app.config import templates
-from app.api import get_answer
+from app.api import apifunc
 
 router = APIRouter(prefix='/answer')
 
 @router.get('/fb', response_class=HTMLResponse)
 async def tiku_answer_fb(request: Request, id: str, answer: str):
-    question = await get_answer(subject='fb', id=id)
+    question = await apifunc.get_answer(id)
     return templates.TemplateResponse('tiku/answer/fb.jinja2' ,{'request': request, 'question': question, 'answer': answer})
 
 @router.post('/fr', response_class=HTMLResponse)
