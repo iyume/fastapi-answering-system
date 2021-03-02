@@ -18,7 +18,7 @@ async def get(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
 
 async def post(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(params=params) as client:
             response = await client.post(uri, params=params)
     except:
         return None
@@ -65,17 +65,19 @@ class AUTH():
         self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
     async def authenticate(self, name: str, password: str):
-        content = await post(
-            self.auth_access_token_uri,
-            name = name,
-            passowrd = password
-        )
+        # content = await post(
+        #     self.auth_access_token_uri,
+        #     name = name,
+        #     passowrd = password
+        # )
+        async with httpx.AsyncClient() as client:
+            content = await client.post(self.auth_access_token_uri, params={'name':name, 'password': password})
         if isinstance(content, str):
             return content
-        if token := getattr(content, 'access-token', None):
+        if token := content.json().get('access-token', None):
             tokenmodel = Token(token=token)
             return tokenmodel
-        return 'incorrect email or name'
+        return 'incorrect name or password'
 
     async def register(self, name: str, email: str, password: str):
         content = await post(

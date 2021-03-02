@@ -42,4 +42,4 @@ async def login_action(request: Request):
             }
         )
     if isinstance(content, Token):
-        return RedirectResponse(request.url_for('index'))
+        return content.token
