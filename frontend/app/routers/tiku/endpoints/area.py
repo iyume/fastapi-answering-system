@@ -1,6 +1,7 @@
 from typing import List
+from functools import wraps
 
-from fastapi import APIRouter, Depends, Cookie
+from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse
@@ -20,21 +21,20 @@ async def tiku_area_index(
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: User = Depends(deps.get_current_user)
 ):
-    if current_user.is_authenticated:
-        return templates.TemplateResponse(
-            'tiku/area/base.jinja2',
-            {
-                'request': request,
-                'subjects': subjects
-            }
-        )
-    return RedirectResponse(request.url_for('login'))
+    return templates.TemplateResponse(
+        'tiku/area/base.jinja2',
+        {
+            'request': request,
+            'subjects': subjects
+        }
+    )
 
 @router.get('/{subject}', response_class=HTMLResponse)
 async def tiku_area(
     request: Request,
     subject: str,
-    subjects: Subjects = Depends(deps.get_subjects)
+    subjects: Subjects = Depends(deps.get_subjects),
+    current_user: User = Depends(deps.get_current_user)
 ):
     if subject not in subjects.aliases:
         raise HTTPException(status_code=404, detail='Subject not found')

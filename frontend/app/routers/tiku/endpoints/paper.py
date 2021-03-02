@@ -8,16 +8,20 @@ from app.config import templates
 from app.routers.tiku import deps
 from app.api import apifunc
 from app.models.subject import Subjects
+from app.models.user import User
+from app.func import login_required
 
 router = APIRouter(prefix='/paper')
 
 
 @router.get('/{subject}', response_class=HTMLResponse)
+@login_required
 async def tiku_paper(
     request: Request,
     subject: str,
     type: str = None,
-    subjects: Subjects = Depends(deps.get_subjects)
+    subjects: Subjects = Depends(deps.get_subjects),
+    current_user: User = Depends(deps.get_current_user)
 ):
     if not type:
         raise HTTPException(status_code=422, detail='Missing type parameter')
