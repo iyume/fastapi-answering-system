@@ -2,6 +2,8 @@ import os
 import httpx
 from typing import Any, Dict, Optional, Union
 
+from app.schema.token import Token
+
 
 host_url = 'http://127.0.0.1:8000'
 
@@ -17,7 +19,7 @@ async def get(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
 async def post(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(uri, data=params)
+            response = await client.post(uri, params=params)
     except:
         return None
     return response.json()
@@ -59,23 +61,25 @@ apifunc = API(version='v1')
 class AUTH():
     def __init__(self, endpoint: str) -> None:
         self.auth_uri = os.path.join(host_url, endpoint)
-        self.auth_access_token = os.path.join(self.auth_uri, 'access-token')
-        self.auth_register = os.path.join(self.auth_uri, 'register')
+        self.auth_access_token_uri = os.path.join(self.auth_uri, 'access-token')
+        self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
     async def authenticate(self, name: str, password: str):
         content = await post(
-            self.auth_access_token,
+            self.auth_access_token_uri,
             name = name,
             passowrd = password
         )
         if isinstance(content, str):
             return content
-        token = getattr(content, 'access-token', None)
-        return token
+        if token := getattr(content, 'access-token', None):
+            tokenmodel = Token(token=token)
+            return tokenmodel
+        return 'incorrect email or name'
 
     async def register(self, name: str, email: str, password: str):
         content = await post(
-            self.auth_register,
+            self.auth_register_uri,
             name = name,
             email = email,
             password = password

@@ -54,3 +54,12 @@ async def register(
         return 'existed email or name'
     user = crud.user.create(db, user_in, is_superuser=False)
     return user
+
+@router.post('/drop-user')
+async def drop_user(
+    user_in: schema.UserDrop,
+    db: Session = Depends(deps.get_db)
+):
+    if crud.user.get_by_name(db, user_in.name):
+        return crud.user.drop(db, user_in)
+    return 'no such user'

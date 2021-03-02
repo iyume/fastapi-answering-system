@@ -1,2 +1,2 @@
-from .user import UserJWT, UserCreate
+from .user import UserJWT, UserCreate, UserDrop
 from .token import Token

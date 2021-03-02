@@ -15,3 +15,6 @@ class UserCreate(UserBase):
     name: str
     email: EmailStr
     password: str
+
+class UserDrop(UserBase):
+    name: str

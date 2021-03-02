@@ -39,7 +39,7 @@ class User():
 
     @property
     def email(self) -> Optional[str]:
-        return getattr(self.current_user, 'name', None)
+        return getattr(self.current_user, 'email', None)
 
     @property
     def wechat(self) -> Optional[str]:

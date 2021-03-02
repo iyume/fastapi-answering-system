@@ -15,12 +15,13 @@
         <!-- right -->
         <div class="container w-2/5 my-auto float-right items-center">
             <div class="flex p-10">
-                <form>
+                <form method="POST" action="/login/">
                     <label class="block">
                         <input
                             type="text"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                             placeholder="请输入用户名"
+                            name="username"
                         />
                     </label>
                     <label class="block">
@@ -28,6 +29,7 @@
                             type="password"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                             placeholder="请输入密码"
+                            name="password"
                         />
                     </label>
                     <input
@@ -36,6 +38,9 @@
                         placeholder="登录"
                     />
                 </form>
+                {% if message %}
+                <p>{{ message }}</p>
+                {% endif %}
             </div>
         </div>
 {% endblock %}
