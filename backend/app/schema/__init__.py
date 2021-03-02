@@ -1,2 +1,2 @@
 from .user import UserJWT, UserCreate, UserDrop
-from .token import Token
+from .token import Token, JWTStr

@@ -45,12 +45,7 @@ async def login_action(request: Request):
             }
         )
     if isinstance(content, Token):
-        rr = RedirectResponse(
-            request.url_for('tiku_area_index'),
-            status_code=303
-        )
-        rr.set_cookie(
-            key='jwt', value=content.access_token
-        )
+        rr = RedirectResponse(request.url_for('tiku_area_index'), status_code=303)
+        rr.set_cookie(key='jwt', value=content.access_token)
         return rr
     raise HTTPException(status_code=400, detail='Bad request')

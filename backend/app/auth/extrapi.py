@@ -22,10 +22,10 @@ async def inspect_user(name: str, db: Session = Depends(deps.get_db)):
 
 @router.post('/test-token')
 async def test_token(token: str):
-    result = func.jwt_decode(token)
-    result.update(
+    payload = func.jwt_decode(token)
+    payload.update(
         {
-            'exp_date': datetime.fromtimestamp(result.get('exp') or 1600000000)
+            'exp_date': datetime.fromtimestamp(payload.get('exp') or 1600000000)
         }
     )
-    return result
+    return payload

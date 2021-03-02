@@ -8,8 +8,9 @@ class UserBase(BaseModel):
     is_superuser: bool = False
 
 class UserJWT(UserBase):
-    name: str
+    iss: str
     email: EmailStr
+    exp: int
 
 class UserCreate(UserBase):
     name: str

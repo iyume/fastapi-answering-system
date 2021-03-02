@@ -8,7 +8,6 @@ from app import schema, crud
 from app.auth import deps, func
 from app.security import jwt
 from app.models.user import User
-from app.schema import UserJWT
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
@@ -22,7 +21,7 @@ async def access_token(
         if not user.is_active:
             return 'inactive user'
         token = jwt.create_access_token(
-            UserJWT(
+            schema.UserJWT(
                 name = user.name,
                 email = user.email,
                 is_superuser = user.is_superuser
@@ -32,6 +31,15 @@ async def access_token(
             "access-token": token
         }
     return 'incorrect name or password'
+
+@router.post('/retrieve-user')
+async def retrive_user(obj_in: schema.JWTStr):
+    payload = schema.UserJWT(**func.jwt_decode(obj_in.jwt))
+    user = User(payload.iss)
+    if user.is_active:
+        return user.current_user
+    else:
+        return 'inactive user'
 
 # @router.post('/refresh-token')
 # async def refresh_token():

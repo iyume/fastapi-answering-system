@@ -69,6 +69,7 @@ class AUTH():
     def __init__(self, endpoint: str) -> None:
         self.auth_uri = os.path.join(host_url, endpoint)
         self.auth_access_token_uri = os.path.join(self.auth_uri, 'access-token')
+        self.auth_retrieve_user_uri = os.path.join(self.auth_uri, 'retrieve-user')
         self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
     async def authenticate(self, name: str, password: str):
@@ -90,6 +91,11 @@ class AUTH():
             tokenmodel = Token(access_token=token)
             return tokenmodel
         return 'invalid name or password'
+
+    async def get_user_by_jwt(self, jwt: str):
+        content = await post_with_json(
+            self.auth_retrieve_user_uri
+        )
 
     async def register(self, name: str, email: str, password: str):
         content = await post_with_json(
