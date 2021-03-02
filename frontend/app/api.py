@@ -25,10 +25,10 @@ async def post_with_params(uri: str, **params) -> Union[Dict[Any, Any], str, Non
         return None
     return response.json()
 
-async def post_with_data(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
+async def post_with_json(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
     try:
         async with httpx.AsyncClient() as client:
-            response = await client.post(uri, data=params)
+            response = await client.post(uri, json=params)
     except:
         return None
     return response.json()
@@ -64,8 +64,6 @@ class API():
         )
         return result
 
-apifunc = API(version='v1')
-
 
 class AUTH():
     def __init__(self, endpoint: str) -> None:
@@ -91,19 +89,28 @@ class AUTH():
         if token := content.get('access-token', None):
             tokenmodel = Token(token=token)
             return tokenmodel
-        return 'incorrect name or password'
+        return 'invalid name or password'
 
     async def register(self, name: str, email: str, password: str):
-        content = await post_with_data(
+        content = await post_with_json(
             self.auth_register_uri,
             name = name,
             email = email,
             password = password
         )
+        # async with httpx.AsyncClient() as client:
+        #     content = await client.post(
+        #         self.auth_register_uri,
+        #         data={'name': name, 'email': email, 'password': password}
+        #     )
+        # content = content.json()
+
         if isinstance(content, str):
             return content
         if token := await self.authenticate(name, password):
             return token
         return 'invalid name or email or password'
 
+
+apifunc = API(version='v1')
 authfunc = AUTH(endpoint='auth')

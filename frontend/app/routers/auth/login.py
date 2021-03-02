@@ -7,15 +7,15 @@ from app.api import authfunc
 from app.schema.token import Token
 
 
-login_router = APIRouter(prefix='/login')
+router = APIRouter()
 
 
-@login_router.get('/', response_class=HTMLResponse)
+@router.get('/login', response_class=HTMLResponse)
 async def login(request: Request):
     form = await request.form()
     return templates.TemplateResponse('login/login.jinja2', {'request': request})
 
-@login_router.post('/', response_class=HTMLResponse)
+@router.post('/login', response_class=HTMLResponse)
 async def login_action(request: Request):
     form = await request.form()
     if not (username := form.get('username', None)):
