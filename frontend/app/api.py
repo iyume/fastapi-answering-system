@@ -108,7 +108,7 @@ class AUTH():
         if isinstance(content, str):
             return content
         if token := await self.authenticate(name, password):
-            return token
+            return Token(token=token)
         return 'invalid name or email or password'
 
 

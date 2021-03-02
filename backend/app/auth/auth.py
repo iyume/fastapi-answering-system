@@ -57,9 +57,9 @@ async def register(
 
 @router.post('/drop-user')
 async def drop_user(
-    user_in: schema.UserDrop,
+    name: str,
     db: Session = Depends(deps.get_db)
 ):
-    if crud.user.get_by_name(db, user_in.name):
-        return crud.user.drop(db, user_in)
+    if crud.user.get_by_name(db, name):
+        return crud.user.drop(db, name)
     return 'no such user'

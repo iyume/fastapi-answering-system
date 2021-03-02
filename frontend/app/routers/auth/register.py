@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 
 from app.api import authfunc
+from app.schema.token import Token
 
 
 router = APIRouter()
@@ -16,4 +17,8 @@ async def register(
     password: str
 ):
     content = await authfunc.register(name, email, password)
-    return content
+    if isinstance(content, str):
+        return content
+    if isinstance(content, Token):
+        return content.token
+    return 'Unknown error'

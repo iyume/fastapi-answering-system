@@ -4,7 +4,7 @@ from typing import Optional, List
 from sqlalchemy.orm import Session
 
 from app.models.user import UserDB
-from app.schema.user import UserCreate, UserDrop
+from app.schema.user import UserCreate
 from app.auth.func import encrypt_password
 
 
@@ -54,9 +54,9 @@ class CRUDUser():
     def drop(
         self,
         db: Session,
-        obj_in: UserDrop
+        name: str
     ) -> str:
-        user = db.query(self.model).filter(self.model.name == obj_in.name).one()
+        user = db.query(self.model).filter(self.model.name == name).one()
         db.delete(user)
         db.commit()
         return 'success'
