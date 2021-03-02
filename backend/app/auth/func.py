@@ -1,7 +1,8 @@
 from typing import Optional
+from passlib.context import CryptContext
 
 from jose import jwt
-from passlib.context import CryptContext
+from fastapi import HTTPException
 from sqlalchemy.orm.session import Session
 
 from app import crud
@@ -26,7 +27,10 @@ def validate(name: str, plain_pwd: str) -> bool:
     return is_valid
 
 def jwt_decode(token: str) -> dict:
-    payload = jwt.decode(
-        token, config.SECRET_KEY, algorithms=ALG
-    )
+    try:
+        payload = jwt.decode(
+            token, config.SECRET_KEY, algorithms=ALG
+        )
+    except jwt.JWTError:
+        raise HTTPException(status_code=403, detail='Could not validate json web token')
     return {**payload}

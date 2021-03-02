@@ -10,7 +10,7 @@ class UserBase(BaseModel):
 class UserJWT(UserBase):
     iss: str
     email: EmailStr
-    exp: int
+    exp: Optional[int] = 1000000000
 
 class UserCreate(UserBase):
     name: str

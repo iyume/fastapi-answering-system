@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Depends, Cookie
 from fastapi.exceptions import HTTPException
 from starlette.requests import Request
-from starlette.responses import HTMLResponse
+from starlette.responses import HTMLResponse, RedirectResponse
 
 from app.config import templates
 from app.routers.tiku import deps
@@ -20,13 +20,15 @@ async def tiku_area_index(
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: User = Depends(deps.get_current_user)
 ):
-    return templates.TemplateResponse(
-        'tiku/area/base.jinja2',
-        {
-            'request': request,
-            'subjects': subjects
-        }
-    )
+    if current_user.is_authenticated:
+        return templates.TemplateResponse(
+            'tiku/area/base.jinja2',
+            {
+                'request': request,
+                'subjects': subjects
+            }
+        )
+    return RedirectResponse(request.url_for('login'))
 
 @router.get('/{subject}', response_class=HTMLResponse)
 async def tiku_area(

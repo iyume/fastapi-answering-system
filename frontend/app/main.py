@@ -7,7 +7,7 @@ from .routers.tiku.router import tiku_router
 from .routers.auth import login, register
 from .config import static_router
 
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None, openapi=None, openapi_url=None)
 
 app.mount('/static', static_router, name='static')
 app.include_router(tiku_router)

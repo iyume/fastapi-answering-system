@@ -25,7 +25,7 @@ async def test_token(token: str):
     payload = func.jwt_decode(token)
     payload.update(
         {
-            'exp_date': datetime.fromtimestamp(payload.get('exp') or 1600000000)
+            'exp_date': datetime.fromtimestamp(payload.get('exp') or 1000000000)
         }
     )
     return payload

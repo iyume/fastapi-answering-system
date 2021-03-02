@@ -1,7 +1,8 @@
 import os
-from re import L
-import httpx
 from typing import Any, Dict, Optional, Union
+import httpx
+
+from fastapi import HTTPException
 
 from app.schema.token import Token
 
@@ -25,12 +26,14 @@ async def post_with_params(uri: str, **params) -> Union[Dict[Any, Any], str, Non
         return None
     return response.json()
 
-async def post_with_json(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
+async def post_with_json(uri: str, **params) -> Union[Dict[Any, Any], str]:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(uri, json=params)
     except:
-        return None
+        raise HTTPException(status_code=500, detail='Server error')
+    if response.status_code == 403:
+        raise HTTPException(status_code=403, detail='Could not validate json web token')
     return response.json()
 
 
@@ -92,10 +95,14 @@ class AUTH():
             return tokenmodel
         return 'invalid name or password'
 
-    async def get_user_by_jwt(self, jwt: str):
+    async def retrieve_user(self, jwt: str) -> Optional[dict]:
         content = await post_with_json(
-            self.auth_retrieve_user_uri
+            self.auth_retrieve_user_uri,
+            jwt = jwt
         )
+        if isinstance(content, str):
+            raise HTTPException(status_code=500, detail=content)
+        return content
 
     async def register(self, name: str, email: str, password: str):
         content = await post_with_json(

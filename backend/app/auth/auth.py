@@ -1,7 +1,7 @@
 from typing import Optional
+from datetime import datetime
 
 from fastapi import APIRouter, Depends
-
 from sqlalchemy.orm.session import Session
 
 from app import schema, crud
@@ -22,24 +22,19 @@ async def access_token(
             return 'inactive user'
         token = jwt.create_access_token(
             schema.UserJWT(
-                name = user.name,
+                iss = user.name,
                 email = user.email,
+                is_active = user.is_active,
                 is_superuser = user.is_superuser
             )
         )
-        return {
-            "access-token": token
-        }
+        return {"access-token": token}
     return 'incorrect name or password'
 
 @router.post('/retrieve-user')
 async def retrive_user(obj_in: schema.JWTStr):
     payload = schema.UserJWT(**func.jwt_decode(obj_in.jwt))
-    user = User(payload.iss)
-    if user.is_active:
-        return user.current_user
-    else:
-        return 'inactive user'
+    return payload
 
 # @router.post('/refresh-token')
 # async def refresh_token():
