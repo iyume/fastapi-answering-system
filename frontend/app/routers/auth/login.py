@@ -4,7 +4,7 @@ from starlette.responses import HTMLResponse, RedirectResponse
 
 from app.config import templates
 from app.api import authfunc
-from app.schema.token import Token
+from app.schema import Token
 
 
 router = APIRouter()
@@ -44,4 +44,4 @@ async def login_action(request: Request):
             }
         )
     if isinstance(content, Token):
-        return content.token
+        return content.access_token
