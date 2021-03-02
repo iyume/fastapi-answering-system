@@ -28,8 +28,8 @@ class API():
         self.api_uri = os.path.join(
             host_url, 'api', version
         )
-        self.question_uri = os.path.join(self.api_uri, 'question/')
-        self.answer_uri = os.path.join(self.api_uri, 'answer/')
+        self.question_uri = os.path.join(self.api_uri, 'question', '')
+        self.answer_uri = os.path.join(self.api_uri, 'answer', '')
 
     async def get_question_by_subject(
         self,
@@ -58,13 +58,13 @@ apifunc = API(version='v1')
 
 class AUTH():
     def __init__(self, endpoint: str) -> None:
-        self.auth_uri = os.path.join(
-            host_url, endpoint
-        )
+        self.auth_uri = os.path.join(host_url, endpoint)
+        self.auth_access_token = os.path.join(self.auth_uri, 'access-token', '')
+        self.auth_register = os.path.join(self.auth_uri, 'register', '')
 
     async def authenticate(self, name: str, password: str):
         content = await post(
-            self.auth_uri,
+            self.auth_access_token,
             name = name,
             passowrd = password
         )
@@ -73,4 +73,17 @@ class AUTH():
         token = getattr(content, 'access-token', None)
         return token
 
-authfunc = AUTH(endpoint='auth/')
+    async def register(self, name: str, email: str, password: str):
+        content = await post(
+            self.auth_register,
+            name = name,
+            email = email,
+            password = password
+        )
+        if isinstance(content, str):
+            return content
+        if token := await self.authenticate(name, password):
+            return token
+        return 'incorrect name or email'
+
+authfunc = AUTH(endpoint='auth')
