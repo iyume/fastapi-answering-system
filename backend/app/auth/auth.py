@@ -33,17 +33,17 @@ async def access_token(
         }
     return 'incorrect name or password'
 
-@router.post('/refresh-token')
-async def refresh_token():
-    ...
+# @router.post('/refresh-token')
+# async def refresh_token():
+#     ...
 
-@router.post('/revoke-access')
-async def revoke_access():
-    ...
+# @router.post('/revoke-access')
+# async def revoke_access():
+#     ...
 
-@router.post('/revoke-refresh')
-async def revoke_refresh():
-    ...
+# @router.post('/revoke-refresh')
+# async def revoke_refresh():
+#     ...
 
 @router.post('/register')
 async def register(
