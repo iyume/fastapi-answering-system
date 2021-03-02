@@ -49,6 +49,7 @@ module.exports = {
     extend: {},
   },
   plugins: [
+    require('@tailwindcss/custom-forms'),
     plugin(function({ theme, addBase }) {
       addBase({
         'hr': {
@@ -65,6 +66,5 @@ module.exports = {
         },
       })
     }),
-    // require('@tailwindcss/custom-forms'),
   ],
 }

@@ -23,11 +23,11 @@ async def post(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
     return response.json()
 
 
+# collection of resource will tail with slash
+# single endpoint end to be empty
 class API():
     def __init__(self, version) -> None:
-        self.api_uri = os.path.join(
-            host_url, 'api', version
-        )
+        self.api_uri = os.path.join(host_url, 'api', version)
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
 
@@ -59,8 +59,8 @@ apifunc = API(version='v1')
 class AUTH():
     def __init__(self, endpoint: str) -> None:
         self.auth_uri = os.path.join(host_url, endpoint)
-        self.auth_access_token = os.path.join(self.auth_uri, 'access-token', '')
-        self.auth_register = os.path.join(self.auth_uri, 'register', '')
+        self.auth_access_token = os.path.join(self.auth_uri, 'access-token')
+        self.auth_register = os.path.join(self.auth_uri, 'register')
 
     async def authenticate(self, name: str, password: str):
         content = await post(

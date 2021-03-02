@@ -1,25 +1,28 @@
-from fastapi import APIRouter
-from fastapi.responses import RedirectResponse
+from typing import List
+from fastapi import APIRouter, Depends
+from fastapi.exceptions import HTTPException
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from app.config import templates
+from app.routers.tiku import deps
 from app.api import apifunc
+from app.models.subject import Subjects
 
 router = APIRouter(prefix='/paper')
 
-info = {
-    'fb': {
-        'name': '基金基础'
-    },
-    'fr': {},
-    'sr': {}
-}
 
-@router.get('/fb', response_class=HTMLResponse)
-async def tiku_paper_fb(request: Request, type: str):
+@router.get('/{subject}', response_class=HTMLResponse)
+async def tiku_paper_subject(
+    request: Request,
+    subject: str,
+    type: str,
+    subjects: Subjects = Depends(deps.get_subjects)
+):
+    if subject not in subjects:
+        raise HTTPException(status_code=404, detail='Subject not found')
     if type == 'random':
-        question = await apifunc.get_question_by_subject('fb')
+        question = await apifunc.get_question_by_subject(subject)
         return templates.TemplateResponse(
             'tiku/paper/fb.jinja2', {
                 'request': request,
@@ -27,20 +30,4 @@ async def tiku_paper_fb(request: Request, type: str):
             }
         )
     else:
-        return RedirectResponse(request.url_for('tiku_area_fb'))
-
-@router.get('/fr', response_class=HTMLResponse)
-async def tiku_paper_fr(request: Request, type: str):
-    return templates.TemplateResponse(
-        'tiku/paper/fr.jinja2', {
-            'request': request
-        }
-    )
-
-@router.get('/sr', response_class=HTMLResponse)
-async def tiku_paper_sr(request: Request, type: str):
-    return templates.TemplateResponse(
-        'tiku/paper/sr.jinja2', {
-            'request': request
-        }
-    )
+        return HTTPException(status_code=400, detail='Bad request')

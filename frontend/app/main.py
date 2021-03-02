@@ -15,7 +15,7 @@ app.include_router(login_router)
 
 @app.get('/')
 async def index(request: Request):
-    return RedirectResponse(os.path.join(str(request.base_url), '/tiku/area'))
+    return RedirectResponse(request.url_for('tiku_area_index'))
 
 # Routers naming
 """
