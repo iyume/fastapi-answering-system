@@ -87,7 +87,7 @@ class AUTH():
         if isinstance(content, str):
             return content
         if token := content.get('access-token', None):
-            tokenmodel = Token(token=token)
+            tokenmodel = Token(access_token=token)
             return tokenmodel
         return 'invalid name or password'
 
