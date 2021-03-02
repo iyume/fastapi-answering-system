@@ -1,4 +1,5 @@
 import os
+from re import L
 import httpx
 from typing import Any, Dict, Optional, Union
 
@@ -16,10 +17,18 @@ async def get(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
         return None
     return response.json()
 
-async def post(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
+async def post_with_params(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
     try:
-        async with httpx.AsyncClient(params=params) as client:
+        async with httpx.AsyncClient() as client:
             response = await client.post(uri, params=params)
+    except:
+        return None
+    return response.json()
+
+async def post_with_data(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(uri, data=params)
     except:
         return None
     return response.json()
@@ -65,22 +74,27 @@ class AUTH():
         self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
     async def authenticate(self, name: str, password: str):
-        # content = await post(
+        # content = await post_with_params(
         #     self.auth_access_token_uri,
         #     name = name,
         #     passowrd = password
         # )
         async with httpx.AsyncClient() as client:
-            content = await client.post(self.auth_access_token_uri, params={'name':name, 'password': password})
+            content = await client.post(
+                self.auth_access_token_uri,
+                params={'name': name, 'password': password}
+            )
+        content = content.json()
+
         if isinstance(content, str):
             return content
-        if token := content.json().get('access-token', None):
+        if token := content.get('access-token', None):
             tokenmodel = Token(token=token)
             return tokenmodel
         return 'incorrect name or password'
 
     async def register(self, name: str, email: str, password: str):
-        content = await post(
+        content = await post_with_data(
             self.auth_register_uri,
             name = name,
             email = email,
@@ -90,6 +104,6 @@ class AUTH():
             return content
         if token := await self.authenticate(name, password):
             return token
-        return 'incorrect name or email'
+        return 'invalid name or email or password'
 
 authfunc = AUTH(endpoint='auth')

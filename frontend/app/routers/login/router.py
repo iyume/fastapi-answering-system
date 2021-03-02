@@ -6,7 +6,9 @@ from app.config import templates
 from app.api import authfunc
 from app.schema.token import Token
 
+
 login_router = APIRouter(prefix='/login')
+
 
 @login_router.get('/', response_class=HTMLResponse)
 async def login(request: Request):
