@@ -5,11 +5,11 @@
             <p class="inline-block">当前位置：</p>
             <a href="/">首页</a>
             <i> > </i>
-            <a href="/tiku/area">题库</a>
+            <a href="{{ url_for('tiku_area_index') }}">题库</a>
             <i> > </i>
             {% block nav_tiku_link %}{% endblock %}
             <i> > </i>
-            <p class="inline-block">{% block paper_subject %}{% endblock %}</p>
+            <p class="inline-block">{% block paper_type %}{% endblock %}</p>
         </div>
         <div class="flex justify-between">
             <div class="container flex flex-col space-y-3 w-870">

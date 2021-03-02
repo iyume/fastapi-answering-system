@@ -26,7 +26,7 @@ async def tiku_area_index(
     )
 
 @router.get('/{subject}', response_class=HTMLResponse)
-async def tiku_area_subject(
+async def tiku_area(
     request: Request,
     subject: str,
     subjects: Subjects = Depends(deps.get_subjects)

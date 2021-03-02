@@ -23,6 +23,13 @@ class Subjects():
         }
     ]
 
+    def get_item(self, subject: str):
+        return [i for i in self.subjects if i['alias'] == subject][0]
+
+    @property
+    def items(self):
+        return self.subjects
+
     @property
     def aliases(self):
         return [i['alias'] for i in self.subjects]
