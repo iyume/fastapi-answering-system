@@ -5,6 +5,7 @@ import httpx
 from fastapi import HTTPException
 
 from app import schema
+from app.config import logger
 
 
 host_url = 'http://127.0.0.1:8000'
@@ -15,9 +16,15 @@ async def get(uri: str, **params) -> Any:
         async with httpx.AsyncClient() as client:
             response = await client.get(uri, params=params)
     except:
-        raise HTTPException(status_code=500, detail='500 Server error')
+        raise HTTPException(
+            status_code=500, detail='500 Server error')
     if response.status_code == 403:
-        raise HTTPException(status_code=403, detail='403 Forbidden')
+        raise HTTPException(
+            status_code=403, detail='403 Forbidden')
+    if response.status_code == 400:
+        logger.error(str(response))
+        raise HTTPException(
+            status_code=400, detail='Bad request caused by inner api request')
     return response.json()
 
 async def post_with_params(uri: str, **params) -> Any:
@@ -25,9 +32,15 @@ async def post_with_params(uri: str, **params) -> Any:
         async with httpx.AsyncClient() as client:
             response = await client.post(uri, params=params)
     except:
-        raise HTTPException(status_code=500, detail='500 Server error')
+        raise HTTPException(
+            status_code=500, detail='500 Server error')
     if response.status_code == 403:
-        raise HTTPException(status_code=403, detail='403 Forbidden')
+        raise HTTPException(
+            status_code=403, detail='403 Forbidden')
+    if response.status_code == 400:
+        logger.error(str(response))
+        raise HTTPException(
+            status_code=400, detail='Bad request caused by inner api request')
     return response.json()
 
 async def post_with_json(uri: str, **params) -> Any:
@@ -35,9 +48,15 @@ async def post_with_json(uri: str, **params) -> Any:
         async with httpx.AsyncClient() as client:
             response = await client.post(uri, json=params)
     except:
-        raise HTTPException(status_code=500, detail='500 Server error')
+        raise HTTPException(
+            status_code=500, detail='500 Server error')
     if response.status_code == 403:
-        raise HTTPException(status_code=403, detail='403 Forbidden')
+        raise HTTPException(
+            status_code=403, detail='403 Forbidden')
+    if response.status_code == 400:
+        logger.error(str(response))
+        raise HTTPException(
+            status_code=400, detail='Bad request caused by inner api request')
     return response.json()
 
 
@@ -49,15 +68,15 @@ class API():
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
 
-    async def get_question_by_subject(self, subject: str, random: Optional[bool] = True):
-        if random:
-            result = await get(
-                self.question_uri,
-                subject = subject,
-                random = random
-            )
-        else:
-            result = None
+    async def get_question_by_subject(
+        self, subject: str, random: bool = True) -> dict:
+        result = await get(
+            self.question_uri,
+            subject = subject,
+            random = random
+        )
+        if not result:
+            raise HTTPException(status_code=500)
         return result
 
     async def get_answer(self, id: str) -> dict:
