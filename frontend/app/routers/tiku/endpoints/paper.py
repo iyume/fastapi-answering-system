@@ -21,10 +21,13 @@ async def tiku_paper(
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: User = Depends(deps.get_current_user)
 ):
-    if not type:
-        raise HTTPException(status_code=422, detail='Missing type parameter')
+    """
+    Render random question practice page
+    """
     if subject not in subjects.aliases:
         raise HTTPException(status_code=404, detail='Subject not found')
+    if not type:
+        raise HTTPException(status_code=422, detail='Missing type parameter')
     request._query_params = {}
     request._query_params['type'] = type
     if type == 'random':

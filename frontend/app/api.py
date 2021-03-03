@@ -10,30 +10,34 @@ from app.schema.token import Token
 host_url = 'http://127.0.0.1:8000'
 
 
-async def get(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
+async def get(uri: str, **params) -> Any:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(uri, params=params)
     except:
-        return None
+        raise HTTPException(status_code=500, detail='500 Server error')
+    if response.status_code == 403:
+        raise HTTPException(status_code=403, detail='403 Forbidden')
     return response.json()
 
-async def post_with_params(uri: str, **params) -> Union[Dict[Any, Any], str, None]:
+async def post_with_params(uri: str, **params) -> Any:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(uri, params=params)
     except:
-        return None
+        raise HTTPException(status_code=500, detail='500 Server error')
+    if response.status_code == 403:
+        raise HTTPException(status_code=403, detail='403 Forbidden')
     return response.json()
 
-async def post_with_json(uri: str, **params) -> Union[Dict[Any, Any], str]:
+async def post_with_json(uri: str, **params) -> Any:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(uri, json=params)
     except:
-        raise HTTPException(status_code=500, detail='Server error')
+        raise HTTPException(status_code=500, detail='500 Server error')
     if response.status_code == 403:
-        raise HTTPException(status_code=403, detail='Could not validate json web token')
+        raise HTTPException(status_code=403, detail='403 Forbidden')
     return response.json()
 
 
@@ -45,11 +49,7 @@ class API():
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
 
-    async def get_question_by_subject(
-        self,
-        subject: str,
-        random: Optional[bool] = True
-    ):
+    async def get_question_by_subject(self, subject: str, random: Optional[bool] = True):
         if random:
             result = await get(
                 self.question_uri,
@@ -60,11 +60,13 @@ class API():
             result = None
         return result
 
-    async def get_answer(self, id: str):
+    async def get_answer(self, id: str) -> Optional[dict]:
         result = await get(
             self.answer_uri,
             id = id
         )
+        if not result:
+            raise HTTPException(status_code=400, detail='incorrect question id')
         return result
 
 
@@ -72,10 +74,10 @@ class AUTH():
     def __init__(self, endpoint: str) -> None:
         self.auth_uri = os.path.join(host_url, endpoint)
         self.auth_access_token_uri = os.path.join(self.auth_uri, 'access-token')
-        self.auth_retrieve_user_uri = os.path.join(self.auth_uri, 'retrieve-user')
+        self.auth_retrieve_payload_uri = os.path.join(self.auth_uri, 'retrieve-payload')
         self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
-    async def authenticate(self, name: str, password: str):
+    async def authenticate(self, name: str, password: str) -> Union[Token, str]:
         # content = await post_with_params(
         #     self.auth_access_token_uri,
         #     name = name,
@@ -95,16 +97,16 @@ class AUTH():
             return tokenmodel
         return 'invalid name or password'
 
-    async def retrieve_user(self, jwt: str) -> Optional[dict]:
+    async def retrieve_payload(self, jwt: str) -> Optional[dict]:
         content = await post_with_json(
-            self.auth_retrieve_user_uri,
+            self.auth_retrieve_payload_uri,
             jwt = jwt
         )
         if isinstance(content, str):
             raise HTTPException(status_code=500, detail=content)
         return content
 
-    async def register(self, name: str, email: str, password: str):
+    async def register(self, name: str, email: str, password: str) -> Union[Token, str]:
         content = await post_with_json(
             self.auth_register_uri,
             name = name,

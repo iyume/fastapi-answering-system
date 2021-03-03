@@ -11,7 +11,7 @@ def get_subjects() -> Subjects:
 async def get_current_user(jwt: str = Cookie(None)) -> User:
     if not jwt:
         return User(None)
-    user_dict = await authfunc.retrieve_user(jwt)
+    user_dict = await authfunc.retrieve_payload(jwt)
     if not user_dict:
         return User(None)
     return User(user_dict)

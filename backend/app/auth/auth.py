@@ -31,8 +31,8 @@ async def access_token(
         return {"access-token": token}
     return 'incorrect name or password'
 
-@router.post('/retrieve-user')
-async def retrive_user(obj_in: schema.JWTStr):
+@router.post('/retrieve-payload')
+async def retrive_payload(obj_in: schema.JWTStr):
     payload = schema.UserJWT(**func.jwt_decode(obj_in.jwt))
     return payload
 

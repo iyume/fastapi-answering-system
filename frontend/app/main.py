@@ -22,8 +22,10 @@ async def index(request: Request):
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
-    return PlainTextResponse(str(exc), status_code=400)
+    return PlainTextResponse(getattr(exc, 'detail', 'Bad request'), status_code=400)
 
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request, exc):
-    return PlainTextResponse(str(exc), status_code=exc.status_code)
+    if exc.status_code == 404:
+        return PlainTextResponse('Page not found', status_code=404)
+    return PlainTextResponse(exc.detail, status_code=exc.status_code)
