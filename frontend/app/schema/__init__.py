@@ -1,1 +1,2 @@
-from .token import Token
+from .token import Token, Secret
+from .user import UserRegister

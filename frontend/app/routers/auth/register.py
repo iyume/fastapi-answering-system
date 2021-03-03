@@ -1,15 +1,13 @@
 import secrets
 from typing import Optional
-import logging
+from pydantic import EmailStr
 
 from fastapi import APIRouter
+from fastapi.exceptions import HTTPException
 
 from app.api import authfunc
-from app.schema import Token
-
-
-logger = logging.getLogger('fastapi')
-super_token = secrets.token_urlsafe(32)
+from app.schema import Token, UserRegister, Secret
+from app.login.func import secret_required
 
 
 router = APIRouter()
@@ -20,20 +18,14 @@ async def register_startup():
     ...
 
 @router.post('/register')
+@secret_required
 async def register(
-    name: str,
-    email: str,
-    password: str,
-    token: Optional[str] = None
+    user_in: UserRegister,
+    secret: Secret
 ):
-    if not token:
-        return 'token required'
-    if token != super_token:
-        logger.warning(f'Secret is { super_token }')
-        return 'token wrong'
-    content = await authfunc.register(name, email, password)
+    content = await authfunc.register(user_in.name, user_in.email, user_in.password)
     if isinstance(content, str):
         return content
     if isinstance(content, Token):
         return content.access_token
-    return 'Unknown error'
+    raise HTTPException(status_code=500, detail='Unknown error')
