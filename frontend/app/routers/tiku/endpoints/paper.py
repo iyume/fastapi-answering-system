@@ -9,7 +9,7 @@ from app.routers.tiku import deps
 from app.api import apifunc
 from app.models.subject import Subjects
 from app.models.user import User
-from app.func import login_required
+from app.login import login_required
 
 router = APIRouter(prefix='/paper')
 
