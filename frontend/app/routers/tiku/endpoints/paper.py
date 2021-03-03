@@ -7,8 +7,7 @@ from starlette.responses import HTMLResponse
 from app.config import templates
 from app.routers.tiku import deps
 from app.api import apifunc
-from app.models.subject import Subjects
-from app.models.user import User
+from app.models import Subjects, User
 from app.login import login_required
 
 router = APIRouter(prefix='/paper')

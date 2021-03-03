@@ -1,13 +1,15 @@
-import os
 from fastapi import FastAPI
+from fastapi.exceptions import RequestValidationError
 from starlette.requests import Request
-from starlette.responses import RedirectResponse
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.responses import PlainTextResponse, RedirectResponse
 
 from .routers.tiku.router import tiku_router
 from .routers.auth import login, register
 from .config import static_router
 
-app = FastAPI(docs_url=None, redoc_url=None, openapi=None, openapi_url=None)
+
+app = FastAPI(redoc_url=None, openapi=None)
 
 app.mount('/static', static_router, name='static')
 app.include_router(tiku_router)
@@ -18,9 +20,10 @@ app.include_router(register.router)
 async def index(request: Request):
     return RedirectResponse(request.url_for('tiku_area_index'))
 
-# Routers naming
-"""
-fb: fund_basis
-fr: fund_regulations
-sr: security_regulations
-"""
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    return PlainTextResponse(str(exc), status_code=400)
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request, exc):
+    return PlainTextResponse(str(exc), status_code=exc.status_code)
