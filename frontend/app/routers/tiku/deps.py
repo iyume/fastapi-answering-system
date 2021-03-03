@@ -1,5 +1,3 @@
-from typing import List
-
 from fastapi import Cookie
 
 from app.api import authfunc

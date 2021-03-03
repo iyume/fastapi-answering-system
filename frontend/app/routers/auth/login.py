@@ -13,7 +13,6 @@ router = APIRouter()
 
 @router.get('/login', response_class=HTMLResponse)
 async def login(request: Request):
-    form = await request.form()
     return templates.TemplateResponse('login/login.jinja2', {'request': request})
 
 @router.post('/login', response_class=HTMLResponse)
