@@ -1,6 +1,3 @@
-from typing import Optional
-from datetime import datetime
-
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
@@ -9,27 +6,29 @@ from app.auth import deps, func
 from app.security import jwt
 from app.models.user import User
 
+
 router = APIRouter(prefix='/auth', tags=['auth'])
+
 
 @router.post('/access-token')
 async def access_token(
-    name: str,
-    password: str
+    user_in: schema.UserAuth
 ):
-    user = User(name, password)
-    if user.is_authenticated:
-        if not user.is_active:
-            return 'inactive user'
-        token = jwt.create_access_token(
-            schema.UserJWT(
-                iss = user.name,
-                email = user.email,
-                is_active = user.is_active,
-                is_superuser = user.is_superuser
-            )
+    user = User(user_in.name, user_in.password)
+    if not user.is_authenticated:
+        return 'incorrect name or password'
+    if not user.is_active:
+        return 'inactive user'
+    token = jwt.create_access_token(
+        schema.UserJWT(
+            iss = user.name,
+            email = user.email,
+            is_active = user.is_active,
+            is_superuser = user.is_superuser
         )
-        return {"access-token": token}
-    return 'incorrect name or password'
+    )
+    return {"access-token": token}
+
 
 @router.post('/retrieve-payload')
 async def retrive_payload(obj_in: schema.JWTStr):

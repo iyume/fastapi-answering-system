@@ -26,9 +26,9 @@ class User():
         db = next(deps.get_db())
         self.current_user = crud.user.get_by_name(db, name)
         if password:
-            self.is_authenticated = self.validate_user(password)
+            self.is_authenticated = self.validate_password(password)
 
-    def validate_user(self, plain_password: str) -> bool:
+    def validate_password(self, plain_password: str) -> bool:
         if not self.current_user:
             return False
         return func.verify_password(plain_password, self.hashed_password)
