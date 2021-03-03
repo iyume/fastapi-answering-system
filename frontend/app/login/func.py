@@ -21,7 +21,7 @@ def secret_required(func):
     async def wrapper(*args, **kwds):
         if 'secret' not in kwds:
             return PlainTextResponse('Secret required', status_code=403)
-        if getattr(kwds['secret'], 'secret', None) != super_secret:
+        if kwds['secret'].secret != super_secret:
             logger.warning(f'[Info] Secret is {super_secret}\n')
             return PlainTextResponse('Secret wrong', status_code=403)
         return await func(*args, **kwds)

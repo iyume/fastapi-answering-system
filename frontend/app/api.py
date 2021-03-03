@@ -1,10 +1,10 @@
 import os
-from typing import Any, Dict, Optional, Union
+from typing import Any, Optional
 import httpx
 
 from fastapi import HTTPException
 
-from app.schema.token import Token
+from app import schema
 
 
 host_url = 'http://127.0.0.1:8000'
@@ -77,27 +77,22 @@ class AUTH():
         self.auth_retrieve_payload_uri = os.path.join(self.auth_uri, 'retrieve-payload')
         self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
-    async def authenticate(self, name: str, password: str) -> Union[Token, str]:
-        # content = await post_with_params(
-        #     self.auth_access_token_uri,
-        #     name = name,
-        #     passowrd = password
-        # )
-        async with httpx.AsyncClient() as client:
-            content = await client.post(
-                self.auth_access_token_uri,
-                params={'name': name, 'password': password}
-            )
-        content = content.json()
+    async def authenticate(self, name: str, password: str) -> schema.JWT:
+        content = await post_with_json(
+            self.auth_access_token_uri,
+            name = name,
+            password = password
+        )
 
         if isinstance(content, str):
-            return content
-        if token := content.get('access-token', None):
-            tokenmodel = Token(access_token=token)
-            return tokenmodel
-        return 'invalid name or password'
+            raise HTTPException(status_code=403, detail='Validate user error')
+        token = content.get('access-token', None)
+        if not token:
+            raise HTTPException(status_code=403, detail='')
+        tokenmodel = schema.JWT(access_token=token)
+        return tokenmodel
 
-    async def retrieve_payload(self, jwt: str) -> Optional[dict]:
+    async def retrieve_payload(self, jwt: str) -> dict:
         content = await post_with_json(
             self.auth_retrieve_payload_uri,
             jwt = jwt
@@ -106,25 +101,18 @@ class AUTH():
             raise HTTPException(status_code=500, detail=content)
         return content
 
-    async def register(self, name: str, email: str, password: str) -> Union[Token, str]:
+    async def register(self, name: str, email: str, password: str) -> schema.JWT:
         content = await post_with_json(
             self.auth_register_uri,
             name = name,
             email = email,
             password = password
         )
-        # async with httpx.AsyncClient() as client:
-        #     content = await client.post(
-        #         self.auth_register_uri,
-        #         data={'name': name, 'email': email, 'password': password}
-        #     )
-        # content = content.json()
 
         if isinstance(content, str):
-            return content
-        if token := await self.authenticate(name, password):
-            return Token(token=token)
-        return 'invalid name or email or password'
+            raise HTTPException(status_code=400, detail=content)
+        token = await self.authenticate(name, password)
+        return token
 
 
 apifunc = API(version='v1')

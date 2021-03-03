@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 
-class Token(BaseModel):
+class JWT(BaseModel):
     access_token: str
 
 class Secret(BaseModel):
