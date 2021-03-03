@@ -23,6 +23,12 @@ async def tiku_answer(
     Render answer page according to the answer selected in paper
     """
     if picked not in list('ABCD'):
-        raise HTTPException(status_code=400, detail='')
+        raise HTTPException(status_code=400, detail='Bad picked query-parameter')
     question = await apifunc.get_answer(id)
-    return templates.TemplateResponse('tiku/answer/main.jinja2' ,{'request': request, 'question': question, 'picked': picked})
+    return templates.TemplateResponse(
+        'tiku/answer/main.jinja2', {
+            'request': request,
+            'question': question,
+            'picked': picked
+        }
+    )

@@ -60,7 +60,7 @@ class API():
             result = None
         return result
 
-    async def get_answer(self, id: str) -> Optional[dict]:
+    async def get_answer(self, id: str) -> dict:
         result = await get(
             self.answer_uri,
             id = id

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from starlette.requests import Request
@@ -9,6 +11,7 @@ from app.api import apifunc
 from app.models import Subjects, User
 from app.login import login_required
 
+
 router = APIRouter(prefix='/paper')
 
 
@@ -18,12 +21,31 @@ async def tiku_paper(
     request: Request,
     subject: str,
     type: str = None,
+    id: Optional[str] = None,
+    picked: Optional[str] = None,
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: User = Depends(deps.get_current_user)
 ):
     """
-    Render random question practice page
+    Case1:
+        Render random question-select practice page
+    Case2:
+        Render answer page according to selected option
+    if (id & picked) -> Case2
     """
+    ## Case 2
+    if id and picked:
+        question = await apifunc.get_answer(id)
+        return templates.TemplateResponse(
+            'tiku/paper/subject.jinja2', {
+                'request': request,
+                'question': question,
+                'subjects': subjects,
+                'picked': picked
+            }
+        )
+
+    ## Case 1
     if subject not in subjects.aliases:
         raise HTTPException(status_code=404, detail='Subject not found')
     if not type:
