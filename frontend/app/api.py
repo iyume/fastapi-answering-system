@@ -11,6 +11,15 @@ from app.config import logger
 host_url = 'http://127.0.0.1:8000'
 
 
+def error_handlers(status_code) -> None:
+    if status_code == 403:
+        raise HTTPException(
+            status_code=403, detail='403 Forbidden')
+    if status_code == 400:
+        raise HTTPException(
+            status_code=400, detail='Bad request caused by inner api request')
+
+
 async def get(uri: str, **params) -> Any:
     try:
         async with httpx.AsyncClient() as client:
@@ -18,13 +27,7 @@ async def get(uri: str, **params) -> Any:
     except:
         raise HTTPException(
             status_code=500, detail='500 Server error')
-    if response.status_code == 403:
-        raise HTTPException(
-            status_code=403, detail='403 Forbidden')
-    if response.status_code == 400:
-        logger.error(str(response))
-        raise HTTPException(
-            status_code=400, detail='Bad request caused by inner api request')
+    error_handlers(response.status_code)
     return response.json()
 
 async def post_with_params(uri: str, **params) -> Any:
@@ -34,13 +37,7 @@ async def post_with_params(uri: str, **params) -> Any:
     except:
         raise HTTPException(
             status_code=500, detail='500 Server error')
-    if response.status_code == 403:
-        raise HTTPException(
-            status_code=403, detail='403 Forbidden')
-    if response.status_code == 400:
-        logger.error(str(response))
-        raise HTTPException(
-            status_code=400, detail='Bad request caused by inner api request')
+    error_handlers(response.status_code)
     return response.json()
 
 async def post_with_json(uri: str, **params) -> Any:
@@ -50,13 +47,7 @@ async def post_with_json(uri: str, **params) -> Any:
     except:
         raise HTTPException(
             status_code=500, detail='500 Server error')
-    if response.status_code == 403:
-        raise HTTPException(
-            status_code=403, detail='403 Forbidden')
-    if response.status_code == 400:
-        logger.error(str(response))
-        raise HTTPException(
-            status_code=400, detail='Bad request caused by inner api request')
+    error_handlers(response.status_code)
     return response.json()
 
 
