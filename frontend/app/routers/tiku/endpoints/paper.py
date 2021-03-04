@@ -8,7 +8,7 @@ from starlette.responses import HTMLResponse
 from app.config import templates
 from app.routers.tiku import deps
 from app.api import apifunc
-from app.models import Subjects, User
+from app.models import Subjects, UserPayload
 from app.login import login_required
 
 
@@ -24,7 +24,7 @@ async def tiku_paper(
     id: Optional[str] = None,
     picked: Optional[str] = None,
     subjects: Subjects = Depends(deps.get_subjects),
-    current_user: User = Depends(deps.get_current_user)
+    current_user: UserPayload = Depends(deps.get_current_user)
 ):
     """
     Case1:

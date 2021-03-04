@@ -1,4 +1,4 @@
-from app.models.user import User
+from app.models.user import UserPayload
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from starlette.requests import Request
@@ -17,7 +17,7 @@ async def tiku_answer(
     request: Request,
     id: str,
     picked: str,
-    current_user: User = Depends(deps.get_current_user)
+    current_user: UserPayload = Depends(deps.get_current_user)
 ):
     """
     Render answer page according to the answer selected in paper

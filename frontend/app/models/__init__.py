@@ -1,2 +1,2 @@
-from .user import User
+from .user import UserPayload
 from .subject import Subjects

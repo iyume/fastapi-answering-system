@@ -1,7 +1,7 @@
 from typing import Optional
 
 
-class User():
+class UserPayload():
     def __init__(self, user_dict: Optional[dict] = None) -> None:
         self.user_dict = user_dict
         if isinstance(user_dict, dict):
