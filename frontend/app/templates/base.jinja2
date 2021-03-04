@@ -35,11 +35,14 @@
                     </nav>
                     {% endblock %}
                 </div>
-                {% block userIMG %}
+                {% if current_user %}
                 <a href="/user">
                     <img class="h-12 w-12 rounded-full" src="https://cdn.jsdelivr.net/gh/iyume/static/hexo-blog/img/avatar.png" alt="">
                 </a>
-                {% endblock %}
+                {% else %}
+                <a href="{{ url_for('login') }}" class="inline-block"></a>
+                <a href="{{ url_for('register') }}" class="inline-block"></a>
+                {% endif %}
             </div>
         </div>
     </header>

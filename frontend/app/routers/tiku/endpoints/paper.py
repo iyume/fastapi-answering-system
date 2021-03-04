@@ -6,7 +6,7 @@ from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from app.config import templates
-from app.routers.tiku import deps
+from app.routers import deps
 from app.api import apifunc
 from app.models import Subjects, UserPayload
 from app.login import login_required

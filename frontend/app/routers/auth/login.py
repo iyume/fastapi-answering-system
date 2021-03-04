@@ -1,22 +1,36 @@
-from fastapi import APIRouter
+import time
+
+from fastapi import APIRouter, Depends
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse
 
 from app.config import templates
 from app.api import authfunc
 from app import schema
+from app.routers import deps
+from app.models.user import UserPayload
 
 
 router = APIRouter()
 
 
 @router.get('/login', response_class=HTMLResponse)
-async def login(request: Request):
+async def login(
+    request: Request,
+    current_user: UserPayload = Depends(deps.get_current_user)
+):
+    if current_user.exp > time.time():
+        return RedirectResponse(request.url_for('index'))
     return templates.TemplateResponse('login/login.jinja2', {'request': request})
 
 
 @router.post('/login', response_class=HTMLResponse)
-async def login_action(request: Request):
+async def login_action(
+    request: Request,
+    current_user: UserPayload = Depends(deps.get_current_user)
+):
+    if current_user.exp > time.time():
+        return RedirectResponse(request.url_for('index'))
     form = await request.form()
     if not (username := form.get('username', None)):
         return templates.TemplateResponse(

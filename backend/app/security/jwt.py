@@ -13,9 +13,9 @@ def create_access_token(
     user: UserJWT,
     exp_hours: int = None
 ) -> str:
-    exp = datetime.utcnow() + timedelta(
+    exp = (datetime.now() + timedelta(
         hours = exp_hours or config.ACCESS_TOKEN_EXP_HOURS
-    )
+    )).timestamp()
     payload = {
         'iss': user.iss,
         'email': user.email,
