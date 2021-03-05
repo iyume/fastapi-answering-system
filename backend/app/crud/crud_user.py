@@ -15,20 +15,20 @@ class CRUDUser():
         self,
         db: Session,
         name: str
-    ) -> Optional[model]:
+    ) -> Optional[UserDB]:
         return db.query(self.model).filter(self.model.name == name).first()
 
     def get_by_email(
         self,
         db: Session,
         email: str
-    ) -> Optional[model]:
+    ) -> Optional[UserDB]:
         return db.query(self.model).filter(self.model.email == email).first()
 
     def get_all(
         self,
         db: Session
-    ) -> List[model]:
+    ) -> List[UserDB]:
         return db.query(self.model).all()
 
     def create(
@@ -36,7 +36,7 @@ class CRUDUser():
         db: Session,
         obj_in: UserCreate,
         is_superuser: Optional[bool] = False
-    ) -> Optional[model]:
+    ) -> Optional[UserDB]:
         db_obj = self.model(
             id = str(uuid.uuid4()),
             name = obj_in.name,
