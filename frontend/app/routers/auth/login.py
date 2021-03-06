@@ -49,7 +49,7 @@ async def login_action(
                 'request': request,
                 'message': '请输入密码'})
 
-    jwt: schema.JWT = await authfunc.authenticate(username, password)
+    jwt: schema.JWT = await authfunc.access_token(username, password)
     rr = RedirectResponse(request.url_for('tiku_area_index'), status_code=303)
     rr.set_cookie(key='jwt', value=jwt.access_token)
     return rr

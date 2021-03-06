@@ -19,8 +19,7 @@ router = APIRouter(prefix='/area')
 @router.get('/', response_class=HTMLResponse)
 async def tiku_area_index(
     request: Request,
-    subjects: Subjects = Depends(deps.get_subjects),
-    current_user: UserPayload = Depends(deps.get_current_user)
+    subjects: Subjects = Depends(deps.get_subjects)
 ) -> Any:
     """
     Render index page, but not the final index page
@@ -37,8 +36,7 @@ async def tiku_area_index(
 async def tiku_area(
     request: Request,
     subject: str,
-    subjects: Subjects = Depends(deps.get_subjects),
-    current_user: UserPayload = Depends(deps.get_current_user)
+    subjects: Subjects = Depends(deps.get_subjects)
 ) -> Any:
     """
     Enter the selected subject navigation page
