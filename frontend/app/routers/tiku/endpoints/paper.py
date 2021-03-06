@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
@@ -25,7 +25,7 @@ async def tiku_paper(
     picked: Optional[str] = None,
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: UserPayload = Depends(deps.get_current_user)
-):
+) -> Any:
     """
     Case1:
         Render random question-select practice page
@@ -50,8 +50,6 @@ async def tiku_paper(
         raise HTTPException(status_code=404, detail='Subject not found')
     if not type:
         raise HTTPException(status_code=422, detail='Missing type parameter')
-    request._query_params = {}
-    request._query_params['type'] = type
     if type == 'random':
         question = await apifunc.get_question_by_subject(subject)
         return templates.TemplateResponse(

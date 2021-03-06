@@ -1,3 +1,5 @@
+from typing import Any, Dict, List
+
 class Subjects():
     subjects = [
         {
@@ -23,15 +25,17 @@ class Subjects():
         }
     ]
 
-    def get_item(self, subject: str):
+    def get_item(self, subject: str) -> Dict[str, str]:
+        if subject not in self.aliases:
+            raise ValueError(f'no such subject named "{subject}"')
         return [i for i in self.subjects if i['alias'] == subject][0]
 
     @property
-    def items(self):
+    def items(self) -> Any:
         return self.subjects
 
     @property
-    def aliases(self):
+    def aliases(self) -> List[str]:
         return [i['alias'] for i in self.subjects]
 
 subjects = Subjects()

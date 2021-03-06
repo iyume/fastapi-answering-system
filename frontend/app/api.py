@@ -11,16 +11,18 @@ from app.config import logger
 host_url = 'http://127.0.0.1:8000'
 
 
-def error_handlers(status_code) -> None:
+def error_handlers(status_code: int) -> None:
     if status_code == 403:
         raise HTTPException(
             status_code=403, detail='403 Forbidden')
     if status_code == 400:
         raise HTTPException(
             status_code=400, detail='Bad request caused by inner api request')
+    if status_code != 200:
+        raise HTTPException(status_code=status_code)
 
 
-async def get(uri: str, **params) -> Any:
+async def get(uri: str, **params: Any) -> Any:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.get(uri, params=params)
@@ -30,7 +32,7 @@ async def get(uri: str, **params) -> Any:
     error_handlers(response.status_code)
     return response.json()
 
-async def post_with_params(uri: str, **params) -> Any:
+async def post_with_params(uri: str, **params: Any) -> Any:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(uri, params=params)
@@ -40,7 +42,7 @@ async def post_with_params(uri: str, **params) -> Any:
     error_handlers(response.status_code)
     return response.json()
 
-async def post_with_json(uri: str, **params) -> Any:
+async def post_with_json(uri: str, **params: Any) -> Any:
     try:
         async with httpx.AsyncClient() as client:
             response = await client.post(uri, json=params)
@@ -54,7 +56,7 @@ async def post_with_json(uri: str, **params) -> Any:
 # collection of resource will tail with slash
 # single endpoint end to be empty
 class API():
-    def __init__(self, version) -> None:
+    def __init__(self, version: str) -> None:
         self.api_uri = os.path.join(host_url, 'api', version)
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')

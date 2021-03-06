@@ -1,10 +1,14 @@
+from typing import Any
+
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
+from fastapi.params import Query
+from starlette.datastructures import QueryParams
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
 from app.config import templates
-from app.routers.tiku import deps
+from app.routers import deps
 from app.models import Subjects, UserPayload
 
 
@@ -17,7 +21,7 @@ async def tiku_area_index(
     request: Request,
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: UserPayload = Depends(deps.get_current_user)
-):
+) -> Any:
     """
     Render index page, but not the final index page
     """
@@ -35,14 +39,12 @@ async def tiku_area(
     subject: str,
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: UserPayload = Depends(deps.get_current_user)
-):
+) -> Any:
     """
     Enter the selected subject navigation page
     """
     if subject not in subjects.aliases:
         raise HTTPException(status_code=404, detail='Subject not found')
-    request._query_params = {}
-    request._query_params['type'] = 'random'
     return templates.TemplateResponse(
         'tiku/area/subject.jinja2',
         {

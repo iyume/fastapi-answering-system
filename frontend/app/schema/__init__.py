@@ -1,2 +1,2 @@
 from .token import JWT, Secret
-from .user import UserRegister
+from .user import UserRegister, UserPayload
