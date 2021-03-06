@@ -11,6 +11,13 @@ from app.auth.func import encrypt_password
 class CRUDUser():
     model = UserDB
 
+    def get_by_id(
+        self,
+        db: Session,
+        id: str
+    ) -> Optional[UserDB]:
+        return db.query(self.model).filter(self.model.id == id).first()
+
     def get_by_name(
         self,
         db: Session,

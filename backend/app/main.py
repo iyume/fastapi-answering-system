@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from .api import api_v1 as api
-from .auth import auth, extrapi
+from .auth import auth, extrapi, user
 
 app = FastAPI(
     title='后端 API 文档',
@@ -11,4 +11,5 @@ app = FastAPI(
 
 app.include_router(api.router)
 app.include_router(auth.router)
+app.include_router(user.router) # only for user inspect and update profile
 app.include_router(extrapi.router)

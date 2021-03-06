@@ -55,6 +55,10 @@ class User():
         return func.verify_password(plain_password, self.hashed_password)
 
     @property
+    def id(self) -> Optional[str]:
+        return getattr(self.current_user, 'id', None)
+
+    @property
     def name(self) -> Optional[str]:
         return getattr(self.current_user, 'name', None)
 

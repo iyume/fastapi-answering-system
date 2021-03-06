@@ -17,6 +17,7 @@ def create_access_token(
         hours = exp_hours or config.ACCESS_TOKEN_EXP_HOURS
     )).timestamp()
     payload = {
+        'id': user.id,
         'iss': user.iss,
         'email': user.email,
         'is_active': int(user.is_active),

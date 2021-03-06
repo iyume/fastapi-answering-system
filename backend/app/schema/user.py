@@ -13,6 +13,7 @@ class UserBase(BaseModel):
     is_superuser: bool = False
 
 class UserJWT(UserBase):
+    id: str
     iss: str
     email: EmailStr
     exp: Optional[int] = 1000000000

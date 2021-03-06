@@ -23,6 +23,7 @@ async def access_token(
         return 'inactive user'
     token = jwt.create_access_token(
         schema.UserJWT(
+            id = user.id,
             iss = user.name,
             email = user.email,
             is_active = user.is_active,
@@ -34,8 +35,23 @@ async def access_token(
 
 @router.post('/retrieve-payload')
 async def retrive_payload(obj_in: schema.JWTStr) -> Any:
+    """
+    post jwt and response jwt_decoded (also for validate)
+    """
     payload = schema.UserJWT(**func.jwt_decode(obj_in.jwt))
     return payload
+
+@router.post('/retrieve-resume')
+async def retrieve_resume(
+    obj_in: schema.JWTStr,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    """
+    post jwt and response user detail
+    """
+    payload = schema.UserJWT(**func.jwt_decode(obj_in.jwt))
+    user = crud.user.get_by_id(db, payload.id)
+    return user
 
 # @router.post('/refresh-token')
 # async def refresh_token():
