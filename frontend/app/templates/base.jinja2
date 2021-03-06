@@ -36,12 +36,14 @@
                     {% endblock %}
                 </div>
                 {% if current_user %}
-                <a href="/user">
+                <a href="{{ url_for('homepage', username=current_user.name) }}">
                     <img class="h-12 w-12 rounded-full" src="https://cdn.jsdelivr.net/gh/iyume/static/hexo-blog/img/avatar.png" alt="">
                 </a>
                 {% else %}
-                <a href="{{ url_for('login') }}" class="inline-block"></a>
-                <a href="{{ url_for('register') }}" class="inline-block"></a>
+                <div>
+                    <a href="{{ url_for('login') }}" class="inline-block">登录</a>
+                    <a href="{{ url_for('register') }}" class="inline-block">注册</a>
+                </div>
                 {% endif %}
             </div>
         </div>

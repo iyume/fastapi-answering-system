@@ -39,6 +39,7 @@ async def tiku_paper(
         return templates.TemplateResponse(
             'tiku/paper/subject.jinja2', {
                 'request': request,
+                'current_user': current_user,
                 'question': question,
                 'subjects': subjects,
                 'picked': picked
@@ -55,6 +56,7 @@ async def tiku_paper(
         return templates.TemplateResponse(
             'tiku/paper/subject.jinja2', {
                 'request': request,
+                'current_user': current_user,
                 'question': question,
                 'subjects': subjects
             }

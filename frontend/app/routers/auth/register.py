@@ -10,9 +10,14 @@ from app.security import secret_required
 router = APIRouter()
 
 
+@router.get('/register')
+async def register() -> Any:
+    return '暂不开放注册'
+
+
 @router.post('/register')
 @secret_required
-async def register(
+async def register_action(
     user_in: schema.UserRegister,
     secret: schema.Secret
 ) -> Any:

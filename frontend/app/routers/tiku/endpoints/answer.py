@@ -32,6 +32,7 @@ async def tiku_answer(
     return templates.TemplateResponse(
         'tiku/answer/main.jinja2', {
             'request': request,
+            'current_user': current_user,
             'question': question,
             'picked': picked
         }

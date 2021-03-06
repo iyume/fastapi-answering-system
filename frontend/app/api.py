@@ -1,5 +1,5 @@
 import os
-from typing import Any
+from typing import Any, Union
 
 import httpx
 
@@ -94,14 +94,14 @@ class AUTH():
         self.auth_retrieve_detail_uri = os.path.join(self.auth_uri, 'retrieve-detail')
         self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
-    async def access_token(self, name: str, password: str) -> schema.JWT:
+    async def access_token(self, name: str, password: str) -> Union[schema.JWT, str]:
         content = await post_with_json(
             self.auth_access_token_uri,
             name = name,
             password = password
         )
         if isinstance(content, str):
-            raise HTTPException(status_code=403, detail='Validate user error')
+            return content
         token = content.get('access_token', None)
         if not token:
             raise HTTPException(status_code=403, detail='')

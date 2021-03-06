@@ -18,12 +18,16 @@ router = APIRouter()
 @router.get('/login', response_class=HTMLResponse)
 async def login(
     request: Request,
+    message: str = None,
     current_user: Optional[UserPayload] = Depends(deps.get_current_user)
 ) -> Any:
     if not current_user:
         return templates.TemplateResponse(
-            'login/login.jinja2', {'request': request})
-
+            'login/login.jinja2', {
+                'request': request,
+                'message': message
+            }
+        )
     if current_user.exp > time.time():
         return RedirectResponse(request.url_for('index'))
 
@@ -49,7 +53,17 @@ async def login_action(
                 'request': request,
                 'message': '请输入密码'})
 
-    jwt: schema.JWT = await authfunc.access_token(username, password)
+    content = await authfunc.access_token(username, password)
+
+    if isinstance(content, str):
+        return RedirectResponse(
+            request.url_for('login', message=content)
+        )
+
     rr = RedirectResponse(request.url_for('tiku_area_index'), status_code=303)
-    rr.set_cookie(key='jwt', value=jwt.access_token)
+    rr.set_cookie(
+        key='jwt',
+        value=content.access_token,
+        httponly=True,
+        samesite='strict')
     return rr

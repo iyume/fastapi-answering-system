@@ -6,17 +6,16 @@ from starlette.requests import Request
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import PlainTextResponse, RedirectResponse
 
-from .routers.tiku.router import tiku_router
-from .routers.auth import login, register
+from .routers import tiku, auth, user
 from .config import static_router
 
 
 app = FastAPI(doc_url=None, redoc_url=None, openapi=None, openapi_url=None)
 
 app.mount('/static', static_router, name='static')
-app.include_router(tiku_router)
-app.include_router(login.router)
-app.include_router(register.router)
+app.include_router(tiku.router)
+app.include_router(auth.router)
+app.include_router(user.router)
 
 
 @app.exception_handler(RequestValidationError)

@@ -2,8 +2,6 @@ from typing import Any
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
-from fastapi.params import Query
-from starlette.datastructures import QueryParams
 from starlette.requests import Request
 from starlette.responses import HTMLResponse
 
@@ -19,7 +17,8 @@ router = APIRouter(prefix='/area')
 @router.get('/', response_class=HTMLResponse)
 async def tiku_area_index(
     request: Request,
-    subjects: Subjects = Depends(deps.get_subjects)
+    subjects: Subjects = Depends(deps.get_subjects),
+    current_user: UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     """
     Render index page, but not the final index page
@@ -28,6 +27,7 @@ async def tiku_area_index(
         'tiku/area/base.jinja2',
         {
             'request': request,
+            'current_user': current_user,
             'subjects': subjects
         }
     )
@@ -36,7 +36,8 @@ async def tiku_area_index(
 async def tiku_area(
     request: Request,
     subject: str,
-    subjects: Subjects = Depends(deps.get_subjects)
+    subjects: Subjects = Depends(deps.get_subjects),
+    current_user: UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     """
     Enter the selected subject navigation page
@@ -47,6 +48,7 @@ async def tiku_area(
         'tiku/area/subject.jinja2',
         {
             'request': request,
+            'current_user': current_user,
             'subjects': subjects
         }
     )
