@@ -4,15 +4,11 @@ from fastapi import APIRouter
 
 from app import schema
 from app.api import authfunc
-from app.login.func import secret_required
+from app.security import secret_required
 
 
 router = APIRouter()
 
-@router.on_event('startup')
-async def register_startup() -> Any:
-    # for unknown reason, logger do not work on connect startup
-    ...
 
 @router.post('/register')
 @secret_required

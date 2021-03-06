@@ -5,29 +5,23 @@ class Subjects():
         {
             'alias': 'fb',
             'name_en': 'fund_basis',
-            'name_zh': '基金基础',
-            'area_endpoint': 'tiku_area_fb',
-            'paper_endpoint': 'tiku_paper_fb'
+            'name_zh': '基金基础'
         },
         {
             'alias': 'fr',
             'name_en': 'fund_regulations',
-            'name_zh': '基金法规',
-            'area_endpoint': 'tiku_area_fr',
-            'paper_endpoint': 'tiku_paper_fb'
+            'name_zh': '基金法规'
         },
         {
             'alias': 'sr',
             'name_en': 'security_regulations',
-            'name_zh': '证券法规',
-            'area_endpoint': 'tiku_area_sr',
-            'paper_endpoint': 'tiku_paper_sr'
+            'name_zh': '证券法规'
         }
     ]
 
     def get_item(self, subject: str) -> Dict[str, str]:
         if subject not in self.aliases:
-            raise ValueError(f'no such subject named "{subject}"')
+            raise ValueError(f'no subject named "{subject}"')
         return [i for i in self.subjects if i['alias'] == subject][0]
 
     @property

@@ -8,9 +8,9 @@ class UserRegister(BaseModel):
 
 
 class UserPayload(BaseModel):
+    id: str
     name :str
     email: EmailStr
     exp: int
     is_active: bool
     is_superuser: bool
-    is_authenticated: bool

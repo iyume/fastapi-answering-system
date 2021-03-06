@@ -9,7 +9,7 @@ from app.config import templates
 from app.routers import deps
 from app.api import apifunc
 from app.models import Subjects, UserPayload
-from app.login import login_required
+from app.security import login_required
 
 
 router = APIRouter(prefix='/paper')

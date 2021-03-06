@@ -8,7 +8,7 @@ from starlette.responses import HTMLResponse
 from app.config import templates
 from app.routers import deps
 from app.api import apifunc
-from app.login import login_required
+from app.security import login_required
 from app import schema
 
 

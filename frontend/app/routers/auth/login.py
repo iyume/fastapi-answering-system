@@ -1,5 +1,5 @@
+from typing import Any, Optional
 import time
-from typing import Any
 
 from fastapi import APIRouter, Depends
 from starlette.requests import Request
@@ -18,20 +18,25 @@ router = APIRouter()
 @router.get('/login', response_class=HTMLResponse)
 async def login(
     request: Request,
-    current_user: UserPayload = Depends(deps.get_current_user)
+    current_user: Optional[UserPayload] = Depends(deps.get_current_user)
 ) -> Any:
+    if not current_user:
+        return templates.TemplateResponse(
+            'login/login.jinja2', {'request': request})
+
     if current_user.exp > time.time():
         return RedirectResponse(request.url_for('index'))
-    return templates.TemplateResponse('login/login.jinja2', {'request': request})
 
 
 @router.post('/login', response_class=HTMLResponse)
 async def login_action(
     request: Request,
-    current_user: UserPayload = Depends(deps.get_current_user)
+    current_user: Optional[UserPayload] = Depends(deps.get_current_user)
 ) -> Any:
-    if current_user.exp > time.time():
-        return RedirectResponse(request.url_for('index'))
+    if current_user:
+        if current_user.exp > time.time():
+            return RedirectResponse(request.url_for('index'))
+
     form = await request.form()
     if not (username := form.get('username', None)):
         return templates.TemplateResponse(

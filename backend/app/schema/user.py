@@ -16,12 +16,10 @@ class UserJWT(UserBase):
     id: str
     iss: str
     email: EmailStr
-    exp: Optional[int] = 1000000000
+    exp: Optional[str]
 
 class UserCreate(UserBase):
     name: str
     email: EmailStr
     password: str
 
-class UserDrop(UserBase):
-    name: str

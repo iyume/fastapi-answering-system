@@ -1,4 +1,3 @@
-from typing import Optional
 from datetime import datetime, timedelta
 
 from jose import jwt
@@ -7,7 +6,7 @@ from app.config import config
 from app.schema.user import UserJWT
 
 
-ALG = 'HS256'    
+ALG = 'HS256'
 
 def create_access_token(
     user: UserJWT,

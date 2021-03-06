@@ -1,30 +1,34 @@
 import os
-from typing import Any, Optional
+from typing import Any
+
 import httpx
 
 from fastapi import HTTPException
 
 from app import schema
-from app.config import logger
 
 
 host_url = 'http://127.0.0.1:8000'
+timeout = 8
 
 
 def error_handlers(status_code: int) -> None:
     if status_code == 403:
         raise HTTPException(
-            status_code=403, detail='403 Forbidden')
+            status_code=403, detail='Forbidden')
     if status_code == 400:
         raise HTTPException(
-            status_code=400, detail='Bad request caused by inner api request')
+            status_code=400, detail='Bad request')
+    if status_code == 422:
+        raise HTTPException(
+            status_code=422, detail='Validation error')
     if status_code != 200:
         raise HTTPException(status_code=status_code)
 
 
 async def get(uri: str, **params: Any) -> Any:
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.get(uri, params=params)
     except:
         raise HTTPException(
@@ -34,7 +38,7 @@ async def get(uri: str, **params: Any) -> Any:
 
 async def post_with_params(uri: str, **params: Any) -> Any:
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.post(uri, params=params)
     except:
         raise HTTPException(
@@ -44,7 +48,7 @@ async def post_with_params(uri: str, **params: Any) -> Any:
 
 async def post_with_json(uri: str, **params: Any) -> Any:
     try:
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.post(uri, json=params)
     except:
         raise HTTPException(
@@ -87,31 +91,34 @@ class AUTH():
         self.auth_uri = os.path.join(host_url, endpoint)
         self.auth_access_token_uri = os.path.join(self.auth_uri, 'access-token')
         self.auth_retrieve_payload_uri = os.path.join(self.auth_uri, 'retrieve-payload')
+        self.auth_retrieve_detail_uri = os.path.join(self.auth_uri, 'retrieve-detail')
         self.auth_register_uri = os.path.join(self.auth_uri, 'register')
 
-    async def authenticate(self, name: str, password: str) -> schema.JWT:
+    async def access_token(self, name: str, password: str) -> schema.JWT:
         content = await post_with_json(
             self.auth_access_token_uri,
             name = name,
             password = password
         )
-
         if isinstance(content, str):
             raise HTTPException(status_code=403, detail='Validate user error')
-        token = content.get('access-token', None)
+        token = content.get('access_token', None)
         if not token:
             raise HTTPException(status_code=403, detail='')
         tokenmodel = schema.JWT(access_token=token)
         return tokenmodel
 
     async def retrieve_payload(self, jwt: str) -> dict:
-        content = await post_with_json(
+        return await post_with_params(
             self.auth_retrieve_payload_uri,
             jwt = jwt
         )
-        if isinstance(content, str):
-            raise HTTPException(status_code=500, detail=content)
-        return content
+
+    async def retrieve_detail(self, jwt: str) -> dict:
+        return await post_with_params(
+            self.auth_retrieve_detail_uri,
+            jwt = jwt
+        )
 
     async def register(self, name: str, email: str, password: str) -> schema.JWT:
         content = await post_with_json(
@@ -120,10 +127,9 @@ class AUTH():
             email = email,
             password = password
         )
-
         if isinstance(content, str):
             raise HTTPException(status_code=400, detail=content)
-        token = await self.authenticate(name, password)
+        token = await self.access_token(name, password)
         return token
 
 
