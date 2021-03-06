@@ -1,6 +1,7 @@
 from typing import Optional, Any
 
 from fastapi import APIRouter, Depends
+from fastapi.exceptions import HTTPException
 from sqlalchemy.orm.session import Session
 
 from app import crud
@@ -10,10 +11,10 @@ router = APIRouter(prefix='/answer')
 
 @router.get('/')
 async def get_answer(
-    db: Session = Depends(deps.get_db),
-    id: Optional[str] = None
+    id: str,
+    db: Session = Depends(deps.get_db)
 ) -> Any:
-    if not id:
-        return None
     answer = crud.item.get_by_id(db, id=id)
+    if not answer:
+        raise HTTPException(status_code=400, detail='bad id')
     return answer

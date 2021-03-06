@@ -1,6 +1,7 @@
 from typing import Optional
 
-from sqlalchemy import Column, String, Boolean
+from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy.sql.functions import now
 
 from app import crud
 from app.auth import deps, func
@@ -10,13 +11,33 @@ from app.db.base_class import Base
 class UserDB(Base):
     __tablename__ = 'user'
 
-    id = Column('id', String, primary_key=True)
-    name = Column('name', String)
-    email = Column('email', String)
-    wechat = Column('wechat', String)
-    hashed_password = Column('hashed_password', String)
-    is_active = Column('is_active', Boolean)
-    is_superuser = Column('is_superuser', Boolean)
+    id = Column('id', String(60), primary_key=True)
+    name = Column('name', String(16))
+    email = Column('email', String(254), unique=True)
+    wechat = Column('wechat', String(16))
+    hashed_password = Column('hashed_password', String(60), nullable=False)
+    is_active = Column('is_active', Boolean, default=True)
+    is_superuser = Column('is_superuser', Boolean, default=False)
+    created_time = Column('created_time', DateTime, default=now())
+    first_login = Column('first_login', DateTime)
+
+    ## this function has automatical implement in Base
+    # def __init__(
+    #     self,
+    #     id: str = None,
+    #     name: str = None,
+    #     email: str = None,
+    #     wechat: str = None,
+    #     is_superuser: bool = False
+    # ) -> None:
+    #     self.id = id
+    #     self.name = name
+    #     self.email = email
+    #     self.wechat = wechat
+    #     self.is_superuser = is_superuser        
+
+    def validate_password(self, password: str) -> bool:
+        return func.verify_password(password, self.hashed_password)
 
 
 class User():
@@ -28,6 +49,8 @@ class User():
 
     def validate_password(self, plain_password: str) -> bool:
         if not self.current_user:
+            return False
+        if not self.hashed_password:
             return False
         return func.verify_password(plain_password, self.hashed_password)
 

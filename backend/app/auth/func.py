@@ -13,18 +13,19 @@ from app.security.jwt import ALG
 pwd_cryptor = CryptContext(schemes=['bcrypt'], deprecated='auto')
 
 
-def verify_password(plain_pwd: str, hashed_pwd: Optional[str]) -> bool:
+def verify_password(plain_pwd: str, hashed_pwd: str) -> bool:
     return pwd_cryptor.verify(plain_pwd, hashed_pwd)
 
 def encrypt_password(pwd: str) -> str:
     return pwd_cryptor.encrypt(pwd)
 
-def validate(name: str, plain_pwd: str) -> bool:
+def validate(name: str, password: str) -> bool:
     db: Session = next(get_db())
-    hashed_pwd = crud.user.get_by_name(db, name)
+    user = crud.user.get_by_name(db, name)
     db.close()
-    is_valid = verify_password(plain_pwd, hashed_pwd)
-    return is_valid
+    if not user:
+        return False
+    return verify_password(password, user.hashed_password)
 
 def jwt_decode(token: str) -> dict:
     try:
