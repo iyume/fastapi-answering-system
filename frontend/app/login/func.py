@@ -1,5 +1,6 @@
 from typing import Any
 from functools import wraps
+from inspect import iscoroutinefunction
 
 from fastapi.responses import RedirectResponse, PlainTextResponse
 
@@ -13,7 +14,10 @@ def login_required(func: Any) -> Any:
             return await func(**kwds)
         if not getattr(kwds['current_user'], 'is_authenticated', None):
             return RedirectResponse(kwds['request'].url_for('login'))
-        return await func(**kwds)
+        if iscoroutinefunction(func):
+            return await func(**kwds)
+        else:
+            return func(**kwds)
     return wrapper
 
 
@@ -21,9 +25,12 @@ def secret_required(func: Any) -> Any:
     @wraps(func)
     async def wrapper(**kwds: Any) -> Any:
         if 'secret' not in kwds:
-            return PlainTextResponse('Secret required', status_code=403)
+            return PlainTextResponse('Secret required', status_code=400)
         if kwds['secret'].secret != super_secret:
-            logger.warning(f'[Info] Secret is {super_secret}\n')
+            logger.warning(f'Secret is {super_secret}')
             return PlainTextResponse('Secret wrong', status_code=403)
-        return await func(**kwds)
+        if iscoroutinefunction(func):
+            return await func(**kwds)
+        else:
+            return func(**kwds)
     return wrapper

@@ -1,1 +1,1 @@
-from .func import login_required
+from .func import login_required, secret_required

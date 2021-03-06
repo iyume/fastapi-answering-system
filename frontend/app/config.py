@@ -15,7 +15,7 @@ else:
 
 super_secret = secrets.token_urlsafe(32)
 
-logger = logging.getLogger('fastapi')
+logger = logging.getLogger('uvicorn')
 
 
 templates = Jinja2Templates(directory='app/templates')
