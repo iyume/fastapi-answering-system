@@ -1,13 +1,11 @@
 from typing import Optional
 
 from sqlalchemy import Column, String, Boolean
-from sqlalchemy.ext.declarative import declarative_base
 
 from app import crud
 from app.auth import deps, func
+from app.db.base_class import Base
 
-
-Base = declarative_base()
 
 class UserDB(Base):
     __tablename__ = 'user'

@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -12,7 +12,7 @@ router = APIRouter(prefix='/question')
 async def get_question(
     db: Session = Depends(deps.get_db),
     subject: Optional[str] = None
-):
+) -> Any:
     if subject:
         question = crud.item.get_by_random(db, subject=subject)
     else:

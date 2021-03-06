@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
@@ -12,7 +12,7 @@ router = APIRouter(prefix='/answer')
 async def get_answer(
     db: Session = Depends(deps.get_db),
     id: Optional[str] = None
-):
+) -> Any:
     if not id:
         return None
     answer = crud.item.get_by_id(db, id=id)

@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+from app.db.base_class import Base
+
 
 class Item(Base):
     __tablename__ = 'questions'
