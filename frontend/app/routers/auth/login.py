@@ -10,6 +10,7 @@ from app.api import authfunc
 from app import schema
 from app.routers import deps
 from app.models.user import UserPayload
+from app.security import login_required
 
 
 router = APIRouter()
@@ -18,14 +19,12 @@ router = APIRouter()
 @router.get('/login', response_class=HTMLResponse)
 async def login(
     request: Request,
-    message: str = None,
     current_user: Optional[UserPayload] = Depends(deps.get_current_user)
 ) -> Any:
     if not current_user:
         return templates.TemplateResponse(
             'login/login.jinja2', {
-                'request': request,
-                'message': message
+                'request': request
             }
         )
     if current_user.exp > time.time():
@@ -56,8 +55,11 @@ async def login_action(
     content = await authfunc.access_token(username, password)
 
     if isinstance(content, str):
-        return RedirectResponse(
-            request.url_for('login', message=content)
+        return templates.TemplateResponse(
+            'login/login.jinja2', {
+                'request': request,
+                'message': content
+            }
         )
 
     rr = RedirectResponse(request.url_for('tiku_area_index'), status_code=303)
@@ -65,5 +67,18 @@ async def login_action(
         key='jwt',
         value=content.access_token,
         httponly=True,
-        samesite='strict')
+        samesite='strict',
+        expires=content.exp
+    )
+    return rr
+
+
+@router.get('/logout')
+@login_required
+async def logout(
+    request: Request,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    rr = RedirectResponse(request.url_for('index'))
+    rr.set_cookie('jwt', value='deleted', expires=0)
     return rr

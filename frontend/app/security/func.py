@@ -11,7 +11,7 @@ def login_required(func: Any) -> Any:
     @wraps(func)
     async def wrapper(**kwds: Any) -> Any:
         if 'current_user' not in kwds:
-            return await func(**kwds)
+            return RedirectResponse(kwds['request'].url_for('login'))
         if not getattr(kwds['current_user'], 'is_authenticated', None):
             return RedirectResponse(kwds['request'].url_for('login'))
         if iscoroutinefunction(func):

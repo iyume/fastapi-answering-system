@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Default{% endblock %}</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
     <link rel="shortcut icon" href="/static/favicon.ico">
 </head>
 
@@ -36,11 +36,15 @@
                     {% endblock %}
                 </div>
                 {% if current_user %}
-                <a href="{{ url_for('homepage', username=current_user.name) }}">
+                <div class="flex pr-8 text-base">
+                    <p class="inline-block pr-8">你好！{{ current_user.name }}</p>
+                    <a href="{{ url_for('homepage', username=current_user.name) }}">用户中心</a>
+                </div>
+                {# <a href="{{ url_for('homepage', username=current_user.name) }}">
                     <img class="h-12 w-12 rounded-full" src="https://cdn.jsdelivr.net/gh/iyume/static/hexo-blog/img/avatar.png" alt="">
-                </a>
+                </a> #}
                 {% else %}
-                <div>
+                <div class="space-x-8">
                     <a href="{{ url_for('login') }}" class="inline-block">登录</a>
                     <a href="{{ url_for('register') }}" class="inline-block">注册</a>
                 </div>

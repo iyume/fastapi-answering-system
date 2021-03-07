@@ -9,7 +9,7 @@
 {% endblock %}
 
 {% block content %}
-        <!-- left -->
+        {# <!-- left -->
         <div class="container float-left">
         </div>
         <!-- right -->
@@ -41,6 +41,42 @@
                 {% if message %}
                 <p>{{ message }}</p>
                 {% endif %}
+            </div>
+        </div> #}
+        <div class="container mx-auto w-full">
+            <div class="mx-auto mt-48 w-5/12 rounded-lg bg-white p-4">
+                <div class="px-12 py-8">
+                    <div class="pb-4 text-xl">
+                        <p>密码登录</p>
+                    </div>
+                    <div>
+                        <form method="post" action="/login">
+                            <label class="block">
+                                <input
+                                    type="text"
+                                    name="username"
+                                    class="form-input mt-1 block w-full border border-gray-300"
+                                    placeholder="昵称 / 邮箱"
+                                />
+                            </label>
+                            <label class="block">
+                                <input
+                                    type="password"
+                                    name="password"
+                                    class="form-input mt-1 block w-full border border-gray-300"
+                                    placeholder="请输入密码"
+                                />
+                            </label>
+                            {% if message %}
+                            <p class="text-red-500 my-2">{{ message }}</p>
+                            {% endif %}
+                            <button
+                                type="submit"
+                                class="block mx-auto mt-4 px-10 py-3 bg-main"
+                            >登录</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
 {% endblock %}

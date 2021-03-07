@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Any
 
 
 class UserPayload():
@@ -20,5 +20,12 @@ class UserPayload():
 
 
 class UserDetail():
-    ...
+    def __init__(self, **kwds: Any) -> None:
+        for k in kwds:
+            setattr(self, k, kwds[k])
 
+    @property
+    def is_authenticated(self) -> bool:
+        if is_active := getattr(self, 'is_active', False):
+            return is_active
+        return False

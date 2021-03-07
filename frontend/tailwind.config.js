@@ -29,6 +29,7 @@ module.exports = {
       yellow: colors.amber,
       indigo: colors.indigo,
       blue: colors.blue,
+      red: colors.red,
     },
     extend: {
       width: {
@@ -39,6 +40,7 @@ module.exports = {
       colors: {
         'green': colors.emerald[500],
         'main': 'orange',
+        'ali': '#ff6a00',
         'darkless': '#f8f8f8',
         'darker': '#e9ebec',
         'darkest': '#000000',

@@ -21,6 +21,8 @@ async def register_action(
     user_in: schema.UserRegister,
     secret: schema.Secret
 ) -> Any:
-    jwt: schema.JWT = await authfunc.register(user_in.name, user_in.email, user_in.password)
-    payload = await authfunc.retrieve_payload(jwt.access_token)
+    content = await authfunc.register(user_in.name, user_in.email, user_in.password)
+    if isinstance(content, str):
+        return content
+    payload = await authfunc.retrieve_payload(content.access_token)
     return payload

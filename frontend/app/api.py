@@ -102,10 +102,7 @@ class AUTH():
         )
         if isinstance(content, str):
             return content
-        token = content.get('access_token', None)
-        if not token:
-            raise HTTPException(status_code=403, detail='')
-        tokenmodel = schema.JWT(access_token=token)
+        tokenmodel = schema.JWT(**content)
         return tokenmodel
 
     async def retrieve_payload(self, jwt: str) -> dict:
@@ -114,13 +111,13 @@ class AUTH():
             jwt = jwt
         )
 
-    async def retrieve_detail(self, jwt: str) -> dict:
+    async def retrieve_detail(self, jwt: str) -> schema.UserDetail:
         return await post_with_params(
             self.auth_retrieve_detail_uri,
             jwt = jwt
         )
 
-    async def register(self, name: str, email: str, password: str) -> schema.JWT:
+    async def register(self, name: str, email: str, password: str) -> Union[schema.JWT, str]:
         content = await post_with_json(
             self.auth_register_uri,
             name = name,
@@ -128,7 +125,7 @@ class AUTH():
             password = password
         )
         if isinstance(content, str):
-            raise HTTPException(status_code=400, detail=content)
+            return content
         token = await self.access_token(name, password)
         return token
 

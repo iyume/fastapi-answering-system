@@ -27,15 +27,11 @@
             </div>
             <!-- right content -->
             <div class="container flex flex-col space-y-8 w-4/5">
-                <div class="flex bg-white rounded-lg">
-                    <a href="/login" class="m-12 text-blue-400">查看登录页面</a>
-                    <a href="/user" class="m-12 text-blue-400">查看个人中心</a>
-                </div>
                 <div class="flex bg-white rounded-lg px-2">
                     <div class="flex w-full">
                         {% block subject_render %}
                         {% for i in subjects.items %}
-                        <a href="{{ url_for('tiku_area', subject=i['alias']) }}" class="inline-block px-6 py-4 w-28 {% block block_active %}hover:bg-gray-200{% endblock %}">
+                        <a href="{{ url_for('tiku_area', subject=i['alias']) }}" class="inline-block px-6 py-4 w-28 hover:bg-gray-200">
                             <svg class="block w-12 h-12 m-auto mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M11 9V5H9v4H5v2h4v4h2v-4h4V9h-4zm-1 11a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
                             <p>{{ i['name_zh'] }}</p>
                         </a>

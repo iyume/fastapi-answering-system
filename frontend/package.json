@@ -4,7 +4,7 @@
   "description": "blablabla",
   "main": "postcss.config.js",
   "scripts": {
-    "build": "postcss app/static/tailwind.css -o app/static/style.css"
+    "build": "postcss app/static/tailwind.css -o app/static/css/style.css"
   },
   "author": "iyume",
   "license": "GPL-3.0",
