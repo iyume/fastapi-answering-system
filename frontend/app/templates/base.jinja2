@@ -37,8 +37,13 @@
                 </div>
                 {% if current_user %}
                 <div class="flex pr-8 text-base">
+                    {% if current_user.is_superuser %}
+                    <p class="inline-block pr-8">你好！管理员 {{ current_user.name }}</p>
+                    <a href="{{ url_for('homepage', username=current_user.name) }}">管理中心</a>
+                    {% else %}
                     <p class="inline-block pr-8">你好！{{ current_user.name }}</p>
                     <a href="{{ url_for('homepage', username=current_user.name) }}">用户中心</a>
+                    {% endif %}
                 </div>
                 {# <a href="{{ url_for('homepage', username=current_user.name) }}">
                     <img class="h-12 w-12 rounded-full" src="https://cdn.jsdelivr.net/gh/iyume/static/hexo-blog/img/avatar.png" alt="">
