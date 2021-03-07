@@ -11,7 +11,7 @@ def get_subjects() -> Subjects:
     return subjects
 
 async def get_current_user(jwt: str = Cookie(None)) -> Optional[UserPayload]:
-    if not jwt:
+    if not jwt or len(jwt) < 50:
         return None
     user_dict = await authfunc.retrieve_payload(jwt)
     user_dict['exp'] = float(user_dict['exp'])
@@ -20,7 +20,7 @@ async def get_current_user(jwt: str = Cookie(None)) -> Optional[UserPayload]:
     return UserPayload(user_dict)
 
 async def get_current_user_detail(jwt: str = Cookie(None)) -> Any:
-    if not jwt:
+    if not jwt or len(jwt) < 50:
         return None
     user_dict = await authfunc.retrieve_detail(jwt)
     user_dict = dict(user_dict)
