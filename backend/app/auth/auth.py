@@ -6,12 +6,13 @@ from sqlalchemy.orm.session import Session
 from app import schema, crud
 from app.auth import deps, func
 from app.security import jwt
+from app.config import config
 
 
 router = APIRouter(prefix='/auth', tags=['auth'])
 
 
-@router.post('/access-token', response_model=schema.JWT)
+@router.post('/access-token')
 async def access_token(
     user_in: schema.UserAuth,
     db: Session = Depends(deps.get_db)
@@ -21,9 +22,13 @@ async def access_token(
     """
     user = crud.user.get_by_name(db, user_in.name)
     if not user:
-        return '用户名或密码错误'
+        user = crud.user.get_by_email(db, user_in.name)
+    if not user or not func.verify_password(user_in.password, user.hashed_password):
+        return '用户名 / 邮箱 / 密码错误'
     if not user.is_active:
         return '用户已被禁用'
+    if not user.first_login:
+        crud.user.update_first_login(db, user.id)
     token = jwt.create_access_token(
         schema.UserJWT(
             id = user.id,
@@ -34,7 +39,10 @@ async def access_token(
             exp = None
         )
     )
-    return {"access_token": token}
+    return {
+        "access_token": token,
+        "exp": config.ACCESS_TOKEN_EXP_HOURS * 60 * 60
+    }
 
 
 @router.post('/retrieve-payload')
@@ -80,8 +88,8 @@ async def register(
     """
     register, string should be shown to client
     """
-    if crud.user.get_by_email(db, user_in.email) or crud.user.get_by_name(db, user_in.name):
-        return '昵称或邮箱已存在'
+    if crud.user.get_by_email(db, user_in.email):
+        return '邮箱已存在'
     user = crud.user.create(db, user_in, is_superuser=False)
     token = jwt.create_access_token(
         schema.UserJWT(
@@ -98,9 +106,9 @@ async def register(
 
 @router.post('/drop-user')
 async def drop_user(
-    name: str,
+    id: str,
     db: Session = Depends(deps.get_db)
 ) -> Any:
-    if crud.user.get_by_name(db, name):
-        return crud.user.drop(db, name)
+    if crud.user.get_by_name(db, id):
+        return crud.user.drop(db, id)
     return 'no such user'

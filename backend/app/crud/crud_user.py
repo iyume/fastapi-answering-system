@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from typing import Optional, List
 
 from sqlalchemy.orm import Session
@@ -58,12 +59,24 @@ class CRUDUser():
         result = self.get_by_email(db, db_obj.email)
         return result
 
+    def update_first_login(
+        self,
+        db: Session,
+        id: str
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.id == id)
+        .update({self.model.first_login: datetime.now()})
+        )
+        db.commit()
+
     def drop(
         self,
         db: Session,
-        name: str
+        id: str
     ) -> str:
-        user = db.query(self.model).filter(self.model.name == name).one()
+        user = db.query(self.model).filter(self.model.id == id).one()
         db.delete(user)
         db.commit()
         return 'success'

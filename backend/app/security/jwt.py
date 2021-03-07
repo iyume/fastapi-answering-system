@@ -12,9 +12,14 @@ def create_access_token(
     user: UserJWT,
     exp_hours: int = None
 ) -> str:
-    exp = (datetime.now() + timedelta(
-        hours = exp_hours or config.ACCESS_TOKEN_EXP_HOURS
-    )).timestamp()
+    if user.exp:
+        exp = (datetime.fromtimestamp(user.exp) + timedelta(
+            hours = exp_hours or config.ACCESS_TOKEN_EXP_HOURS
+        )).timestamp()
+    else:
+        exp = (datetime.now() + timedelta(
+            hours = exp_hours or config.ACCESS_TOKEN_EXP_HOURS
+        )).timestamp()
     payload = {
         'id': user.id,
         'iss': user.iss,

@@ -16,7 +16,7 @@ class UserJWT(UserBase):
     id: str
     iss: str
     email: EmailStr
-    exp: Optional[str]
+    exp: Optional[float]
 
 class UserCreate(UserBase):
     name: str
