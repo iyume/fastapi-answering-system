@@ -56,7 +56,7 @@ class CRUDUser():
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)
-        result = self.get_by_email(db, db_obj.email)
+        result = self.get_by_id(db, db_obj.id)
         return result
 
     def update_first_login(

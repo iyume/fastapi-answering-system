@@ -88,7 +88,7 @@ async def register(
     """
     register, string should be shown to client
     """
-    if crud.user.get_by_email(db, user_in.email):
+    if user_in.email and crud.user.get_by_email(db, user_in.email):
         return '邮箱已存在'
     user_in.hashed_password = authfunc.encrypt_password(user_in.password)
     user = crud.user.create(db, user_in, is_superuser=False)

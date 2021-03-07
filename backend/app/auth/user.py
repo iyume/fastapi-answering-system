@@ -20,7 +20,7 @@ async def list_users(
 
 
 @router.post('')
-async def user_id(
+async def query_user_by_id(
     id: str,
     db: Session = Depends(deps.get_db)
 ) -> Any:

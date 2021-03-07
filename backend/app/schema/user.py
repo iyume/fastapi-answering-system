@@ -25,7 +25,7 @@ class UserJWT(UserBase):
 
 class UserCreate(UserBase):
     name: str
-    email: EmailStr
+    email: Optional[EmailStr] = None
     password: str
     hashed_password: Optional[str] = None
 
