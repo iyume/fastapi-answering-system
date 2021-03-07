@@ -8,6 +8,11 @@ class UserAuth(BaseModel):
     password: str
 
 
+class UserChangePassword(BaseModel):
+    id: str
+    password_new: str
+
+
 class UserBase(BaseModel):
     is_active: bool = True
     is_superuser: bool = False
@@ -22,4 +27,5 @@ class UserCreate(UserBase):
     name: str
     email: EmailStr
     password: str
+    hashed_password: Optional[str] = None
 

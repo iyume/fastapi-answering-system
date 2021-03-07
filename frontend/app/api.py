@@ -130,5 +130,19 @@ class AUTH():
         return token
 
 
+class USER():
+    def __init__(self, endpoint: str) -> None:
+        self.user_uri = os.path.join(host_url, endpoint)
+        self.user_change_password_uri = os.path.join(self.user_uri, 'change-password')
+
+    async def change_password(self, id: str, password: str) -> None:
+        await post_with_json(
+            self.user_change_password_uri,
+            id = id,
+            password_new = password
+        )
+
+
 apifunc = API(version='v1')
 authfunc = AUTH(endpoint='auth')
+userfunc = USER(endpoint='user')

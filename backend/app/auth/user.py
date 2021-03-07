@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
 from app import crud
-from app.auth import deps
+from app.auth import deps, authfunc
+from app import schema
 
 
 router = APIRouter(prefix='/user')
@@ -17,10 +18,21 @@ async def list_users(
     result = crud.user.get_all(db)
     return result
 
-@router.post('/user/{id}')
+
+@router.post('')
 async def user_id(
     id: str,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     user = crud.user.get_by_id(db, id)
     return user
+
+
+@router.post('/change-password')
+async def change_password(
+    password_in: schema.UserChangePassword,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    hashed_password = authfunc.encrypt_password(password_in.password_new)
+    crud.user.update_password(db, password_in.id, hashed_password)
+    return 'success'

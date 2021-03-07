@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from app.models.user import UserDB
 from app.schema.user import UserCreate
-from app.auth.func import encrypt_password
+from app.auth.authfunc import encrypt_password
 
 
 class CRUDUser():
@@ -49,7 +49,7 @@ class CRUDUser():
             id = str(uuid.uuid4()),
             name = obj_in.name,
             email = obj_in.email,
-            hashed_password = encrypt_password(obj_in.password),
+            hashed_password = obj_in.hashed_password,
             is_active = True,
             is_superuser = is_superuser
         )
@@ -68,6 +68,19 @@ class CRUDUser():
         .query(self.model)
         .filter(self.model.id == id)
         .update({self.model.first_login: datetime.now()})
+        )
+        db.commit()
+
+    def update_password(
+        self,
+        db: Session,
+        id: str,
+        hashed_password: str
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.id == id)
+        .update({self.model.hashed_password: hashed_password})
         )
         db.commit()
 

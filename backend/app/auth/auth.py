@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
 from app import schema, crud
-from app.auth import deps, func
+from app.auth import deps, authfunc
 from app.security import jwt
 from app.config import config
 
@@ -23,7 +23,7 @@ async def access_token(
     user = crud.user.get_by_name(db, user_in.name)
     if not user:
         user = crud.user.get_by_email(db, user_in.name)
-    if not user or not func.verify_password(user_in.password, user.hashed_password):
+    if not user or not authfunc.verify_password(user_in.password, user.hashed_password):
         return '用户名 / 邮箱 / 密码错误'
     if not user.is_active:
         return '用户已被禁用'
@@ -50,7 +50,7 @@ async def retrive_payload(jwt: str) -> Any:
     """
     post jwt and response jwt_decoded (also for validate)
     """
-    payload = schema.UserJWT(**func.jwt_decode(jwt))
+    payload = schema.UserJWT(**authfunc.jwt_decode(jwt))
     return payload
 
 
@@ -62,7 +62,7 @@ async def retrieve_detail(
     """
     post jwt and response user detail
     """
-    payload = schema.UserJWT(**func.jwt_decode(jwt))
+    payload = schema.UserJWT(**authfunc.jwt_decode(jwt))
     user = crud.user.get_by_id(db, payload.id)
     return user
 
@@ -90,6 +90,7 @@ async def register(
     """
     if crud.user.get_by_email(db, user_in.email):
         return '邮箱已存在'
+    user_in.hashed_password = authfunc.encrypt_password(user_in.password)
     user = crud.user.create(db, user_in, is_superuser=False)
     token = jwt.create_access_token(
         schema.UserJWT(

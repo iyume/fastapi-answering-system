@@ -34,6 +34,10 @@
                 <hr class="w-3/4">
                 <div class="items-center grid grid-cols-1">
                     <span class="ml-8 text-gray-400">账户操作</span>
+                    <a class="flex px-4 items-center h-12 w-full hover:bg-gray-200" href="{{ url_for('change_password', username=current_user.name) }}">
+                        <svg class="inline-block w-6 h-6 ml-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M8 20H3V10H0L10 0l10 10h-3v10h-5v-6H8v6z"/></svg>
+                        <span class="pl-3">修改密码</span>
+                    </a>
                     <a class="flex px-4 items-center h-12 w-full hover:bg-gray-200" href="{{ url_for('logout') }}">
                         <svg class="inline-block w-6 h-6 ml-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M8 20H3V10H0L10 0l10 10h-3v10h-5v-6H8v6z"/></svg>
                         <span class="pl-3">登出</span>
@@ -43,6 +47,7 @@
             <!-- right main -->
             <div class="container w-4/5">
                 <div class="flex bg-white rounded-lg">
+                    {% block user_main %}
                     <div class="m-12 space-y-3">
                         <p class="text-3xl">个人资料</p>
                         <p>用户名：{{ current_user.name }}</p>
@@ -53,6 +58,7 @@
                         <p class="font-thin text-xs">账号状态：{{ current_user.is_active }}</p>
                         <!-- <p class="font-thin text-xs">登录凭据过期日期：{{ current_user.exp }}</p> -->
                     </div>
+                    {% endblock %}
                 </div>
             </div>
         </div>

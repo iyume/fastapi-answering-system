@@ -4,7 +4,7 @@ from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.sql.functions import now
 
 from app import crud
-from app.auth import deps, func
+from app.auth import deps, authfunc
 from app.db.base_class import Base
 
 
@@ -37,7 +37,7 @@ class UserDB(Base):
     #     self.is_superuser = is_superuser        
 
     def validate_password(self, password: str) -> bool:
-        return func.verify_password(password, self.hashed_password)
+        return authfunc.verify_password(password, self.hashed_password)
 
 
 class User():
@@ -52,7 +52,7 @@ class User():
             return False
         if not self.hashed_password:
             return False
-        return func.verify_password(plain_password, self.hashed_password)
+        return authfunc.verify_password(plain_password, self.hashed_password)
 
     @property
     def id(self) -> Optional[str]:

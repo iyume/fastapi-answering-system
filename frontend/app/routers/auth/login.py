@@ -41,6 +41,8 @@ async def login_action(
             return RedirectResponse(request.url_for('index'))
 
     form = await request.form()
+    if 'username' not in form and 'password' not in form:
+        return templates.TemplateResponse('login/login.jinja2', {'request': request})
     if not (username := form.get('username', None)):
         return templates.TemplateResponse(
             'login/login.jinja2', {
