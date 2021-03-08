@@ -13,8 +13,8 @@ from app.models import Subjects, UserPayload
 router = APIRouter(prefix='/area')
 
 
-@router.get('', response_class=HTMLResponse)
 @router.get('/', response_class=HTMLResponse)
+@router.post('/', response_class=HTMLResponse)
 async def tiku_area_index(
     request: Request,
     subjects: Subjects = Depends(deps.get_subjects),
@@ -32,7 +32,9 @@ async def tiku_area_index(
         }
     )
 
+
 @router.get('/{subject}', response_class=HTMLResponse)
+@router.post('/{subject}', response_class=HTMLResponse)
 async def tiku_area(
     request: Request,
     subject: str,

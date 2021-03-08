@@ -4,7 +4,7 @@ const plugin = require('tailwindcss/plugin')
 
 module.exports = {
   purge: {
-    enabled: true, // set to false if you are in developing
+    enabled: false, // set to false if you are in developing
     preserveHtmlElements: true,
     content: [
       './app/templates/**',

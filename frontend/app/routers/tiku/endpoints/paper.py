@@ -41,8 +41,7 @@ async def tiku_paper(
                 'request': request,
                 'current_user': current_user,
                 'question': question,
-                'subjects': subjects,
-                'picked': picked
+                'subjects': subjects
             }
         )
 
@@ -63,3 +62,19 @@ async def tiku_paper(
         )
     else:
         raise HTTPException(status_code=400, detail='Bad request')
+
+
+@router.post('/{subject}', response_class=HTMLResponse)
+async def tiku_paper_action(
+    request: Request,
+    subject: str,
+    subjects: Subjects = Depends(deps.get_subjects),
+    current_user: UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    """
+    Render answer page, `subject` for a return link
+    """
+    form = await request.form()
+    if 'id' not in form and 'picked' not in form:
+        raise HTTPException(status_code=400, detail='Bad request')
+    return form

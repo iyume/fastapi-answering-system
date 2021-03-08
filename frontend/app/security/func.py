@@ -34,3 +34,13 @@ def secret_required(func: Any) -> Any:
         else:
             return func(**kwds)
     return wrapper
+
+
+def superuser_required(func: Any) -> Any:
+    @wraps(func)
+    async def wrapper(**kwds: Any) -> Any:
+        if iscoroutinefunction(func):
+            return await func(**kwds)
+        else:
+            return func(**kwds)
+    return wrapper

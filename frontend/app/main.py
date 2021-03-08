@@ -6,7 +6,7 @@ from starlette.requests import Request
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import PlainTextResponse, RedirectResponse
 
-from .routers import tiku, auth, user
+from .routers import tiku, auth, user, exam
 from .config import static_router
 
 
@@ -16,6 +16,7 @@ app.mount('/static', static_router, name='static')
 app.include_router(tiku.router)
 app.include_router(auth.router)
 app.include_router(user.router)
+app.include_router(exam.router)
 
 
 @app.exception_handler(RequestValidationError)
@@ -31,4 +32,8 @@ async def http_exception_handler(request: Request, exc: Any) -> Any:
 
 @app.get('/')
 async def index(request: Request) -> Any:
+    return RedirectResponse(request.url_for('tiku_area_index'))
+
+@app.post('/')
+async def index_post(request: Request) -> Any:
     return RedirectResponse(request.url_for('tiku_area_index'))
