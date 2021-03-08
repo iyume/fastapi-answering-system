@@ -7,7 +7,6 @@ from sqlalchemy.orm.session import Session
 
 from app import crud, schema
 from app.auth import deps, authfunc
-from app.security import jwt
 
 
 router = APIRouter(tags=['test resource'])
