@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, TIMESTAMP
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey
 from sqlalchemy.sql.functions import now
 
 from app.db.base_class import Base
@@ -17,7 +17,8 @@ class ExamInfo(Base):
 class Exam(Base):
     __tablename__ = 'exam'
 
-    user_id = Column(String(36))
-    question_id = Column(String(36))
+    user_id = Column(String(36), ForeignKey('user.id'))
+    question_id = Column(String(36), ForeignKey('questions.id'))
     picked = Column(String(1))
-    exam_tag = Column(String(10))
+    exam_tag = Column(String(10), ForeignKey('exam.tag'))
+    fade_key = Column(String(36), primary_key=True)

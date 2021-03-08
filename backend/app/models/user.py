@@ -1,6 +1,7 @@
 from typing import Optional
 
 from sqlalchemy import Column, String, Boolean, DateTime
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.functions import now
 
 from app import crud
@@ -20,6 +21,7 @@ class UserDB(Base):
     is_superuser = Column('is_superuser', Boolean, default=False)
     created_time = Column('created_time', DateTime, default=now())
     first_login = Column('first_login', DateTime)
+    exam = relationship('Exam')
 
     ## this function has automatical implement in Base
     # def __init__(

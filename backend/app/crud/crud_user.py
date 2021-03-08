@@ -5,8 +5,7 @@ from typing import Optional, List
 from sqlalchemy.orm import Session
 
 from app.models.user import UserDB
-from app.schema.user import UserCreate
-from app.auth.authfunc import encrypt_password
+from app import schema
 
 
 class CRUDUser():
@@ -42,7 +41,7 @@ class CRUDUser():
     def create(
         self,
         db: Session,
-        obj_in: UserCreate,
+        obj_in: schema.UserCreate,
         is_superuser: Optional[bool] = False
     ) -> Optional[UserDB]:
         db_obj = self.model(

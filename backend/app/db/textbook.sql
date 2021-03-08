@@ -24,8 +24,9 @@ CREATE TABLE exam_info (
 );
 
 CREATE TABLE exam (
-    user_id CHAR(36),
-    question_id CHAR(36),
+    user_id CHAR(36) REFERENCES user(id),
+    question_id CHAR(36) REFERENCES questions(id),
     picked CHAR(1),
-    exam_tag CHAR(10)
+    exam_tag CHAR(10) REFERENCES exam(tag),
+    fade_key CHAR(36) PRIMARY KEY
 );
