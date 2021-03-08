@@ -98,6 +98,7 @@ class API():
     async def create_exam(
         self,
         title: str,
+        type: str,
         start_time: str,
         end_time: str,
         tag: Optional[str] = '',
@@ -106,6 +107,7 @@ class API():
         result = await post_with_json(
             self.exam_create_uri,
             title = title,
+            type = type,
             start_time = start_time,
             end_time = end_time,
             tag = tag,

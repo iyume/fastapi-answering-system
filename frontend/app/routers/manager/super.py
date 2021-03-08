@@ -1,5 +1,4 @@
 from typing import Any
-from datetime import datetime
 
 from fastapi import APIRouter, Depends
 from starlette.requests import Request
@@ -37,8 +36,9 @@ async def create_exam_action(
     form = await request.form()
     # start_time = datetime.fromisoformat(form['start_time'])
     # end_time = datetime.fromisoformat(form['end_time'])
-    result = await apifunc.create_exam(
+    await apifunc.create_exam(
         title = form['title'],
+        type = form['type'],
         start_time = form['start_time'],
         end_time = form['end_time'],
         detail = form['detail']
