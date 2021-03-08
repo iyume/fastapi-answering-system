@@ -64,6 +64,7 @@ async def retrieve_detail(
     """
     payload = schema.UserJWT(**authfunc.jwt_decode(jwt))
     user = crud.user.get_by_id(db, payload.id)
+    user.__setattr__('exp', payload.exp)
     return user
 
 

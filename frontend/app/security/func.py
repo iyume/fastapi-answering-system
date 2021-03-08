@@ -1,4 +1,5 @@
 from typing import Any
+import time
 from functools import wraps
 from inspect import iscoroutinefunction
 
@@ -15,6 +16,10 @@ def login_required(func: Any) -> Any:
             return RedirectResponse(kwds['request'].url_for('login'))
         if not getattr(kwds['current_user'], 'is_authenticated', None):
             return RedirectResponse(kwds['request'].url_for('login'))
+        if getattr(kwds['current_user'], 'exp') < time.time():
+            rr = RedirectResponse(kwds['request'].url_for('login'))
+            rr.set_cookie('jwt', value='delete', expires=0)
+            return rr
         if iscoroutinefunction(func):
             return await func(**kwds)
         else:
@@ -41,9 +46,9 @@ def superuser_required(func: Any) -> Any:
     @wraps(func)
     async def wrapper(**kwds: Any) -> Any:
         if 'current_user' not in kwds:
-            return HTTPException(status_code=404)
+            return HTTPException(status_code=403)
         if not getattr(kwds['current_user'], 'is_superuser', None):
-            return HTTPException(status_code=404)
+            return HTTPException(status_code=403)
         if iscoroutinefunction(func):
             return await func(**kwds)
         else:
