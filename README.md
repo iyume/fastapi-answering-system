@@ -12,4 +12,5 @@
 - [x] improve old template pattern
 - [x] complete login action and add login_required for router
 - [ ] add exam page
-- [ ] logout utility
+- [x] logout utility
+- [ ] use Redis to store user refresh token and replace `one-token` pattern
