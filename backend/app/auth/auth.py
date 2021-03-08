@@ -87,7 +87,10 @@ async def register(
 ) -> Any:
     """
     register, string should be shown to client
+    uesrname is unique, while email can be empty but also unique
     """
+    if crud.user.get_by_name(db, user_in.name):
+        return '用户名已存在'
     if user_in.email and crud.user.get_by_email(db, user_in.email):
         return '邮箱已存在'
     user_in.hashed_password = authfunc.encrypt_password(user_in.password)

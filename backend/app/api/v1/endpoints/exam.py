@@ -11,7 +11,7 @@ router = APIRouter(prefix='/exam')
 
 
 @router.post('/create')
-async def get_question(
+async def create_exam(
     examinfo: schema.ExamCreate,
     db: Session = Depends(deps.get_db)
 ) -> Any:

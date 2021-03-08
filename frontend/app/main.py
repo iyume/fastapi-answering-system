@@ -6,7 +6,7 @@ from starlette.requests import Request
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import PlainTextResponse, RedirectResponse
 
-from .routers import tiku, auth, user, exam
+from .routers import tiku, auth, user, exam, manager
 from .config import static_router
 
 
@@ -17,6 +17,7 @@ app.include_router(tiku.router)
 app.include_router(auth.router)
 app.include_router(user.router)
 app.include_router(exam.router)
+app.include_router(manager.router)
 
 
 @app.exception_handler(RequestValidationError)

@@ -3,6 +3,7 @@ from functools import wraps
 from inspect import iscoroutinefunction
 
 from fastapi.responses import RedirectResponse, PlainTextResponse
+from fastapi.exceptions import HTTPException
 
 from app.config import super_secret, logger
 
@@ -39,6 +40,10 @@ def secret_required(func: Any) -> Any:
 def superuser_required(func: Any) -> Any:
     @wraps(func)
     async def wrapper(**kwds: Any) -> Any:
+        if 'current_user' not in kwds:
+            return HTTPException(status_code=404)
+        if not getattr(kwds['current_user'], 'is_superuser', None):
+            return HTTPException(status_code=404)
         if iscoroutinefunction(func):
             return await func(**kwds)
         else:

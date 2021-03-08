@@ -1,18 +1,22 @@
 import os
-from typing import Any, Union
+from typing import Any, Union, Optional
+from datetime import datetime
 
 import httpx
+from httpx import Response
 
 from fastapi import HTTPException
 
 from app import schema
+from app.config import logger
 
 
 host_url = 'http://127.0.0.1:8000'
 timeout = 8
 
 
-def error_handlers(status_code: int) -> None:
+def error_handlers(response: Response) -> None:
+    status_code = response.status_code
     if status_code == 403:
         raise HTTPException(
             status_code=403, detail='Forbidden')
@@ -20,6 +24,7 @@ def error_handlers(status_code: int) -> None:
         raise HTTPException(
             status_code=400, detail='Bad request')
     if status_code == 422:
+        logger.error(f'Validation error: {response.json()}')
         raise HTTPException(
             status_code=422, detail='Validation error')
     if status_code != 200:
@@ -27,33 +32,36 @@ def error_handlers(status_code: int) -> None:
 
 
 async def get(uri: str, **params: Any) -> Any:
+    logger.info(f'GET {uri} {params}')
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.get(uri, params=params)
     except:
         raise HTTPException(
             status_code=500, detail='500 Server error')
-    error_handlers(response.status_code)
+    error_handlers(response)
     return response.json()
 
 async def post_with_params(uri: str, **params: Any) -> Any:
+    logger.info(f'POST params {uri} {params}')
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.post(uri, params=params)
     except:
         raise HTTPException(
             status_code=500, detail='500 Server error')
-    error_handlers(response.status_code)
+    error_handlers(response)
     return response.json()
 
 async def post_with_json(uri: str, **params: Any) -> Any:
+    logger.info(f'POST json {uri} {params}')
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:
             response = await client.post(uri, json=params)
     except:
         raise HTTPException(
             status_code=500, detail='500 Server error')
-    error_handlers(response.status_code)
+    error_handlers(response)
     return response.json()
 
 
@@ -64,6 +72,8 @@ class API():
         self.api_uri = os.path.join(host_url, 'api', version)
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
+        self.exam_uri = os.path.join(self.api_uri, 'exam')
+        self.exam_create_uri = os.path.join(self.exam_uri, 'create')
 
     async def get_question_by_subject(
         self, subject: str, random: bool = True) -> dict:
@@ -83,6 +93,24 @@ class API():
         )
         if not result:
             raise HTTPException(status_code=400, detail='incorrect question id')
+        return result
+
+    async def create_exam(
+        self,
+        title: str,
+        start_time: str,
+        end_time: str,
+        tag: Optional[str] = '',
+        detail: Optional[str] = ''
+    ) -> schema.ExamCreate:
+        result = await post_with_json(
+            self.exam_create_uri,
+            title = title,
+            start_time = start_time,
+            end_time = end_time,
+            tag = tag,
+            detail = detail
+        )
         return result
 
 

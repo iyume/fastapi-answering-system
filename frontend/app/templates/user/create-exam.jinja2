@@ -1,0 +1,27 @@
+{% extends "user/homepage.jinja2" %}
+
+{% block user_main %}
+<div class="m-12 w-full">
+    <h1 class="font-lg text-3xl pb-4">创建考试</h1>
+    <form action="{{ url_for('create_exam_action') }}" method="post" class="space-y-5">
+        <label class="block">
+            <span class="pr-4">标题：(20 字之内)</span>
+            <input type="text" name="title" class="form-input border-2 h-10 w-2/5" maxlength="20" required/>
+        </label>
+        <label class="block">
+            <span class="pr-4">详情：(200 字之内)</span>
+            <input type="text" name="detail" class="form-input border-2 h-10 w-full" maxlength="200">
+        </label>
+        <label class="block">
+            <span>开始时间：</span>
+            <input type="datetime-local" name="start_time" required/>
+        </label>
+        <label class="block">
+            <span>结束时间：</span>
+            <input type="datetime-local" name="end_time" required/>
+        </label>
+        <button type="submit" class="block mx-auto mt-4 px-10 py-3 bg-main"
+        >创建考试</button>
+    </form>
+</div>
+{% endblock user_main %}
