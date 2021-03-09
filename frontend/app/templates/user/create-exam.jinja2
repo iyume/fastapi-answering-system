@@ -14,17 +14,21 @@
         </label>
         <label class="block">
             <span class="pr-4">出题依据</span>
-            <select name="type" class="form-select inline-block w-3/12 border-2 h-10">
+            <select name="type" class="form-select inline-block w-3/12 border h-10">
                 <option value="random">随机</option>
             </select>
         </label>
         <label class="block">
             <span class="pr-4">开始时间 <span class="text-red-500 font-bold">*</span>：</span>
-            <input type="datetime-local" name="start_time" required/>
+            {# <input type="datetime-local" name=""> #}
+            <input type="date" name="start_time_date" class="pr-8" required/>
+            <input type="time" name="start_time_time" required/>
         </label>
         <label class="block">
             <span class="pr-4">结束时间 <span class="text-red-500 font-bold">*</span>：</span>
-            <input type="datetime-local" name="end_time" required/>
+            {# <input type="datetime-local" name=""> #}
+            <input type="date" name="end_time_date" class="pr-8" required/>
+            <input type="time" name="end_time_time" required/>
         </label>
         <label class="block">
             <span class="pr-4">标签 <span class="text-red-500 font-bold">*</span>：(20 字之内，用于区分考试的唯一标签)</span>

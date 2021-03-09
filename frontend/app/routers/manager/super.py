@@ -36,12 +36,14 @@ async def create_exam_action(
     form = await request.form()
     # start_time = datetime.fromisoformat(form['start_time'])
     # end_time = datetime.fromisoformat(form['end_time'])
-    result = await apifunc.create_exam(
+    start_time = form['start_time_date'] + form['start_time_time']
+    end_time = form['end_time_date'] + form['end_time_time']
+    result = await apifunc.exam_create(
         title = form['title'],
         tag = form['tag'],
         type = form['type'],
-        start_time = form['start_time'],
-        end_time = form['end_time'],
+        start_time = start_time,
+        end_time = end_time,
         detail = form['detail']
     )
     return result

@@ -74,6 +74,7 @@ class API():
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
         self.exam_uri = os.path.join(self.api_uri, 'exam')
         self.exam_create_uri = os.path.join(self.exam_uri, 'create')
+        self.exam_delete_uri = os.path.join(self.exam_uri, 'delete')
 
     async def get_question_by_subject(
         self, subject: str, random: bool = True) -> dict:
@@ -95,7 +96,7 @@ class API():
             raise HTTPException(status_code=400, detail='incorrect question id')
         return result
 
-    async def create_exam(
+    async def exam_create(
         self,
         title: str,
         type: str,
@@ -103,7 +104,7 @@ class API():
         end_time: str,
         tag: Optional[str] = '',
         detail: Optional[str] = ''
-    ) -> schema.ExamCreate:
+    ) -> Any:
         result = await post_with_json(
             self.exam_create_uri,
             title = title,
@@ -112,6 +113,16 @@ class API():
             end_time = end_time,
             tag = tag,
             detail = detail
+        )
+        return result
+
+    async def exam_delete(
+        self,
+        tag: str
+    ) -> Any:
+        result = await post_with_params(
+            self.exam_delete_uri,
+            tag = tag
         )
         return result
 
