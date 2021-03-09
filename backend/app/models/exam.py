@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, String, TIMESTAMP, ForeignKey
+from sqlalchemy import Column, String, TIMESTAMP, ForeignKey, Integer
 
 from app.db.base_class import Base
 
@@ -13,6 +13,7 @@ class ExamInfo(Base):
     detail = Column('detail', String(200))
     type = Column('type', String(10))
     subject = Column('subject', String(10))
+    question_count = Column('question_count', Integer)
     created_time = Column('created_time', TIMESTAMP, default=datetime.now())
     start_time = Column('start_time', TIMESTAMP, nullable=False)
     end_time = Column('end_time', TIMESTAMP, nullable=False)
