@@ -1,8 +1,8 @@
 from typing import Optional
+from datetime import datetime
 
 from sqlalchemy import Column, String, Boolean, DateTime
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.functions import now
 
 from app import crud
 from app.auth import deps, authfunc
@@ -19,7 +19,7 @@ class UserDB(Base):
     hashed_password = Column('hashed_password', String(60), nullable=False)
     is_active = Column('is_active', Boolean, default=True)
     is_superuser = Column('is_superuser', Boolean, default=False)
-    created_time = Column('created_time', DateTime, default=now())
+    created_time = Column('created_time', DateTime, default=datetime.now())
     first_login = Column('first_login', DateTime)
     exam = relationship('Exam')
 

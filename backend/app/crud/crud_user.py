@@ -83,15 +83,14 @@ class CRUDUser():
         )
         db.commit()
 
-    def drop(
+    def delete(
         self,
         db: Session,
         id: str
-    ) -> str:
+    ) -> None:
         user = db.query(self.model).filter(self.model.id == id).one()
         db.delete(user)
         db.commit()
-        return 'success'
 
 
 user = CRUDUser()

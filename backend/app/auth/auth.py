@@ -81,7 +81,7 @@ async def retrieve_detail(
 #     ...
 
 
-@router.post('/register', response_model=schema.JWT)
+@router.post('/register')
 async def register(
     user_in: schema.UserCreate,
     db: Session = Depends(deps.get_db)
@@ -106,14 +106,7 @@ async def register(
             exp = None
         )
     )
-    return {"access_token": token}
-
-
-@router.post('/drop-user')
-async def drop_user(
-    id: str,
-    db: Session = Depends(deps.get_db)
-) -> Any:
-    if crud.user.get_by_name(db, id):
-        return crud.user.drop(db, id)
-    return 'no such user'
+    return {
+        "access_token": token,
+        "exp": config.ACCESS_TOKEN_EXP_HOURS * 60 * 60
+    }
