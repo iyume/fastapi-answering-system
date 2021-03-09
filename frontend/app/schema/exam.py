@@ -9,5 +9,6 @@ class ExamCreate(BaseModel):
     title: str
     detail: Optional[str] = None
     type: str
+    subject: str
     start_time: datetime
     end_time: datetime

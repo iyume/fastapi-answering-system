@@ -24,6 +24,18 @@
             {% endif %}
         </label>
         <label class="block">
+            <span class="pr-4">科目</span>
+            {% if not created_exam %}
+            <select name="subject" class="form-select inline-block w-3/12 border h-10">
+                <option value="fb">基金基础</option>
+                <option value="fr">基金法规</option>
+                <option value="sr">证券法规</option>
+            </select>
+            {% else %}
+            <span>{{ subjects.get_item(created_exam['subject'])['name_zh'] }}</span>
+            {% endif %}
+        </label>
+        <label class="block">
             <span class="pr-4">出题依据</span>
             {% if not created_exam %}
             <select name="type" class="form-select inline-block w-3/12 border h-10">

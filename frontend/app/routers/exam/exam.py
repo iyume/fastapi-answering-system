@@ -7,6 +7,7 @@ from app.config import templates
 from app.security import login_required
 from app.routers import deps
 from app import schema
+from app.api import apifunc
 
 
 router = APIRouter()
@@ -18,6 +19,7 @@ async def exam_entry(
     request: Request,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
+    exams = await apifunc.exam_fetchall()
     return templates.TemplateResponse(
         'exam/entry.jinja2', {
             'request': request,

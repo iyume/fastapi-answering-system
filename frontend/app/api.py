@@ -102,7 +102,7 @@ class API():
         self
     ) -> Any:
         return await get(
-            self.exam_uri
+            self.exam_fetchall_uri
         )
 
     async def exam_get_by_tag(
@@ -118,6 +118,7 @@ class API():
         self,
         title: str,
         type: str,
+        subject: str,
         start_time: str,
         end_time: str,
         tag: Optional[str] = '',
@@ -127,6 +128,7 @@ class API():
             self.exam_create_uri,
             title = title,
             type = type,
+            subject = subject,
             start_time = start_time,
             end_time = end_time,
             tag = tag,

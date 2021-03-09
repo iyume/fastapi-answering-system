@@ -33,6 +33,7 @@ class CRUDExamInfo():
             title = obj_in.title,
             detail = obj_in.detail,
             type = obj_in.type,
+            subject = obj_in.subject,
             start_time = obj_in.start_time,
             end_time = obj_in.end_time
         )
@@ -57,8 +58,5 @@ class CRUDExamCache():
     model = Exam
 
 
-class CRUDExam(CRUDExamInfo, CRUDExamCache):
-    ...
-
-
-exam = CRUDExam()
+examinfo = CRUDExamInfo()
+examcache = CRUDExamCache()

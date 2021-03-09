@@ -14,7 +14,7 @@ router = APIRouter(prefix='/exam')
 async def list_exam(
     db: Session = Depends(deps.get_db)
 ) -> Any:
-    return crud.exam.fetchall(db)
+    return crud.examinfo.fetchall(db)
 
 
 @router.get('')
@@ -22,7 +22,7 @@ async def get_exam(
     tag: str,
     db: Session = Depends(deps.get_db)
 ) -> Any:
-    return crud.exam.get_by_tag(db, tag=tag)
+    return crud.examinfo.get_by_tag(db, tag=tag)
 
 
 @router.post('/create')
@@ -33,7 +33,7 @@ async def create_exam(
     """
     create exam
     """
-    return crud.exam.create(db, examinfo)
+    return crud.examinfo.create(db, examinfo)
 
 
 @router.post('/delete')
@@ -44,5 +44,5 @@ async def delete_exam(
     """
     delete exam by unique tag
     """
-    crud.exam.delete(db, tag=tag)
+    crud.examinfo.delete(db, tag=tag)
     return 'success'

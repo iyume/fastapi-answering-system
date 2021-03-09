@@ -7,6 +7,7 @@
 - [ ] add unitest for api
 - [ ] save user wrong answer for analysis
 - [ ] add block user api
+- [ ] add retrieve password function
 
 **frontend**
 - [x] improve old template pattern

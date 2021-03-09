@@ -12,6 +12,7 @@ class ExamInfo(Base):
     title = Column('title', String(20), nullable=False)
     detail = Column('detail', String(200))
     type = Column('type', String(10))
+    subject = Column('subject', String(10))
     created_time = Column('created_time', TIMESTAMP, default=datetime.now())
     start_time = Column('start_time', TIMESTAMP, nullable=False)
     end_time = Column('end_time', TIMESTAMP, nullable=False)

@@ -18,6 +18,8 @@ CREATE TABLE exam_info (
     tag CHAR(10) PRIMARY KEY,
     title CHAR(20) NOt NULL,
     detail CHAR(200),
+    type CHAR(10),
+    subject CHAR(10),
     created_time TIMESTAMP DEFAULT (datetime('now', 'localtime')),
     start_time TIMESTAMP NOt NULL,
     end_time TIMESTAMP NOt NULL

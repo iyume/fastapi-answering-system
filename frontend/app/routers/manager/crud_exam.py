@@ -8,6 +8,7 @@ from app.routers import deps
 from app import schema
 from app.security.func import superuser_required
 from app.api import apifunc
+from app.models import Subjects
 
 
 router = APIRouter(prefix='/exam')
@@ -31,6 +32,7 @@ async def create_exam(
 @superuser_required
 async def create_exam_action(
     request: Request,
+    subjects: Subjects = Depends(deps.get_subjects),
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     form = await request.form()
@@ -50,6 +52,7 @@ async def create_exam_action(
         title = form['title'],
         tag = form['tag'],
         type = form['type'],
+        subject = form['subject'],
         start_time = start_time,
         end_time = end_time,
         detail = form['detail']
@@ -58,6 +61,7 @@ async def create_exam_action(
         'user/super/create-exam.jinja2', {
             'request': request,
             'current_user': current_user,
+            'subjects': subjects,
             'created_exam': created_exam
         }
     )
