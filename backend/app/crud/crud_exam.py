@@ -1,9 +1,10 @@
 from typing import Optional
+from random import randint
 
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import random
 
-from app.models.exam import Exam, ExamInfo
+from app.models.exam import ExamCache, ExamInfo
 from app import schema
 
 
@@ -56,7 +57,40 @@ class CRUDExamInfo():
 
 
 class CRUDExamCache():
-    model = Exam
+    model = ExamCache
+
+    def create_paper(
+        self,
+        db: Session,
+        user_id: str,
+        exam_tag: str,
+        question_id_list: list[str]
+    ) -> None:
+        db_obj_list = []
+        for i in range(len(question_id_list)):
+            db_obj_list.append(self.model(
+                user_id = user_id,
+                question_id = question_id_list[i],
+                exam_tag = exam_tag
+            ))
+        db.add_all(db_obj_list)
+        db.commit()
+        for i in db_obj_list:
+            db.refresh(i)
+        return None
+
+    def fetchone(
+        self,
+        db: Session,
+        user_id: str,
+        exam_tag: str,
+    ) -> Optional[ExamCache]:
+        return (
+            db.query(self.model)
+            .filter(self.model.user_id == user_id)
+            .filter(self.model.exam_tag == exam_tag)
+            .first()
+        )
 
 
 examinfo = CRUDExamInfo()

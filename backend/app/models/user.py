@@ -21,7 +21,7 @@ class UserDB(Base):
     is_superuser = Column('is_superuser', Boolean, default=False)
     created_time = Column('created_time', DateTime, default=datetime.now())
     first_login = Column('first_login', DateTime)
-    exam = relationship('Exam')
+    exam = relationship('ExamCache')
 
     ## this function has automatical implement in Base
     # def __init__(

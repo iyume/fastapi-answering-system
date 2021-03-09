@@ -8,7 +8,7 @@
                         <h1>进行中的考试</h1>
                         {% if processing_exams %}
                         {% for exam in processing_exams %}
-                        <a href="#" class="block">
+                        <a href="{{ url_for('exam_paper', tag=exam['tag']) }}" class="block">
                             <div class="container border border-gray-100 shadow hover:shadow-lg py-4 px-8">
                                 <h1 class="text-2xl">{{ exam['title'] }}</h1>
                                 <span class="font-light text-base">{{ exam['detail'] }}</span>
@@ -25,7 +25,7 @@
                         <h1>未开始的考试</h1>
                         {% if unstarted_exams %}
                         {% for exam in unstarted_exams %}
-                        <a href="#" class="block">
+                        <a href="{{ url_for('exam_paper', tag=exam['tag']) }}" class="block">
                             <div class="container border border-gray-100 shadow hover:shadow-lg py-4 px-8">
                                 <h1 class="text-2xl">{{ exam['title'] }}</h1>
                                 <span class="font-light text-base">{{ exam['detail'] }}</span>
@@ -42,7 +42,7 @@
                         <h1>已完成的考试</h1>
                         {% if finished_exams %}
                         {% for exam in finished_exams %}
-                        <a href="#" class="block">
+                        <a href="{{ url_for('exam_paper', tag=exam['tag']) }}" class="block">
                             <div class="container border border-gray-100 shadow hover:shadow-lg py-4 px-8">
                                 <h1 class="text-2xl">{{ exam['title'] }}</h1>
                                 <span class="font-light text-base">{{ exam['detail'] }}</span>

@@ -18,11 +18,11 @@ class ExamInfo(Base):
     start_time = Column('start_time', TIMESTAMP, nullable=False)
     end_time = Column('end_time', TIMESTAMP, nullable=False)
 
-class Exam(Base):
-    __tablename__ = 'exam'
+class ExamCache(Base):
+    __tablename__ = 'exam_cache'
 
     user_id = Column(String(36), ForeignKey('user.id'))
     question_id = Column(String(36), ForeignKey('questions.id'))
     picked = Column(String(1))
-    exam_tag = Column(String(10), ForeignKey('exam.tag'))
-    fade_key = Column(String(36), primary_key=True)
+    exam_tag = Column(String(10), ForeignKey('exam_info.tag'))
+    fade_key = Column(Integer, primary_key=True) # autoincrement

@@ -15,9 +15,29 @@ class CRUDQuestion():
         subject: Optional[str] = None
     ) -> Optional[Item]:
         if subject:
-            return db.query(self.model).filter(self.model.subject == subject).order_by(random()).first()
-        else:
-            return db.query(self.model).order_by(random()).first()
+            return (
+                db.query(self.model)
+                .filter(self.model.subject == subject)
+                .order_by(random())
+                .first()
+            )
+        return db.query(self.model).order_by(random()).first()
+
+    def get_by_random_many(
+        self,
+        db: Session,
+        amount: int,
+        subject: Optional[str] = None
+    ) -> list[Item]:
+        if subject:
+            return (
+                db.query(self.model)
+                .filter(self.model.subject == subject)
+                .order_by(random())
+                .limit(amount)
+                .all()
+            )
+        return db.query(self.model).order_by(random()).limit(amount).all()
 
     def get_by_id(
         self,

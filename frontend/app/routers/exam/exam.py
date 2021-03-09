@@ -2,6 +2,7 @@ from typing import Any
 from datetime import datetime
 
 from fastapi import APIRouter, Depends
+from fastapi.exceptions import HTTPException
 from starlette.requests import Request
 
 from app.config import templates
@@ -43,5 +44,32 @@ async def exam_entry(
             'unstarted_exams': unstarted_exams,
             'processing_exams': processing_exams,
             'finished_exams': finished_exams
+        }
+    )
+
+
+@router.get('/tag/{tag}')
+@login_required
+async def exam_paper(
+    request: Request,
+    tag: str,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    exam = await apifunc.exam_get_by_tag(tag)
+    if not exam:
+        raise HTTPException(status_code=404)
+    start_time = datetime.fromisoformat(exam['start_time'])
+    end_time = datetime.fromisoformat(exam['end_time'])
+    if not (start_time < datetime.now() < end_time):
+        return templates.TemplateResponse(
+            'exam/paper.jinja2', {
+                'request': request,
+                'current_user': current_user
+            }
+        )
+    return templates.TemplateResponse(
+        'exam/paper.jinja2', {
+            'request': request,
+            'current_user': current_user
         }
     )
