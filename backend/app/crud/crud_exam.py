@@ -16,6 +16,13 @@ class CRUDExamInfo():
     ) -> list[ExamInfo]:
         return db.query(self.model).all()
 
+    def get_by_tag(
+        self,
+        db: Session,
+        tag: str
+    ) -> Optional[ExamInfo]:
+        return db.query(self.model).filter(self.model.tag == tag).first()
+
     def create(
         self,
         db: Session,
@@ -39,7 +46,9 @@ class CRUDExamInfo():
         db: Session,
         tag: str
     ) -> None:
-        exam = db.query(self.model).filter(self.model.tag == tag).one()
+        exam = db.query(self.model).filter(self.model.tag == tag).first()
+        if not exam:
+            return None
         db.delete(exam)
         db.commit()
 

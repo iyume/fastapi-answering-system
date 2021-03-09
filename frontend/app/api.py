@@ -73,6 +73,8 @@ class API():
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
         self.exam_uri = os.path.join(self.api_uri, 'exam')
+        self.exam_fetchall_uri = os.path.join(self.exam_uri, '')
+        self.exam_get_uri = self.exam_uri
         self.exam_create_uri = os.path.join(self.exam_uri, 'create')
         self.exam_delete_uri = os.path.join(self.exam_uri, 'delete')
 
@@ -95,6 +97,22 @@ class API():
         if not result:
             raise HTTPException(status_code=400, detail='incorrect question id')
         return result
+
+    async def exam_fetchall(
+        self
+    ) -> Any:
+        return await get(
+            self.exam_uri
+        )
+
+    async def exam_get_by_tag(
+        self,
+        tag: str
+    ) -> Any:
+        return await get(
+            self.exam_get_uri,
+            tag = tag
+        )
 
     async def exam_create(
         self,

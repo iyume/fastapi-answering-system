@@ -19,6 +19,7 @@
                         <span class="pl-3">首页</span>
                     </a>
                 </div>
+                {% if not current_user.is_superuser %}
                 <hr class="w-3/4">
                 <div class="items-center grid grid-cols-1">
                     <span class="ml-8 text-gray-400">个人中心</span>
@@ -31,7 +32,7 @@
                         <span class="pl-3">修改资料</span>
                     </a>
                 </div>
-                {% if current_user.is_superuser %}
+                {% else %}
                 <hr class="w-3/4">
                 <div class="items-center grid grid-cols-1">
                     <span class="ml-8 text-gray-400">考试管理</span>

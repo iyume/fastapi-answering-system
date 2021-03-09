@@ -10,11 +10,19 @@ from app.api import deps
 router = APIRouter(prefix='/exam')
 
 
-@router.post('/')
+@router.get('/')
 async def list_exam(
     db: Session = Depends(deps.get_db)
 ) -> Any:
     return crud.exam.fetchall(db)
+
+
+@router.get('')
+async def get_exam(
+    tag: str,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.exam.get_by_tag(db, tag=tag)
 
 
 @router.post('/create')
