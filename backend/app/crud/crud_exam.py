@@ -34,7 +34,6 @@ class CRUDExamInfo():
             detail = obj_in.detail,
             type = obj_in.type,
             subject = obj_in.subject,
-            question_count = obj_in.question_count,
             start_time = obj_in.start_time,
             end_time = obj_in.end_time
         )

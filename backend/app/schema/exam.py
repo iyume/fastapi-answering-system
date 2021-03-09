@@ -10,6 +10,5 @@ class ExamCreate(BaseModel):
     detail: Optional[str] = None
     type: str
     subject: str
-    question_count: int
     start_time: datetime
     end_time: datetime

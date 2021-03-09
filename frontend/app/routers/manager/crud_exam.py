@@ -53,7 +53,6 @@ async def create_exam_action(
         tag = form['tag'],
         type = form['type'],
         subject = form['subject'],
-        question_count = int(form['question_count']),
         start_time = start_time,
         end_time = end_time,
         detail = form['detail']
