@@ -1,11 +1,58 @@
 {% extends "base.jinja2" %}
 
 {% block content %}
-        <div class="flex mt-12 justify-between">
+        <div class="flex mt-12 mb-24 justify-between">
             <div class="container flex flex-col w-full">
                 <div class="bg-white rounded-lg">
-                    <div class="w-10/12 m-auto">
-                        <div class="border border-gray-700">content</div>
+                    <div class="w-10/12 m-auto my-12 leading-normal space-y-4">
+                        <h1>进行中的考试</h1>
+                        {% if processing_exams %}
+                        {% for exam in processing_exams %}
+                        <a href="#" class="block">
+                            <div class="container border border-gray-100 shadow hover:shadow-lg py-4 px-8">
+                                <h1 class="text-2xl">{{ exam['title'] }}</h1>
+                                <span class="font-light text-base">{{ exam['detail'] }}</span>
+                                <p class="font-thin text-xs mt-2">持续时间：{{ exam['start_time'] }} 至 {{ exam['end_time'] }}<br>标签：{{ exam['tag'] }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <p>无</p>
+                        {% endif %}
+                    </div>
+                    <hr class="w-3/4">
+                    <div class="w-10/12 m-auto my-12 leading-normal space-y-4">
+                        <h1>未开始的考试</h1>
+                        {% if unstarted_exams %}
+                        {% for exam in unstarted_exams %}
+                        <a href="#" class="block">
+                            <div class="container border border-gray-100 shadow hover:shadow-lg py-4 px-8">
+                                <h1 class="text-2xl">{{ exam['title'] }}</h1>
+                                <span class="font-light text-base">{{ exam['detail'] }}</span>
+                                <p class="font-thin text-xs mt-2">持续时间：{{ exam['start_time'] }} 至 {{ exam['end_time'] }}<br>标签：{{ exam['tag'] }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <p>无</p>
+                        {% endif %}
+                    </div>
+                    <hr class="w-3/4">
+                    <div class="w-10/12 m-auto my-12 leading-normal space-y-4">
+                        <h1>已完成的考试</h1>
+                        {% if finished_exams %}
+                        {% for exam in finished_exams %}
+                        <a href="#" class="block">
+                            <div class="container border border-gray-100 shadow hover:shadow-lg py-4 px-8">
+                                <h1 class="text-2xl">{{ exam['title'] }}</h1>
+                                <span class="font-light text-base">{{ exam['detail'] }}</span>
+                                <p class="font-thin text-xs mt-2">持续时间：{{ exam['start_time'] }} 至 {{ exam['end_time'] }}<br>标签：{{ exam['tag'] }}</p>
+                            </div>
+                        </a>
+                        {% endfor %}
+                        {% else %}
+                        <p>无</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>
