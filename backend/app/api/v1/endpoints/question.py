@@ -6,7 +6,9 @@ from sqlalchemy.orm import Session
 from app import crud
 from app.api import deps
 
+
 router = APIRouter(prefix='/question')
+
 
 @router.get('/')
 async def get_question(

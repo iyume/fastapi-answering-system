@@ -4,6 +4,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from starlette.requests import Request
+from starlette.responses import RedirectResponse
 
 from app.config import templates
 from app.security import login_required
@@ -48,50 +49,33 @@ async def exam_entry(
     )
 
 
-@router.post('/submit')
-@login_required
-async def exam_submit(
-    request: Request,
-    current_user: schema.UserPayload = Depends(deps.get_current_user)
-) -> Any:
-    form = await request.form()
-    try:
-        exam_tag = form['exam_tag']
-        question_order = int(form['question_order'])
-    except:
-        raise HTTPException(status_code=403)
-    if not (exam := await apifunc.exam_paper_get_by_order(
-        user_id = current_user.id,
-        exam_tag = exam_tag,
-        question_order = question_order
-    )):
-        raise HTTPException(status_code=400, detail='Bad exam_tag or question_order')
-    # do database update
-
-
-@router.get('/complete')
+@router.get('/complete/{tag}')
 @login_required
 async def exam_complete(
     request: Request,
-    exam_tag: str,
+    tag: str,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
-    if not (exam := await apifunc.exam_get_by_tag(exam_tag)):
+    if not (exam := await apifunc.exam_get_by_tag(tag)):
         raise HTTPException(status_code=400, detail='Bad exam_tag')
     exam_records = await apifunc.exam_paper_fetchall(
         user_id = current_user.id,
-        exam_tag = exam_tag
+        exam_tag = tag
     )
     for i in exam_records:
         if i['picked'] is None:
-            raise HTTPException(status_code=200, detail=f"您尚未完成考试 {exam['title']}")
+            return RedirectResponse(
+                request.url_for(
+                    'exam_paper_answering',
+                    tag = i['exam_tag'],
+                    q_num = i['question_order']
+                ))
     return exam_records
 
 
 @router.get('/tag/{tag}')
 @login_required
 async def exam_paper(
-    request: Request,
     tag: str,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
@@ -106,6 +90,7 @@ async def exam_paper(
 
 
 @router.get('/tag/{tag}/{q_num}')
+@router.post('/tag/{tag}/{q_num}')
 @login_required
 async def exam_paper_answering(
     request: Request,
@@ -124,18 +109,29 @@ async def exam_paper_answering(
     if not (start_time < datetime.now() < end_time):
         raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')
     if q_num > exam['question_count']:
-        if q_num == exam['question_count'] + 1:
-            raise HTTPException(status_code=200, detail='答题完毕')
         raise HTTPException(status_code=404)
     if not await apifunc.exam_paper_fetchone(user_id=current_user.id, exam_tag=tag):
         await apifunc.exam_paper_create(user_id=current_user.id, exam_tag=tag)
+    # update database picked
+    if request.method == 'POST':
+        form = await request.form()
+        raise HTTPException(status_code=200, detail='method post')
     exam_record = await apifunc.exam_paper_get_by_order(
         user_id = current_user.id,
         exam_tag = tag,
-        question_order = 1
+        question_order = q_num
     )
     exam_records = await apifunc.exam_paper_fetchall(
         user_id = current_user.id,
         exam_tag = tag
     )
-    return f"{exam_record}{exam_records}"
+    question = await apifunc.get_answer(id=exam_record['question_id'])
+    return templates.TemplateResponse(
+        'paper/exam.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            'exam': exam,
+            'question': question,
+            'exam_records': exam_records
+        }
+    )

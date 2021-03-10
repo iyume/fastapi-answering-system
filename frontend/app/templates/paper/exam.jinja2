@@ -1,7 +1,13 @@
 {% extends "paper/base.jinja2" %}
 
 {% set exam_tag = request.path_params['tag'] %}
-{% set exam_question_num = request.path_params['q_num'] %}
+{% set exam_question_order = request.path_params['q_num']|int %}
+{% set question_done_sum = 0 %}
+{% for i in exam_records %}
+{% if i['picked'] is not none %}
+{% set question_done_sum = question_done_sum + 1 %}
+{% endif %}
+{% endfor %}
 
 {% block nav_first_link %}
 <a href="{{ url_for('exam_entry') }}">考试</a>
@@ -19,19 +25,47 @@
 {% block paper_header_qcount %}共 {{ exam['question_count'] }} 题{% endblock paper_header_qcount %}
 
 
-{% block question_number %}{{ exam_question_num }}{% endblock %}
+{% block question_number %}{{ exam_question_order }}、{% endblock %}
 
-{% block paper_body_action %}{{ url_for('exam_paper_question', tag=exam_tag, q_num=exam['order']) }}{% endblock paper_body_action %}
+{% block paper_body_action %}{% endblock paper_body_action %}
 
 {% block paper_body_hidden1_name %}id{% endblock %}
 {% block paper_body_hidden1_value %}{{ question.id }}{% endblock %}
-{% block paper_body_hidden2_name %}subject{% endblock %}
-{% block paper_body_hidden2_value %}{{ current_subject }}{% endblock %}
 
 {% block paper_body_option_a %}{{ question['option_a'] }}{% endblock paper_body_option_a %}
 {% block paper_body_option_b %}{{ question['option_b'] }}{% endblock paper_body_option_b %}
 {% block paper_body_option_c %}{{ question['option_c'] }}{% endblock paper_body_option_c %}
 {% block paper_body_option_d %}{{ question['option_d'] }}{% endblock paper_body_option_d %}
+
+
+{% block paper_tail_previous %}
+{% if exam_question_order - 1 != 0 %}
+{{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order-1) }}
+{% endif %}
+{% endblock %}
+{% block paper_tail_next %}
+{% if exam_question_order + 1 != exam['question_count'] + 1 %}
+{{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order+1) }}
+{% else %}
+{{ url_for('exam_complete', tag=exam_tag) }}
+{% endif %}
+{% endblock %}
+
+
+{% block question_list %}
+<div class="bg-white rounded-lg px-7 py-5">
+    <span class="block pb-3">答题情况</span>
+    <div>
+        <div class="h-full grid grid-cols-7 gap-2">
+            {% for i in range(exam['question_count']) %}
+            <a href="{{ url_for('exam_paper_answering', tag=exam_tag, q_num=i+1) }}"
+                class="block bg-white border text-center {% if i+1 == exam_question_order %}bg-gray-300 border-gray-300{% endif %} {% if exam_records[i]['picked'] %}bg-green{% endif %}"
+            >{{ i + 1 }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock question_list %}
 
 
 {% block back_to_link %}{{ url_for('exam_entry') }}{% endblock back_to_link %}
