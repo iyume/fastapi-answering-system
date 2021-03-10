@@ -22,3 +22,8 @@ class ExamPaperBase(BaseModel):
 
 class ExamPaperQuery(ExamPaperBase):
     question_order: Optional[int] = None
+
+
+class ExamPaperUpdate(ExamPaperBase):
+    question_id: str
+    picked: str

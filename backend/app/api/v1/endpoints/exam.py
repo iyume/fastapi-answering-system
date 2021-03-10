@@ -97,3 +97,11 @@ async def get_first_not_picked_question_exam_paper(
     db: Session = Depends(deps.get_db)
 ) -> Any:
     return crud.examcache.get_first_not_picked(db, obj_in)
+
+
+@router.post('/paper/update-picked')
+async def update_exam_paper_picked(
+    obj_in: schema.ExamPaperUpdate,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.examcache.update_picked(db, obj_in)

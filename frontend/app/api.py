@@ -81,6 +81,7 @@ class API():
         self.exam_paper_create_uri = os.path.join(self.exam_paper_uri, 'create')
         self.exam_paper_fetchone_uri = os.path.join(self.exam_paper_uri, 'fetchone')
         self.exam_paper_get_first_not_picked_uri = os.path.join(self.exam_paper_uri, 'first-not-picked')
+        self.exam_paper_update_picked_uri = os.path.join(self.exam_paper_uri, 'update-picked')
 
     async def get_question_by_subject(
         self, subject: str, random: bool = True) -> dict:
@@ -211,6 +212,22 @@ class API():
             self.exam_paper_get_first_not_picked_uri,
             user_id = user_id,
             exam_tag = exam_tag
+        )
+        return result
+
+    async def exam_paper_update_picked(
+        self,
+        user_id: str,
+        exam_tag: str,
+        question_id: str,
+        picked: str
+    ) -> Any:
+        result = await post_with_json(
+            self.exam_paper_update_picked_uri,
+            user_id = user_id,
+            exam_tag = exam_tag,
+            question_id = question_id,
+            picked = picked
         )
         return result
 

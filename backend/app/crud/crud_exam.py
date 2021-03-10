@@ -123,6 +123,20 @@ class CRUDExamCache():
             .first()
         )
 
+    def update_picked(
+        self,
+        db: Session,
+        obj_in: schema.ExamPaperUpdate
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.user_id == obj_in.user_id)
+        .filter(self.model.exam_tag == obj_in.exam_tag)
+        .filter(self.model.question_id == obj_in.question_id)
+        .update({self.model.picked: obj_in.picked})
+        )
+        db.commit()
+
 
 examinfo = CRUDExamInfo()
 examcache = CRUDExamCache()

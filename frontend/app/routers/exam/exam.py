@@ -115,7 +115,16 @@ async def exam_paper_answering(
     # update database picked
     if request.method == 'POST':
         form = await request.form()
-        raise HTTPException(status_code=200, detail='method post')
+        await apifunc.exam_paper_update_picked(
+            user_id = current_user.id,
+            exam_tag = tag,
+            question_id = form['id'],
+            picked = form['picked']
+        )
+        return RedirectResponse(
+            request.url_for('exam_paper_answering', tag=tag, q_num=q_num+1),
+            status_code = 303
+        )
     exam_record = await apifunc.exam_paper_get_by_order(
         user_id = current_user.id,
         exam_tag = tag,

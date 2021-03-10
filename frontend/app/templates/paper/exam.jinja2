@@ -2,10 +2,11 @@
 
 {% set exam_tag = request.path_params['tag'] %}
 {% set exam_question_order = request.path_params['q_num']|int %}
-{% set question_done_sum = 0 %}
+{% set question_done_sum = [] %}
 {% for i in exam_records %}
-{% if i['picked'] is not none %}
-{% set question_done_sum = question_done_sum + 1 %}
+{% if i['picked'] %}
+{% set _ = question_done_sum.append(1) %}
+{# due to scoping rules, I use some trick #}
 {% endif %}
 {% endfor %}
 
@@ -21,7 +22,7 @@
 
 {% block paper_header_title %}{{ exam['title'] }}{% endblock paper_header_title %}
 
-{% block paper_header_qdone %}已做 {{ question_done_sum }} 题{% endblock paper_header_qdone %}
+{% block paper_header_qdone %}已做 {{ question_done_sum|length }} 题{% endblock paper_header_qdone %}
 {% block paper_header_qcount %}共 {{ exam['question_count'] }} 题{% endblock paper_header_qcount %}
 
 
