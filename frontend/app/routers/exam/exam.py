@@ -97,6 +97,12 @@ async def exam_paper_answering(
             question_id = form['id'],
             picked = form['picked']
         )
+        # last question then do nothing
+        if q_num == exam['question_count']:
+            return RedirectResponse(
+                request.url_for('exam_paper_answering', tag=tag, q_num=q_num),
+                status_code = 303
+            )
         return RedirectResponse(
             request.url_for('exam_paper_answering', tag=tag, q_num=q_num+1),
             status_code = 303
@@ -117,7 +123,8 @@ async def exam_paper_answering(
             'current_user': current_user,
             'exam': exam,
             'question': question,
-            'exam_records': exam_records
+            'exam_records': exam_records,
+            'exam_picked': exam_record['picked']
         }
     )
 
@@ -142,4 +149,4 @@ async def exam_answer(
                     tag = i['exam_tag'],
                     q_num = i['question_order']
                 ))
-    return exam_records
+    raise HTTPException(status_code=200, detail=f"你已完成考试 {exam['title']}，答案页面正在制作中，可以去考试页面查看你的选项")
