@@ -48,7 +48,7 @@
 {% if exam_question_order + 1 != exam['question_count'] + 1 %}
 {{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order+1) }}
 {% else %}
-{{ url_for('exam_complete', tag=exam_tag) }}
+{{ url_for('exam_answer', tag=exam_tag) }}
 {% endif %}
 {% endblock %}
 

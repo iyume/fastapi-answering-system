@@ -49,30 +49,6 @@ async def exam_entry(
     )
 
 
-@router.get('/complete/{tag}')
-@login_required
-async def exam_complete(
-    request: Request,
-    tag: str,
-    current_user: schema.UserPayload = Depends(deps.get_current_user)
-) -> Any:
-    if not (exam := await apifunc.exam_get_by_tag(tag)):
-        raise HTTPException(status_code=400, detail='Bad exam_tag')
-    exam_records = await apifunc.exam_paper_fetchall(
-        user_id = current_user.id,
-        exam_tag = tag
-    )
-    for i in exam_records:
-        if i['picked'] is None:
-            return RedirectResponse(
-                request.url_for(
-                    'exam_paper_answering',
-                    tag = i['exam_tag'],
-                    q_num = i['question_order']
-                ))
-    return exam_records
-
-
 @router.get('/tag/{tag}')
 @login_required
 async def exam_paper(
@@ -144,3 +120,26 @@ async def exam_paper_answering(
             'exam_records': exam_records
         }
     )
+
+
+@router.get('/answer/{tag}')
+async def exam_answer(
+    request: Request,
+    tag: str,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    if not (exam := await apifunc.exam_get_by_tag(tag)):
+        raise HTTPException(status_code=400, detail='Bad exam_tag')
+    exam_records = await apifunc.exam_paper_fetchall(
+        user_id = current_user.id,
+        exam_tag = tag
+    )
+    for i in exam_records:
+        if i['picked'] is None:
+            return RedirectResponse(
+                request.url_for(
+                    'exam_paper_answering',
+                    tag = i['exam_tag'],
+                    q_num = i['question_order']
+                ))
+    return exam_records
