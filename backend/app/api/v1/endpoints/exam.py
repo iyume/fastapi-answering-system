@@ -51,16 +51,15 @@ async def delete_exam(
 
 @router.post('/paper/create')
 async def create_exam_paper(
-    user_id: str,
-    exam_tag: str,
+    obj_in: schema.ExamPaperBase,
     db: Session = Depends(deps.get_db)
 ) -> Any:
-    exam = crud.examinfo.get_by_tag(db, tag=exam_tag)
+    exam = crud.examinfo.get_by_tag(db, tag=obj_in.exam_tag)
     if not exam:
         raise HTTPException(status_code=400, detail='Bad exam_tag')
-    if not crud.user.get_by_id(db, user_id):
+    if not crud.user.get_by_id(db, obj_in.user_id):
         raise HTTPException(status_code=400, detail='Bad user_id')
-    if crud.examcache.fetchone(db, user_id, exam_tag):
+    if crud.examcache.fetchone(db, obj_in):
         return 'exists'
     questions = crud.item.get_by_random_many(
         db,
@@ -70,8 +69,23 @@ async def create_exam_paper(
     del questions
     crud.examcache.create_paper(
         db,
-        user_id = user_id,
-        exam_tag = exam_tag,
+        obj_in = obj_in,
         question_id_list = question_id_list
     )
     return 'success'
+
+
+@router.get('/paper/fetchone')
+async def exam_paper_fetchone(
+    obj_in: schema.ExamPaperBase,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.examcache.fetchone(db, obj_in)
+
+
+@router.get('/paper/first-not-picked')
+async def get_first_not_picked_question_exam_paper(
+    obj_in: schema.ExamPaperBase,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.examcache.get_first_not_picked(db, obj_in)
