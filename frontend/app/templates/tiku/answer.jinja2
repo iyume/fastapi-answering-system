@@ -1,6 +1,6 @@
-{% extends 'tiku/paper/subject.jinja2' %}
+{% extends 'paper/practice.jinja2' %}
 
-{% block paper_content_body %}
+{% block paper_body %}
                     <div class="container">
                         <p class="font-medium text-base py-3">{{ 1 }}、{% if question %}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
                         {% if question %}

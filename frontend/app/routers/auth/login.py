@@ -23,7 +23,7 @@ async def login(
 ) -> Any:
     if not current_user:
         return templates.TemplateResponse(
-            'login/login.jinja2', {
+            'login.jinja2', {
                 'request': request
             }
         )
@@ -42,15 +42,15 @@ async def login_action(
 
     form = await request.form()
     if 'username' not in form and 'password' not in form:
-        return templates.TemplateResponse('login/login.jinja2', {'request': request})
+        return templates.TemplateResponse('login.jinja2', {'request': request})
     if not (username := form.get('username', None)):
         return templates.TemplateResponse(
-            'login/login.jinja2', {
+            'login.jinja2', {
                 'request': request,
                 'message': '请输入用户名'})
     if not (password := form.get('password', None)):
         return templates.TemplateResponse(
-            'login/login.jinja2', {
+            'login.jinja2', {
                 'request': request,
                 'message': '请输入密码'})
 
@@ -58,7 +58,7 @@ async def login_action(
 
     if isinstance(content, str):
         return templates.TemplateResponse(
-            'login/login.jinja2', {
+            'login.jinja2', {
                 'request': request,
                 'message': content
             }

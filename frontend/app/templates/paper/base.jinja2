@@ -1,37 +1,47 @@
-{% extends 'tiku/paper/base.jinja2' %}
+{% extends 'base.jinja2' %}
 
-{% set current_subject = request.path_params['subject'] or subject %}
-{% set subject_dict = subjects.get_item(current_subject) %}
-
-{% block nav_tiku_link %}
-<a href="{{ url_for('tiku_area', subject=current_subject) }}">{{ subject_dict['name_zh'] }}</a>
-{% endblock %}
-
-{% block paper_type %}随机抽题{% endblock %}
-
-{% block paper_content_header %}
+{% block content %}
+        <div class="h-12 pt-4 pb-8 text-sm">
+            <p class="inline-block">当前位置：</p>
+            <a href="/">首页</a>
+            <i> > </i>
+            <a href="{{ url_for('tiku_area_index') }}">题库</a>
+            <i> > </i>
+            {% block nav_tiku_link %}{% endblock %}
+            <i> > </i>
+            <p class="inline-block">{% block paper_type %}{% endblock %}</p>
+        </div>
+        <div class="flex justify-between">
+            <div class="container flex flex-col space-y-3 w-870">
+                <div class="bg-white rounded-lg px-7 py-5">
                     <div class="pb-1 font-medium text-lg">
-                        <p>{{ subject_dict['name_zh'] }}随机抽题练习</p>
+                        <p>{% block paper_header_title %}{% endblock paper_header_title %}</p>
                     </div>
                     <div class="font-light text-base">
-                        <span class="text-gray-700">已做 {{ 1 }} 题</span>
-                        <span class="text-gray-400"> / 共 ∞ 题</span>
+                        <span class="text-gray-700">
+                        {% block paper_header_qdone %}{% endblock paper_header_qdone %}
+                        </span>
+                        <span class="text-gray-400"> / </span>
+                        <span class="text-gray-400">
+                        {% block paper_header_qcount %}{% endblock paper_header_qcount %}
+                        </span>
                     </div>
-{% endblock %}
-
-{% block paper_content_body %}
+                </div>
+                <div class="bg-white rounded-lg px-7 py-5">
+                    {% block paper_body %}
                     <div class="container">
                         <p class="font-medium text-base py-3">{% if question %}{{ '1、' }}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
                         {% if question %}
-                        <form action="{{ url_for('get_answer') }}" method="post">
-                            <input type="hidden" name="id" value="{{ question.id }}">
-                            <input type="hidden" name="subject" value="{{ current_subject }}">
+                        <form action="{% block paper_body_action %}{% endblock %}" method="post">
+                            <input type="hidden" name="{% block paper_body_hidden1_name %}{% endblock %}" value="{% block paper_body_hidden1_value %}{% endblock %}">
+                            <input type="hidden" name="{% block paper_body_hidden2_name %}{% endblock %}" value="{% block paper_body_hidden2_value %}{% endblock %}">
+                            <input type="hidden" name="{% block paper_body_hidden3_name %}{% endblock %}" value="{% block paper_body_hidden3_value %}{% endblock %}">
                             <ul class="font-light text-sm">
                                 <li>
                                     <div class="block cursor-pointer hover:bg-gray-100 relative">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="A">
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
-                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{{ question['option_a'] }}</span>
+                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{% block paper_body_option_a %}{% endblock %}</span>
                                         </button>
                                     </div>
                                 </li>
@@ -39,7 +49,7 @@
                                     <div class="block cursor-pointer hover:bg-gray-100">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="B">
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
-                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{{ question['option_b'] }}</span>
+                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{% block paper_body_option_b %}{% endblock %}</span>
                                         </button>
                                     </div>
                                 </li>
@@ -47,7 +57,7 @@
                                     <div class="block cursor-pointer hover:bg-gray-100">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="C">
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
-                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{{ question['option_c'] }}</span>
+                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{% block paper_body_option_c %}{% endblock %}</span>
                                         </button>
                                     </div>
                                 </li>
@@ -55,7 +65,7 @@
                                     <div class="block cursor-pointer hover:bg-gray-100">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="D">
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
-                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{{ question['option_d'] }}</span>
+                                            <span class="font-light text-sm ml-2.5 mt-0.5 align-middle float-left">{% block paper_body_option_d %}{% endblock %}</span>
                                         </button>
                                     </div>
                                 </li>
@@ -63,19 +73,27 @@
                         </form>
                         {% endif %}
                     </div>
-{% endblock %}
-
-{% block paper_content_tail %}
+                    {% endblock %}
+                </div>
+                <div class="bg-white rounded-lg px-7 py-3">
+                    {% block paper_tail %}
                     <div class="container flex justify-around text-base">
-                        <a href="{{ url_for('tiku_paper', subject=current_subject) }}?type=random" class="inline-block w-48 h-12 m-auto text-center">
+                        <a href="{% block paper_tail_previous %}{% endblock %}" class="inline-block w-48 h-12 m-auto text-center">
                             <span class="block align-middle leading-8">上一题</span>
                             <span>&lt;</span>
                         </a>
-                        <a href="{{ url_for('tiku_paper', subject=current_subject) }}?type=random" class="inline-block w-48 h-12 m-auto text-center">
+                        <a href="{% block paper_tail_next %}{% endblock %}" class="inline-block w-48 h-12 m-auto text-center">
                             <span class="block align-middle leading-8">下一题</span>
                             <span>&gt;</span>
                         </a>
                     </div>
+                    {% endblock %}
+                </div>
+            </div>
+            <div class="container flex flex-col space-y-3 w-280">
+                <div class="bg-white rounded-lg px-7 py-5">
+                    <a href="{% block back_to_link %}{% endblock %}" class="text-blue-400">后退</a>
+                </div>
+            </div>
+        </div>
 {% endblock %}
-
-{% block back_to_link %}{{ url_for('tiku_area', subject=current_subject) }}{% endblock %}

@@ -36,7 +36,7 @@ async def get_answer(
         raise HTTPException(status_code=400, detail='Bad picked')
     question = await apifunc.get_answer(id)
     return templates.TemplateResponse(
-        'tiku/paper/answer.jinja2', {
+        'tiku/answer.jinja2', {
             'request': request,
             'subjects': subjects,
             'current_user': current_user,

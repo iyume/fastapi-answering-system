@@ -62,13 +62,13 @@ async def exam_paper(
     end_time = datetime.fromisoformat(exam['end_time'])
     if not (start_time < datetime.now() < end_time):
         return templates.TemplateResponse(
-            'exam/paper.jinja2', {
+            'paper/exam.jinja2', {
                 'request': request,
                 'current_user': current_user
             }
         )
     return templates.TemplateResponse(
-        'exam/paper.jinja2', {
+        'paper/exam.jinja2', {
             'request': request,
             'current_user': current_user
         }
