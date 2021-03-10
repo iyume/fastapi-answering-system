@@ -62,16 +62,15 @@ class CRUDExamCache():
     def create_paper(
         self,
         db: Session,
-        user_id: str,
-        exam_tag: str,
+        obj_in: schema.ExamPaperBase,
         question_id_list: list[str]
     ) -> None:
         db_obj_list = []
         for i in range(len(question_id_list)):
             db_obj_list.append(self.model(
-                user_id = user_id,
+                user_id = obj_in.user_id,
+                exam_tag = obj_in.exam_tag,
                 question_id = question_id_list[i],
-                exam_tag = exam_tag,
                 question_order = i + 1
             ))
         db.add_all(db_obj_list)
@@ -83,13 +82,25 @@ class CRUDExamCache():
     def fetchone(
         self,
         db: Session,
-        user_id: str,
-        exam_tag: str,
+        obj_in: schema.ExamPaperBase
     ) -> Optional[ExamCache]:
         return (
             db.query(self.model)
-            .filter(self.model.user_id == user_id)
-            .filter(self.model.exam_tag == exam_tag)
+            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.exam_tag == obj_in.exam_tag)
+            .first()
+        )
+
+    def get_first_not_picked(
+        self,
+        db: Session,
+        obj_in: schema.ExamPaperBase
+    ) -> Optional[ExamCache]:
+        return (
+            db.query(self.model)
+            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.exam_tag == obj_in.exam_tag)
+            .filter(self.model.picked != None)
             .first()
         )
 

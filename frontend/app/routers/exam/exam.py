@@ -71,15 +71,18 @@ async def exam_paper(
     )
 
 
-@router.get('/tag/{tag}/{q_num}')
-@router.post('/tag/{tag}/{q_num}')
+@router.get('/tag/{tag}/{q_order}')
+@router.post('/tag/{tag}/{q_order}')
 @login_required
 async def exam_paper_question(
     request: Request,
     tag: str,
-    q_num: int,
+    q_order: int,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
+    """
+    select question from database according to the question_order column
+    """
     exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
         raise HTTPException(status_code=404)

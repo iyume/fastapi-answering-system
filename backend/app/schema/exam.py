@@ -13,3 +13,8 @@ class ExamCreate(BaseModel):
     question_count: int
     start_time: datetime
     end_time: datetime
+
+
+class ExamPaperBase(BaseModel):
+    user_id: str
+    exam_tag: str
