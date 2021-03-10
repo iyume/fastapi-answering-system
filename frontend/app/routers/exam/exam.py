@@ -48,6 +48,27 @@ async def exam_entry(
     )
 
 
+@router.post('/submit')
+@login_required
+async def exam_submit(
+    request: Request,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    form = await request.form()
+    try:
+        exam_tag = form['exam_tag']
+        question_order = int(form['question_order'])
+    except:
+        raise HTTPException(status_code=403)
+    if not (exam := await apifunc.exam_paper_get_by_order(
+        user_id = current_user.id,
+        exam_tag = exam_tag,
+        question_order = question_order
+    )):
+        raise HTTPException(status_code=400, detail='Bad exam_tag or question_order')
+    # do database update
+
+
 @router.get('/complete')
 @login_required
 async def exam_complete(
