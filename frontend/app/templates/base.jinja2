@@ -49,10 +49,12 @@
                     <img class="h-12 w-12 rounded-full" src="https://cdn.jsdelivr.net/gh/iyume/static/hexo-blog/img/avatar.png" alt="">
                 </a> #}
                 {% else %}
+                {% if not is_error_page %}
                 <div class="space-x-8">
                     <a href="{{ url_for('login') }}" class="inline-block">登录</a>
                     <a href="{{ url_for('register') }}" class="inline-block">注册</a>
                 </div>
+                {% endif %}
                 {% endif %}
             </div>
         </div>
@@ -60,6 +62,11 @@
     <div class="container mx-auto xl:w-normal sm:w-full">
         <!-- content -->
         {% block content %}
+        {% if is_error_page %}
+        {% if message %}
+        <p class="pt-12">{{ message }}</p>
+        {% endif %}
+        {% endif %}
         {% endblock %}
     </div>
     {% block scripts %}

@@ -77,7 +77,7 @@ class API():
         self.exam_get_uri = self.exam_uri
         self.exam_create_uri = os.path.join(self.exam_uri, 'create')
         self.exam_delete_uri = os.path.join(self.exam_uri, 'delete')
-        self.exam_paper_uri = os.path.join(self.exam_uri, 'paper')
+        self.exam_paper_uri = os.path.join(self.exam_uri, 'paper', '')
         self.exam_paper_create_uri = os.path.join(self.exam_paper_uri, 'create')
         self.exam_paper_fetchone_uri = os.path.join(self.exam_paper_uri, 'fetchone')
         self.exam_paper_get_first_not_picked_uri = os.path.join(self.exam_paper_uri, 'first-not-picked')
@@ -173,6 +173,32 @@ class API():
             self.exam_paper_fetchone_uri,
             user_id = user_id,
             exam_tag = exam_tag
+        )
+        return result
+
+    async def exam_paper_fetchall(
+        self,
+        user_id: str,
+        exam_tag: str
+    ) -> Any:
+        result = await post_with_json(
+            self.exam_paper_uri,
+            user_id = user_id,
+            exam_tag = exam_tag
+        )
+        return result
+
+    async def exam_paper_get_by_order(
+        self,
+        user_id: str,
+        exam_tag: str,
+        question_order: int
+    ) -> Any:
+        result = await post_with_json(
+            self.exam_paper_uri,
+            user_id = user_id,
+            exam_tag = exam_tag,
+            question_order = question_order
         )
         return result
 

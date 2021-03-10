@@ -18,3 +18,7 @@ class ExamCreate(BaseModel):
 class ExamPaperBase(BaseModel):
     user_id: str
     exam_tag: str
+
+
+class ExamPaperQuery(ExamPaperBase):
+    question_order: Optional[int] = None

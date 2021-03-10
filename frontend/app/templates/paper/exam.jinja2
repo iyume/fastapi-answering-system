@@ -1,6 +1,7 @@
 {% extends "paper/base.jinja2" %}
 
 {% set exam_tag = request.path_params['tag'] %}
+{% set exam_question_num = request.path_params['q_num'] %}
 
 {% block nav_first_link %}
 <a href="{{ url_for('exam_entry') }}">考试</a>
@@ -14,9 +15,11 @@
 
 {% block paper_header_title %}{{ exam['title'] }}{% endblock paper_header_title %}
 
-{% block paper_header_qdone %}已做 * 题{% endblock paper_header_qdone %}
-{% block paper_header_qcount %}共 ∞ 题{% endblock paper_header_qcount %}
+{% block paper_header_qdone %}已做 {{ question_done_sum }} 题{% endblock paper_header_qdone %}
+{% block paper_header_qcount %}共 {{ exam['question_count'] }} 题{% endblock paper_header_qcount %}
 
+
+{% block question_number %}{{ exam_question_num }}{% endblock %}
 
 {% block paper_body_action %}{{ url_for('exam_paper_question', tag=exam_tag, q_num=exam['order']) }}{% endblock paper_body_action %}
 

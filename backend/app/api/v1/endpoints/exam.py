@@ -75,7 +75,7 @@ async def create_exam_paper(
     return 'success'
 
 
-@router.get('/paper/fetchone')
+@router.post('/paper/fetchone')
 async def exam_paper_fetchone(
     obj_in: schema.ExamPaperBase,
     db: Session = Depends(deps.get_db)
@@ -83,7 +83,15 @@ async def exam_paper_fetchone(
     return crud.examcache.fetchone(db, obj_in)
 
 
-@router.get('/paper/first-not-picked')
+@router.post('/paper/')
+async def exam_paper_fetch_with_filter(
+    obj_in: schema.ExamPaperQuery,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.examcache.get_by_condition(db, obj_in)
+
+
+@router.post('/paper/first-not-picked')
 async def get_first_not_picked_question_exam_paper(
     obj_in: schema.ExamPaperBase,
     db: Session = Depends(deps.get_db)

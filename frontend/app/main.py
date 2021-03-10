@@ -7,7 +7,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.responses import PlainTextResponse, RedirectResponse
 
 from .routers import tiku, auth, user, exam, manager
-from .config import static_router
+from .config import static_router, templates
 
 
 app = FastAPI(doc_url=None, redoc_url=None, openapi=None, openapi_url=None)
@@ -25,10 +25,19 @@ async def validation_exception_handler(request: Request, exc: Any) -> Any:
     return PlainTextResponse(getattr(exc, 'detail', 'Bad request'), status_code=400)
 
 @app.exception_handler(StarletteHTTPException)
-async def http_exception_handler(request: Request, exc: Any) -> Any:
+async def http_exception_handler(
+    request: Request,
+    exc: Any
+) -> Any:
     if exc.status_code == 404:
         return PlainTextResponse('Page not found', status_code=404)
-    return PlainTextResponse(exc.detail, status_code=exc.status_code)
+    return templates.TemplateResponse(
+        'base.jinja2', {
+            'request': request,
+            'message': exc.detail,
+            'is_error_page': True
+        }
+    )
 
 
 @app.get('/')

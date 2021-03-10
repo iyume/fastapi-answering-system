@@ -30,7 +30,7 @@
                 <div class="bg-white rounded-lg px-7 py-5">
                     {% block paper_body %}
                     <div class="container">
-                        <p class="font-medium text-base py-3">{% if question %}{{ '1、' }}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
+                        <p class="font-medium text-base py-3">{% if question %}{% block question_number %}1、{% endblock %}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
                         {% if question %}
                         <form action="{% block paper_body_action %}{% endblock %}" method="post">
                             <input type="hidden" name="{% block paper_body_hidden1_name %}{% endblock %}" value="{% block paper_body_hidden1_value %}{% endblock %}">

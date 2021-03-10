@@ -48,6 +48,25 @@ async def exam_entry(
     )
 
 
+@router.get('/complete')
+@login_required
+async def exam_complete(
+    request: Request,
+    exam_tag: str,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    if not (exam := await apifunc.exam_get_by_tag(exam_tag)):
+        raise HTTPException(status_code=400, detail='Bad exam_tag')
+    exam_records = await apifunc.exam_paper_fetchall(
+        user_id = current_user.id,
+        exam_tag = exam_tag
+    )
+    for i in exam_records:
+        if i['picked'] is None:
+            raise HTTPException(status_code=200, detail=f"您尚未完成考试 {exam['title']}")
+    return exam_records
+
+
 @router.get('/tag/{tag}')
 @login_required
 async def exam_paper(
@@ -62,22 +81,15 @@ async def exam_paper(
     end_time = datetime.fromisoformat(exam['end_time'])
     if not (start_time < datetime.now() < end_time):
         raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')
-    return templates.TemplateResponse(
-        'paper/exam.jinja2', {
-            'request': request,
-            'current_user': current_user,
-            'exam': exam,
-        }
-    )
+    raise HTTPException(status_code=200, detail='考试进行中，请从主页入口进入')
 
 
-@router.get('/tag/{tag}/{q_order}')
-@router.post('/tag/{tag}/{q_order}')
+@router.get('/tag/{tag}/{q_num}')
 @login_required
-async def exam_paper_question(
+async def exam_paper_answering(
     request: Request,
     tag: str,
-    q_order: int,
+    q_num: int,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     """
@@ -90,3 +102,19 @@ async def exam_paper_question(
     end_time = datetime.fromisoformat(exam['end_time'])
     if not (start_time < datetime.now() < end_time):
         raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')
+    if q_num > exam['question_count']:
+        if q_num == exam['question_count'] + 1:
+            raise HTTPException(status_code=200, detail='答题完毕')
+        raise HTTPException(status_code=404)
+    if not await apifunc.exam_paper_fetchone(user_id=current_user.id, exam_tag=tag):
+        await apifunc.exam_paper_create(user_id=current_user.id, exam_tag=tag)
+    exam_record = await apifunc.exam_paper_get_by_order(
+        user_id = current_user.id,
+        exam_tag = tag,
+        question_order = 1
+    )
+    exam_records = await apifunc.exam_paper_fetchall(
+        user_id = current_user.id,
+        exam_tag = tag
+    )
+    return f"{exam_record}{exam_records}"

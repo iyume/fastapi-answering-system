@@ -1,5 +1,4 @@
-from typing import Optional
-from random import randint
+from typing import Optional, Union
 
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import random
@@ -89,6 +88,26 @@ class CRUDExamCache():
             .filter(self.model.user_id == obj_in.user_id)
             .filter(self.model.exam_tag == obj_in.exam_tag)
             .first()
+        )
+
+    def get_by_condition(
+        self,
+        db: Session,
+        obj_in: schema.ExamPaperQuery
+    ) -> Union[ExamCache, list[ExamCache], None]:
+        if obj_in.question_order:
+            return (
+                db.query(self.model)
+                .filter(self.model.user_id == obj_in.user_id)
+                .filter(self.model.exam_tag == obj_in.exam_tag)
+                .filter(self.model.question_order == obj_in.question_order)
+                .first()
+            )
+        return (
+            db.query(self.model)
+            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.exam_tag == obj_in.exam_tag)
+            .all()
         )
 
     def get_first_not_picked(
