@@ -25,4 +25,5 @@ class ExamCache(Base):
     question_id = Column(String(36), ForeignKey('questions.id'))
     picked = Column(String(1))
     exam_tag = Column(String(10), ForeignKey('exam_info.tag'))
+    question_order = Column(Integer)
     fade_key = Column(Integer, primary_key=True) # autoincrement

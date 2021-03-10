@@ -30,5 +30,6 @@ CREATE TABLE exam_cache (
     question_id CHAR(36) REFERENCES questions(id),
     picked CHAR(1),
     exam_tag CHAR(10) REFERENCES exam_info(tag),
+    question_order INT,
     fade_key INTEGER PRIMARY KEY AUTOINCREMENT
 );

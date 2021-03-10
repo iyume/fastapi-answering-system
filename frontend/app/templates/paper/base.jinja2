@@ -5,9 +5,9 @@
             <p class="inline-block">当前位置：</p>
             <a href="/">首页</a>
             <i> > </i>
-            <a href="{{ url_for('tiku_area_index') }}">题库</a>
+            {% block nav_first_link %}{% endblock %}
             <i> > </i>
-            {% block nav_tiku_link %}{% endblock %}
+            {% block nav_second_link %}{% endblock %}
             <i> > </i>
             <p class="inline-block">{% block paper_type %}{% endblock %}</p>
         </div>

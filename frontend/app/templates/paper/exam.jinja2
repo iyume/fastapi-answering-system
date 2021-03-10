@@ -1,3 +1,34 @@
 {% extends "paper/base.jinja2" %}
 
+{% set exam_tag = request.path_params['tag'] %}
+
+{% block nav_first_link %}
+<a href="{{ url_for('exam_entry') }}">考试</a>
+{% endblock nav_first_link %}
+
+{% block nav_second_link %}
+<a href="{{ url_for('exam_paper', tag=exam_tag) }}">{{ exam['tag'] }}</a>
+{% endblock %}
+
+{% block paper_type %}{{ exam['title'] }}{% endblock %}
+
+{% block paper_header_title %}{{ exam['title'] }}{% endblock paper_header_title %}
+
+{% block paper_header_qdone %}已做 * 题{% endblock paper_header_qdone %}
+{% block paper_header_qcount %}共 ∞ 题{% endblock paper_header_qcount %}
+
+
+{% block paper_body_action %}{{ url_for('exam_paper_question', tag=exam_tag, q_num=exam['order']) }}{% endblock paper_body_action %}
+
+{% block paper_body_hidden1_name %}id{% endblock %}
+{% block paper_body_hidden1_value %}{{ question.id }}{% endblock %}
+{% block paper_body_hidden2_name %}subject{% endblock %}
+{% block paper_body_hidden2_value %}{{ current_subject }}{% endblock %}
+
+{% block paper_body_option_a %}{{ question['option_a'] }}{% endblock paper_body_option_a %}
+{% block paper_body_option_b %}{{ question['option_b'] }}{% endblock paper_body_option_b %}
+{% block paper_body_option_c %}{{ question['option_c'] }}{% endblock paper_body_option_c %}
+{% block paper_body_option_d %}{{ question['option_d'] }}{% endblock paper_body_option_d %}
+
+
 {% block back_to_link %}{{ url_for('exam_entry') }}{% endblock back_to_link %}

@@ -55,21 +55,35 @@ async def exam_paper(
     tag: str,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
-    exam = await apifunc.exam_get_by_tag(tag)
+    exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
         raise HTTPException(status_code=404)
     start_time = datetime.fromisoformat(exam['start_time'])
     end_time = datetime.fromisoformat(exam['end_time'])
     if not (start_time < datetime.now() < end_time):
-        return templates.TemplateResponse(
-            'paper/exam.jinja2', {
-                'request': request,
-                'current_user': current_user
-            }
-        )
+        raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')
     return templates.TemplateResponse(
         'paper/exam.jinja2', {
             'request': request,
-            'current_user': current_user
+            'current_user': current_user,
+            'exam': exam,
         }
     )
+
+
+@router.get('/tag/{tag}/{q_num}')
+@router.post('/tag/{tag}/{q_num}')
+@login_required
+async def exam_paper_question(
+    request: Request,
+    tag: str,
+    q_num: int,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    exam: dict = await apifunc.exam_get_by_tag(tag)
+    if not exam:
+        raise HTTPException(status_code=404)
+    start_time = datetime.fromisoformat(exam['start_time'])
+    end_time = datetime.fromisoformat(exam['end_time'])
+    if not (start_time < datetime.now() < end_time):
+        raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')

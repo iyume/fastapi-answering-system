@@ -71,7 +71,8 @@ class CRUDExamCache():
             db_obj_list.append(self.model(
                 user_id = user_id,
                 question_id = question_id_list[i],
-                exam_tag = exam_tag
+                exam_tag = exam_tag,
+                question_order = i + 1
             ))
         db.add_all(db_obj_list)
         db.commit()

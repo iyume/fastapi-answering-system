@@ -3,7 +3,11 @@
 {% set current_subject = request.path_params['subject'] or subject %}
 {% set subject_dict = subjects.get_item(current_subject) %}
 
-{% block nav_tiku_link %}
+{% block nav_first_link %}
+<a href="{{ url_for('tiku_area_index') }}">题库</a>
+{% endblock nav_first_link %}
+
+{% block nav_second_link %}
 <a href="{{ url_for('tiku_area', subject=current_subject) }}">{{ subject_dict['name_zh'] }}</a>
 {% endblock %}
 
