@@ -3,7 +3,7 @@ from typing import Optional, Union
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import random
 
-from app.models.exam import ExamCache, ExamInfo
+from app.models.exam import ExamCache, ExamInfo, ExamStatus
 from app import schema
 
 
@@ -138,5 +138,10 @@ class CRUDExamCache():
         db.commit()
 
 
+class CRUDExamStatus():
+    model = ExamStatus
+
+
 examinfo = CRUDExamInfo()
 examcache = CRUDExamCache()
+examstatus = CRUDExamStatus()

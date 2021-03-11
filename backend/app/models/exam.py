@@ -24,6 +24,14 @@ class ExamCache(Base):
     user_id = Column(String(36), ForeignKey('user.id'))
     question_id = Column(String(36), ForeignKey('questions.id'))
     picked = Column(String(1))
-    exam_tag = Column(String(10), ForeignKey('exam_info.tag'))
+    exam_tag = Column(String(20), ForeignKey('exam_info.tag'))
     question_order = Column(Integer)
+    fade_key = Column(Integer, primary_key=True) # autoincrement
+
+class ExamStatus(Base):
+    __tablename__ = 'exam_status'
+
+    user_id = Column(String(36), ForeignKey('user.id'))
+    exam_tag = Column(String(20), ForeignKey('exam_info.tag'))
+    status = Column(Integer, default=0) # 0: created, 1: doing, 2: done
     fade_key = Column(Integer, primary_key=True) # autoincrement
