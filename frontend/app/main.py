@@ -10,7 +10,7 @@ from .routers import tiku, auth, user, exam, manager
 from .config import static_router, templates
 
 
-app = FastAPI(doc_url=None, redoc_url=None, openapi=None, openapi_url=None)
+app = FastAPI(doc_url=None, docs_url=None, redoc_url=None, openapi=None, openapi_url=None)
 
 app.mount('/static', static_router, name='static')
 app.include_router(tiku.router)

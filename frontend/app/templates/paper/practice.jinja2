@@ -1,7 +1,9 @@
 {% extends 'paper/base.jinja2' %}
 
 {% set current_subject = request.path_params['subject'] or subject %}
+{% if current_subject %}
 {% set subject_dict = subjects.get_item(current_subject) %}
+{% endif %}
 
 {% block nav_first_link %}
 <a href="{{ url_for('tiku_area_index') }}">题库</a>

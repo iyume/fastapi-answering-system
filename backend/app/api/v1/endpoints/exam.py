@@ -75,6 +75,14 @@ async def create_exam_paper(
     return 'success'
 
 
+@router.post('/paper/status')
+async def status_exam_paper(
+    obj_in: schema.ExamBase,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.examcache.paper_status(db, obj_in)
+
+
 @router.post('/paper/finish')
 async def finish_exam_paper(
     obj_in: schema.ExamStatusUpdate,

@@ -79,6 +79,13 @@ class CRUDExamCache():
             db.refresh(i)
         return None
 
+    def paper_status(
+        self,
+        db: Session,
+        obj_in: schema.ExamBase
+    ) -> Optional[ExamStatus]:
+        return examstatus.query_status(db, obj_in)
+
     def finish_paper(
         self,
         db: Session,
@@ -158,6 +165,18 @@ class CRUDExamStatus():
         db.add(exam_status)
         db.commit()
         db.refresh(exam_status)
+
+    def query_status(
+        self,
+        db: Session,
+        obj_in: schema.ExamBase
+    ) -> Optional[ExamStatus]:
+        return (
+            db.query(self.model)
+            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.exam_tag == obj_in.exam_tag)
+            .first()
+        )
 
     def update(
         self,

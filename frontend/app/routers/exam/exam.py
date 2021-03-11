@@ -11,6 +11,7 @@ from app.security import login_required
 from app.routers import deps
 from app import schema
 from app.api import apifunc
+from app.models.subject import Subjects
 
 
 router = APIRouter()
@@ -49,11 +50,40 @@ async def exam_entry(
     )
 
 
-@router.get('/tag/{tag}')
+@router.get('/complete/{tag}')
 @login_required
-async def exam_paper(
+async def exam_complete(
+    request: Request,
     tag: str,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    exam: dict = await apifunc.exam_get_by_tag(tag)
+    if not exam:
+        raise HTTPException(status_code=404)
+    exam_paper_status = await apifunc.exam_paper_status(user_id=current_user.id, exam_tag=tag)
+    if not exam_paper_status['status']:
+        exam_records = await apifunc.exam_paper_fetchall(
+            user_id = current_user.id,
+            exam_tag = tag
+        )
+        for i in exam_records:
+            if i['picked'] is None:
+                return RedirectResponse(
+                    request.url_for(
+                        'exam_paper_answering',
+                        tag = i['exam_tag'],
+                        q_num = i['question_order']
+                    )
+                )
+        await apifunc.exam_paper_finish(current_user.id, tag)
+    return RedirectResponse(
+        request.url_for('exam_answer', tag = tag, q_num = 1), status_code = 303
+    )
+
+
+@router.get('/tag/{tag}')
+async def exam_paper(
+    tag: str
 ) -> Any:
     exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
@@ -129,24 +159,41 @@ async def exam_paper_answering(
     )
 
 
-@router.get('/answer/{tag}')
+@router.get('/answer/{tag}/{q_num}')
+@login_required
 async def exam_answer(
     request: Request,
     tag: str,
+    q_num: int,
+    subjects: Subjects = Depends(deps.get_subjects),
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
-    if not (exam := await apifunc.exam_get_by_tag(tag)):
-        raise HTTPException(status_code=400, detail='Bad exam_tag')
+    exam: dict = await apifunc.exam_get_by_tag(tag)
+    if not exam:
+        raise HTTPException(status_code=404)
+    exam_record = await apifunc.exam_paper_get_by_order(
+        user_id = current_user.id,
+        exam_tag = tag,
+        question_order = q_num
+    )
     exam_records = await apifunc.exam_paper_fetchall(
         user_id = current_user.id,
         exam_tag = tag
     )
+    question = await apifunc.get_answer(exam_record['question_id'])
+    question_list = []
     for i in exam_records:
-        if i['picked'] is None:
-            return RedirectResponse(
-                request.url_for(
-                    'exam_paper_answering',
-                    tag = i['exam_tag'],
-                    q_num = i['question_order']
-                ))
-    raise HTTPException(status_code=200, detail=f"你已完成考试 {exam['title']}，答案页面正在制作中，可以去考试页面查看你的选项")
+        question_list.append(await apifunc.get_answer(i['question_id']))
+    return templates.TemplateResponse(
+        'exam/answer.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            'subjects': subjects,
+            'question': question,
+            'question_list': question_list,
+            'exam': exam,
+            'exam_records': exam_records,
+            'picked': exam_record['picked']
+
+        }
+    )
