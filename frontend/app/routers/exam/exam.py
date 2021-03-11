@@ -61,7 +61,7 @@ async def exam_complete(
     if not exam:
         raise HTTPException(status_code=404)
     exam_paper_status = await apifunc.exam_paper_status(user_id=current_user.id, exam_tag=tag)
-    if not exam_paper_status['status']:
+    if exam_paper_status and not exam_paper_status.get('status', None):
         exam_records = await apifunc.exam_paper_fetchall(
             user_id = current_user.id,
             exam_tag = tag
@@ -116,6 +116,9 @@ async def exam_paper_answering(
         raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')
     if q_num > exam['question_count']:
         raise HTTPException(status_code=404)
+    exam_status = await apifunc.exam_paper_status(current_user.id, tag)
+    if exam_status and exam_status.get('status', None):
+        raise HTTPException(status_code=200, detail='您已完成此考试，请去个人中心查看考试记录')
     if not await apifunc.exam_paper_fetchone(user_id=current_user.id, exam_tag=tag):
         await apifunc.exam_paper_create(user_id=current_user.id, exam_tag=tag)
     # update database picked

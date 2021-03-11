@@ -1,5 +1,9 @@
 {% extends 'paper/base.jinja2' %}
 
+{% block title %}
+{{ super() }} - {{ subjects.get_item(request.path_params['subject'])['name_zh'] or subject }}
+{% endblock title %}
+
 {% set current_subject = request.path_params['subject'] or subject %}
 {% if current_subject %}
 {% set subject_dict = subjects.get_item(current_subject) %}

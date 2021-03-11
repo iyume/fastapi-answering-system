@@ -1,5 +1,9 @@
 {% extends 'paper/practice.jinja2' %}
 
+{% block title %}
+{{ exam['title'] }}答案
+{% endblock title %}
+
 {% set exam_tag = request.path_params['tag'] %}
 {% set exam_question_order = request.path_params['q_num']|int %}
 {% set question_done_sum = [] %}

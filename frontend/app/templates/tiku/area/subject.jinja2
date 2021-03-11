@@ -1,14 +1,8 @@
 {% extends 'tiku/area/base.jinja2' %}
 
-
-{% block subject_render %}
-{% for i in subjects.items %}
-<a href="{{ url_for('tiku_area', subject=i['alias']) }}" class="inline-block px-6 py-4 w-28 {% if request.path_params['subject'] == i['alias'] %}bg-gray-200{% else %}hover:bg-gray-200{% endif %}">
-    <svg class="block w-12 h-12 m-auto mb-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M11 9V5H9v4H5v2h4v4h2v-4h4V9h-4zm-1 11a10 10 0 1 1 0-20 10 10 0 0 1 0 20z"/></svg>
-    <p>{{ i['name_zh'] }}</p>
-</a>
-{% endfor %}
-{% endblock %}
+{% block title %}
+{{ super() }} - {{ subjects.get_item(request.path_params['subject'])['name_zh'] }}
+{% endblock title %}
 
 {% block paperentry %}
                 <div class="flex bg-white rounded-lg p-4">
