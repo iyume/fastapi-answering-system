@@ -15,7 +15,7 @@ CREATE TABLE user (
 );
 
 CREATE TABLE exam_info (
-    tag CHAR(10) PRIMARY KEY,
+    tag CHAR(20) PRIMARY KEY,
     title CHAR(20) NOT NULL,
     detail CHAR(200),
     type CHAR(10),
@@ -29,7 +29,14 @@ CREATE TABLE exam_cache (
     user_id CHAR(36) REFERENCES user(id),
     question_id CHAR(36) REFERENCES questions(id),
     picked CHAR(1),
-    exam_tag CHAR(10) REFERENCES exam_info(tag),
+    exam_tag CHAR(20) REFERENCES exam_info(tag),
     question_order INT,
+    fade_key INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE exam_status (
+    user_id CHAR(36) REFERENCES user(id),
+    exam_tag CHAR(20) REFERENCES exam_info(tag),
+    status INT DEFAULT 0,
     fade_key INTEGER PRIMARY KEY AUTOINCREMENT
 );

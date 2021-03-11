@@ -61,7 +61,7 @@ class CRUDExamCache():
     def create_paper(
         self,
         db: Session,
-        obj_in: schema.ExamPaperBase,
+        obj_in: schema.ExamBase,
         question_id_list: list[str]
     ) -> None:
         db_obj_list = []
@@ -74,6 +74,7 @@ class CRUDExamCache():
             ))
         db.add_all(db_obj_list)
         db.commit()
+        examstatus.create(db, obj_in)
         for i in db_obj_list:
             db.refresh(i)
         return None
@@ -81,7 +82,7 @@ class CRUDExamCache():
     def fetchone(
         self,
         db: Session,
-        obj_in: schema.ExamPaperBase
+        obj_in: schema.ExamBase
     ) -> Optional[ExamCache]:
         return (
             db.query(self.model)
@@ -113,7 +114,7 @@ class CRUDExamCache():
     def get_first_not_picked(
         self,
         db: Session,
-        obj_in: schema.ExamPaperBase
+        obj_in: schema.ExamBase
     ) -> Optional[ExamCache]:
         return (
             db.query(self.model)
@@ -140,6 +141,29 @@ class CRUDExamCache():
 
 class CRUDExamStatus():
     model = ExamStatus
+
+    def create(
+        self,
+        db: Session,
+        obj_in: schema.ExamBase
+    ) -> None:
+        exam_status = self.model(user_id = obj_in.user_id, exam_tag = obj_in.exam_tag)
+        db.add(exam_status)
+        db.commit()
+        db.refresh(exam_status)
+
+    def update(
+        self,
+        db: Session,
+        obj_in: schema.ExamStatusUpdate
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.user_id == obj_in.user_id)
+        .filter(self.model.exam_tag == obj_in.exam_tag)
+        .update({self.model.status: obj_in.status})
+        )
+        db.commit()
 
 
 examinfo = CRUDExamInfo()

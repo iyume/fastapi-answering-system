@@ -15,15 +15,19 @@ class ExamCreate(BaseModel):
     end_time: datetime
 
 
-class ExamPaperBase(BaseModel):
+class ExamBase(BaseModel):
     user_id: str
     exam_tag: str
 
 
-class ExamPaperQuery(ExamPaperBase):
+class ExamPaperQuery(ExamBase):
     question_order: Optional[int] = None
 
 
-class ExamPaperUpdate(ExamPaperBase):
+class ExamPaperUpdate(ExamBase):
     question_id: str
     picked: str
+
+
+class ExamStatusUpdate(ExamBase):
+    status: int
