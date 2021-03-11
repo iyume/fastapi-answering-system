@@ -79,6 +79,13 @@ class CRUDExamCache():
             db.refresh(i)
         return None
 
+    def finish_paper(
+        self,
+        db: Session,
+        obj_in: schema.ExamStatusUpdate
+    ) -> None:
+        examstatus.update(db, obj_in)
+
     def fetchone(
         self,
         db: Session,
@@ -168,4 +175,4 @@ class CRUDExamStatus():
 
 examinfo = CRUDExamInfo()
 examcache = CRUDExamCache()
-examstatus = CRUDExamStatus()
+examstatus = CRUDExamStatus() # do not export

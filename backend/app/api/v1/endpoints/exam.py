@@ -51,7 +51,7 @@ async def delete_exam(
 
 @router.post('/paper/create')
 async def create_exam_paper(
-    obj_in: schema.ExamPaperBase,
+    obj_in: schema.ExamBase,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     exam = crud.examinfo.get_by_tag(db, tag=obj_in.exam_tag)
@@ -75,9 +75,17 @@ async def create_exam_paper(
     return 'success'
 
 
+@router.post('/paper/finish')
+async def finish_exam_paper(
+    obj_in: schema.ExamStatusUpdate,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    crud.examcache.finish_paper(db, obj_in)
+
+
 @router.post('/paper/fetchone')
 async def exam_paper_fetchone(
-    obj_in: schema.ExamPaperBase,
+    obj_in: schema.ExamBase,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     return crud.examcache.fetchone(db, obj_in)
@@ -93,7 +101,7 @@ async def exam_paper_fetch_with_filter(
 
 @router.post('/paper/first-not-picked')
 async def get_first_not_picked_question_exam_paper(
-    obj_in: schema.ExamPaperBase,
+    obj_in: schema.ExamBase,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     return crud.examcache.get_first_not_picked(db, obj_in)
