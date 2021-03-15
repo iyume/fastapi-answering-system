@@ -6,7 +6,7 @@ from starlette.requests import Request
 from app.config import templates
 from app.routers import deps
 from app import schema
-from app.security.func import superuser_required
+from app.security import superuser_required
 from app.api import apifunc
 from app.models import Subjects
 
