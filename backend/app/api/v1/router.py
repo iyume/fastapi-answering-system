@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from .endpoints import question, answer, exam
+from .endpoints import question, answer, exam, extrapi
 
 api_router = APIRouter(tags=['v1'])
 
@@ -15,3 +15,4 @@ async def shutdown() -> None:
 api_router.include_router(question.router)
 api_router.include_router(answer.router)
 api_router.include_router(exam.router)
+api_router.include_router(extrapi.router)

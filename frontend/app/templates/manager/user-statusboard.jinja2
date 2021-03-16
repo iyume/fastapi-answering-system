@@ -1,0 +1,25 @@
+{% extends "user/homepage.jinja2" %}
+
+{% block user_main %}
+<div class="m-12 w-full">
+    {% if message %}
+    <p class="text-red-500 pb-4">{{ message }}</p>
+    {% endif %}
+    <table class="w-full">
+        <tr class="text-white text-left">
+            <th class="bg-green p-2 border border-ddd">用户名</th>
+            <th class="bg-green p-2 border border-ddd">微信名</th>
+            <th class="bg-green p-2 border border-ddd">最近一场完成的考试</th>
+            <th class="bg-green p-2 border border-ddd">所有考试</th>
+        </tr>
+        {% for exam in exams %}
+        <tr class="font-light">
+            <td class="p-2 border border-ddd">{{ '' }}</td>
+            <td class="p-2 border border-ddd">{{ '' }}</td>
+            <td class="p-2 border border-ddd">{{ '' }}</td>
+            <td class="p-2 border border-ddd">{{ '' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock user_main %}

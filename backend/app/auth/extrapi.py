@@ -9,7 +9,7 @@ from app import crud, schema
 from app.auth import deps, authfunc
 
 
-router = APIRouter(tags=['test resource'])
+router = APIRouter(tags=['extrapi'])
 
 
 @router.post('/test-token')

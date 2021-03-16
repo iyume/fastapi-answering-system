@@ -21,22 +21,7 @@ class UserDB(Base):
     is_superuser = Column('is_superuser', Boolean, default=False)
     created_time = Column('created_time', DateTime, default=datetime.now())
     first_login = Column('first_login', DateTime)
-    exam = relationship('ExamCache')
-
-    ## this function has automatical implement in Base
-    # def __init__(
-    #     self,
-    #     id: str = None,
-    #     name: str = None,
-    #     email: str = None,
-    #     wechat: str = None,
-    #     is_superuser: bool = False
-    # ) -> None:
-    #     self.id = id
-    #     self.name = name
-    #     self.email = email
-    #     self.wechat = wechat
-    #     self.is_superuser = is_superuser        
+    exam = relationship('ExamCache')    
 
     def validate_password(self, password: str) -> bool:
         return authfunc.verify_password(password, self.hashed_password)

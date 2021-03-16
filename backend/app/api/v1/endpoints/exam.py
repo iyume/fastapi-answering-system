@@ -111,7 +111,7 @@ async def exam_paper_fetchone(
 
 
 @router.post('/paper/')
-async def exam_paper_fetch_with_filter(
+async def exam_paper_user_all(
     obj_in: schema.ExamPaperQuery,
     db: Session = Depends(deps.get_db)
 ) -> Any:

@@ -212,7 +212,8 @@ class API():
         result = await post_with_json(
             self.exam_paper_finish_uri,
             user_id = user_id,
-            exam_tag = exam_tag
+            exam_tag = exam_tag,
+            status = 1
         )
         return result
 

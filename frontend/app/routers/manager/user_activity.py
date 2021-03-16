@@ -19,4 +19,10 @@ async def list_user_exam(
     request: Request,
     current_user: UserPayload = Depends(deps.get_current_user)
 ) -> Any:
-    ...
+    return templates.TemplateResponse(
+        'manager/user-statusboard.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            
+        }
+    )

@@ -34,4 +34,4 @@ class ExamPaperUpdate(ExamBase):
 
 
 class ExamStatusUpdate(ExamBase):
-    status: int = 1
+    status: int = 0
