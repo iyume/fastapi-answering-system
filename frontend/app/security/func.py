@@ -11,46 +11,46 @@ from app.config import super_secret, logger
 
 def login_required(func: Any) -> Any:
     @wraps(func)
-    async def wrapper(**kwds: Any) -> Any:
-        if 'current_user' not in kwds:
-            return RedirectResponse(kwds['request'].url_for('login'))
-        if not getattr(kwds['current_user'], 'is_authenticated', None):
-            return RedirectResponse(kwds['request'].url_for('login'))
-        if getattr(kwds['current_user'], 'exp') < time.time():
-            rr = RedirectResponse(kwds['request'].url_for('login'))
+    async def wrapper(**kwargs: Any) -> Any:
+        if 'current_user' not in kwargs:
+            return RedirectResponse(kwargs['request'].url_for('login'))
+        if not getattr(kwargs['current_user'], 'is_authenticated', None):
+            return RedirectResponse(kwargs['request'].url_for('login'))
+        if getattr(kwargs['current_user'], 'exp') < time.time():
+            rr = RedirectResponse(kwargs['request'].url_for('login'))
             rr.set_cookie('jwt', value='delete', expires=0)
             return rr
         if iscoroutinefunction(func):
-            return await func(**kwds)
+            return await func(**kwargs)
         else:
-            return func(**kwds)
+            return func(**kwargs)
     return wrapper
 
 
 def secret_required(func: Any) -> Any:
     @wraps(func)
-    async def wrapper(**kwds: Any) -> Any:
-        if 'secret' not in kwds:
+    async def wrapper(**kwargs: Any) -> Any:
+        if 'secret' not in kwargs:
             return PlainTextResponse('Secret required', status_code=400)
-        if kwds['secret'].secret != super_secret:
+        if kwargs['secret'].secret != super_secret:
             logger.warning(f'Secret is {super_secret}')
             return PlainTextResponse('Secret wrong', status_code=403)
         if iscoroutinefunction(func):
-            return await func(**kwds)
+            return await func(**kwargs)
         else:
-            return func(**kwds)
+            return func(**kwargs)
     return wrapper
 
 
 def superuser_required(func: Any) -> Any:
     @wraps(func)
-    async def wrapper(**kwds: Any) -> Any:
-        if 'current_user' not in kwds:
+    async def wrapper(**kwargs: Any) -> Any:
+        if 'current_user' not in kwargs:
             return HTTPException(status_code=403)
-        if not getattr(kwds['current_user'], 'is_superuser', None):
+        if not getattr(kwargs['current_user'], 'is_superuser', None):
             return HTTPException(status_code=403)
         if iscoroutinefunction(func):
-            return await func(**kwds)
+            return await func(**kwargs)
         else:
-            return func(**kwds)
+            return func(**kwargs)
     return wrapper

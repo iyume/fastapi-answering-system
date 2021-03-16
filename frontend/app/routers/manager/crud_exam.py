@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import APIRouter, Depends
+from fastapi.exceptions import HTTPException
 from starlette.requests import Request
 
 from app.config import templates
@@ -21,7 +22,7 @@ async def create_exam(
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     return templates.TemplateResponse(
-        'user/super/create-exam.jinja2', {
+        'manager/create-exam.jinja2', {
             'request': request,
             'current_user': current_user
         }
@@ -38,7 +39,7 @@ async def create_exam_action(
     form = await request.form()
     if await apifunc.exam_get_by_tag(form['tag']):
         return templates.TemplateResponse(
-            'user/super/create-exam.jinja2', {
+            'manager/create-exam.jinja2', {
                 'request': request,
                 'current_user': current_user,
                 'message': '考试标签重复'
@@ -59,7 +60,7 @@ async def create_exam_action(
         detail = form['detail']
     )
     return templates.TemplateResponse(
-        'user/super/create-exam.jinja2', {
+        'manager/create-exam.jinja2', {
             'request': request,
             'current_user': current_user,
             'subjects': subjects,
@@ -68,18 +69,62 @@ async def create_exam_action(
     )
 
 
-@router.post('/delete')
-@superuser_required
-async def delete_exam(
+@router.get('/list')
+async def list_exam(
     request: Request,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
-    form = await request.form()
-    await apifunc.exam_delete(form['tag'])
+    """
+    list exams like a dashboard contains `full_info`, `revise`, `delete` button
+    """
+    ...
+
+
+@router.get('/{tag}/read')
+async def read_exam(
+    request: Request,
+    tag: str,
+    current_user: schema.UserDetail = Depends(deps.get_current_user)
+) -> Any:
+    ...
+
+
+@router.get('/{tag}/update')
+@superuser_required
+async def update_exam(
+   request: Request,
+   tag: str,
+   current_user: schema.UserPayload = Depends(deps.get_current_user) 
+) -> Any:
+    if not await apifunc.exam_get_by_tag(tag=tag):
+        raise HTTPException(status_code=400, detail='无此考试标签')
+
+
+@router.post('/{tag}/update')
+@superuser_required
+async def update_exam_action(
+   request: Request,
+   tag: str,
+   current_user: schema.UserPayload = Depends(deps.get_current_user) 
+) -> Any:
+    """
+    update do not revise tag
+    """
+    ...
+
+
+@router.post('/{tag}/delete')
+@superuser_required
+async def delete_exam(
+    request: Request,
+    tag: str,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    await apifunc.exam_delete(tag)
     return templates.TemplateResponse(
-        'user/super/create-exam.jinja2', {
+        'manager/create-exam.jinja2', {
             'request': request,
             'current_user': current_user,
-            'message': f"删除考试 {form['tag']} 成功"
+            'message': f"删除考试 {tag} 成功"
         }
     )

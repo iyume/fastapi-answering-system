@@ -88,15 +88,12 @@
         {% endif %}
     </form>
     {% if created_exam %}
-    <div class="py-6">
-        <a href="{{ url_for('create_exam') }}" class="text-blue-400 block">再创建一场考试</a>
-        <br>
-        <a href="{{ url_for('exam_entry') }}" class="text-blue-400 block">去考试页面</a>
+    <div class="pt-8">
+        <a href="{{ url_for('update_exam', tag=created_exam['tag']) }}" class="bg-green text-white px-6 py-2"
+        >修正信息</a>
+        <a href="{{ url_for('list_exam') }}" class="bg-green text-white px-6 py-2"
+        >确认</a>
     </div>
-    <form action="{{ url_for('delete_exam') }}" method="post">
-        <input type="hidden" name="tag" value="{{ created_exam['tag'] }}"/>
-        <button type="submit" class="block px-6 py-2 bg-red-500">信息有误，删掉考试</button>
-    </form>
     {% endif %}
 </div>
 {% endblock user_main %}
