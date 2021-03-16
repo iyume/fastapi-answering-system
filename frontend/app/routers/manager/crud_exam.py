@@ -166,7 +166,7 @@ async def update_exam_action(
     return RedirectResponse(request.url_for('list_exam'), status_code=303)
 
 
-@router.post('/{tag}/delete')
+@router.get('/{tag}/delete')
 @superuser_required
 async def delete_exam(
     request: Request,
@@ -174,10 +174,12 @@ async def delete_exam(
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     await apifunc.exam_delete(tag)
+    exams = await apifunc.exam_fetchall()
     return templates.TemplateResponse(
-        'manager/create-exam.jinja2', {
+        'manager/list-exam.jinja2', {
             'request': request,
             'current_user': current_user,
+            'exams': exams,
             'message': f"删除考试 {tag} 成功"
         }
     )

@@ -2,6 +2,9 @@
 
 {% block user_main %}
 <div class="m-12 w-full">
+    {% if message %}
+    <p class="text-red-500 pb-4">{{ message }}</p>
+    {% endif %}
     <table class="w-full">
         <tr class="text-white text-left">
             <th class="bg-green p-2 border border-ddd">标题</th>

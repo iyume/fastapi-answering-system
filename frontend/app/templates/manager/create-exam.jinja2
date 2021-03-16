@@ -2,7 +2,7 @@
 
 {% block user_main %}
 <div class="m-12 w-full">
-    <h1 class="font-lg text-3xl pb-4">{% if not created_exam %}编辑信息{% else %}创建考试{% endif %}</h1>
+    <h1 class="font-lg text-3xl pb-4">{% block user_main_title %}{% if not created_exam %}编辑信息{% elif is_read_exam %}考试详情{% else %}创建考试{% endif %}{% endblock %}</h1>
     {% if message %}
     <p class="text-red-500 py-2">{{ message }}</p>
     {% endif %}
@@ -86,7 +86,8 @@
         {% if not created_exam %}
         <button type="submit" class="inline-block mt-4 px-10 py-3 bg-main">{% if to_update %}更新{% else %}创建考试{% endif %}</button>
         {% if to_update %}
-        <button type="submit" class="inline-block mt-4 px-10 py-3 bg-red-500">删除</button>
+        <a href="{{ url_for('list_exam') }}" class="inline-block mt-4 px-10 py-3 bg-green">返回</a>
+        <a href="{{ url_for('delete_exam', tag=to_update['tag']) }}" class="inline-block mt-4 px-10 py-3 bg-red-500">删除</a>
         {% endif %}
         {% endif %}
     </form>
