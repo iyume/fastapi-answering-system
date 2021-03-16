@@ -43,6 +43,18 @@ class CRUDExamInfo():
         db.refresh(db_obj)
         return db_obj
 
+    def update(
+        self,
+        db: Session,
+        obj_in: schema.ExamUpdate
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.tag == obj_in.tag)
+        .update(dict(obj_in))
+        )
+        db.commit()
+
     def delete(
         self,
         db: Session,

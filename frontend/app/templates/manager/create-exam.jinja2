@@ -2,15 +2,15 @@
 
 {% block user_main %}
 <div class="m-12 w-full">
-    <h1 class="font-lg text-3xl pb-4">{% if not created_exam %}创建考试{% else %}创建成功{% endif %}</h1>
+    <h1 class="font-lg text-3xl pb-4">{% if not created_exam %}编辑信息{% else %}创建考试{% endif %}</h1>
     {% if message %}
     <p class="text-red-500 py-2">{{ message }}</p>
     {% endif %}
-    <form action="{{ url_for('create_exam_action') }}" method="post" class="space-y-5">
+    <form action="{% if to_update %}{{ url_for('update_exam', tag=to_update['tag']) }}{% else %}{{ url_for('create_exam_action') }}{% endif %}" method="post" class="space-y-5">
         <label class="block">
             <span class="pr-4">标题 <span class="text-red-500 font-bold">*</span>：(20 字之内)</span>
             {% if not created_exam %}
-            <input type="text" name="title" class="form-input border-2 h-10 w-2/5" maxlength="20" required/>
+            <input type="text" name="title" {% if to_update %}value="{{ to_update['title'] }}"{% endif %} class="form-input border-2 h-10 w-2/5" maxlength="20" required/>
             {% else %}
             <span>{{ created_exam['title'] }}</span>
             {% endif %}
@@ -18,7 +18,7 @@
         <label class="block">
             <span class="pr-4">详情：(200 字之内)</span>
             {% if not created_exam %}
-            <textarea type="text" name="detail" class="form-textarea border-2 h-32 flex-wrap w-full" maxlength="200" placeholder="可留空"></textarea>
+            <textarea type="text" name="detail" class="form-textarea border-2 h-24 flex-wrap w-full" maxlength="200" placeholder="可留空">{% if to_update %}{{ to_update['detail'] }}{% endif %}</textarea>
             {% else %}
             <span>{{ created_exam['detail'] }}</span>
             {% endif %}
@@ -27,9 +27,9 @@
             <span class="pr-4">科目</span>
             {% if not created_exam %}
             <select name="subject" class="form-select inline-block w-3/12 border h-10">
-                <option value="fb">基金基础</option>
-                <option value="fr">基金法规</option>
-                <option value="sr">证券法规</option>
+                <option value="fb" {% if to_update %}{% if to_update['subject'] == 'fb' %}selected{% endif %}{% endif %}>基金基础</option>
+                <option value="fr" {% if to_update %}{% if to_update['subject'] == 'fr' %}selected{% endif %}{% endif %}>基金法规</option>
+                <option value="sr" {% if to_update %}{% if to_update['subject'] == 'sr' %}selected{% endif %}{% endif %}>证券法规</option>
             </select>
             {% else %}
             <span>{{ subjects.get_item(created_exam['subject'])['name_zh'] }}</span>
@@ -38,7 +38,7 @@
         <label class="block">
             <span class="pr-4">题目数量 <span class="text-red-500 font-bold">*</span>：</span>
             {% if not created_exam %}
-            <input type="number" name="question_count" class="form-input border h-10 w-1/5" required/>
+            <input type="number" name="question_count" {% if to_update %}value="{{ to_update['question_count'] }}"{% endif %} class="form-input border h-10 w-1/5" required/>
             {% else %}
             <span>{{ created_exam['question_count'] }}</span>
             {% endif %}
@@ -47,7 +47,7 @@
             <span class="pr-4">出题依据</span>
             {% if not created_exam %}
             <select name="type" class="form-select inline-block w-3/12 border h-10">
-                <option value="random">随机</option>
+                <option value="random" {% if to_update %}{% if to_update['type'] == 'random' %}selected{% endif %}{% endif %}>随机</option>
             </select>
             {% else %}
             <span>{{ created_exam['type'] }}</span>
@@ -57,8 +57,8 @@
             <span class="pr-4">开始时间 <span class="text-red-500 font-bold">*</span>：</span>
             {# <input type="datetime-local" name=""> #}
             {% if not created_exam %}
-            <input type="date" name="start_time_date" class="pr-8" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
-            <input type="time" name="start_time_time" pattern="[0-9]{2}:[0-9]{2}" required/>
+            <input type="date" name="start_time_date" {% if to_update %}value="{{ to_update['start_time_date'] }}"{% endif %} class="pr-8" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
+            <input type="time" name="start_time_time" {% if to_update %}value="{{ to_update['start_time_time'] }}"{% endif %} pattern="[0-9]{2}:[0-9]{2}" required/>
             {% else %}
             <span>{{ created_exam['start_time'] }}</span>
             {% endif %}
@@ -67,8 +67,8 @@
             <span class="pr-4">结束时间 <span class="text-red-500 font-bold">*</span>：</span>
             {# <input type="datetime-local" name=""> #}
             {% if not created_exam %}
-            <input type="date" name="end_time_date" class="pr-8" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
-            <input type="time" name="end_time_time" pattern="[0-9]{2}:[0-9]{2}" required/>
+            <input type="date" name="end_time_date" {% if to_update %}value="{{ to_update['end_time_date'] }}"{% endif %} class="pr-8" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" required/>
+            <input type="time" name="end_time_time" {% if to_update %}value="{{ to_update['end_time_time'] }}"{% endif %} pattern="[0-9]{2}:[0-9]{2}" required/>
             <span class="font-thin text-xs">注：火狐浏览器的时间控件里第一个栏目按 `a` 键是上午，`p` 键是下午</span>
             {% else %}
             <span>{{ created_exam['end_time'] }}</span>
@@ -76,15 +76,18 @@
             <!-- <span>a for a.m. while p for p.m.</span> -->
         </label>
         <label class="block">
-            <span class="pr-4">标签 <span class="text-red-500 font-bold">*</span>：(20 字之内，用于区分考试的唯一标签)</span>
-            {% if not created_exam %}
+            <span class="pr-4">标签 <span class="text-red-500 font-bold">*</span>：(20 字之内，用于区分考试的唯一标签，不可修改)</span>
+            {% if not created_exam and not to_update %}
             <input type="text" name="tag" class="form-input border h-10 w-2/5" maxlength="20" placeholder="比如：基金春季第一次考试" required/>
             {% else %}
-            <span>{{ created_exam['tag'] }}</span>
+            <span>{% if created_exam %}{{ created_exam['tag'] }}{% else %}{{ to_update['tag'] }}{% endif %}</span>
             {% endif %}
         </label>
         {% if not created_exam %}
-        <button type="submit" class="block mx-auto mt-4 px-10 py-3 bg-main">创建考试</button>
+        <button type="submit" class="inline-block mt-4 px-10 py-3 bg-main">{% if to_update %}更新{% else %}创建考试{% endif %}</button>
+        {% if to_update %}
+        <button type="submit" class="inline-block mt-4 px-10 py-3 bg-red-500">删除</button>
+        {% endif %}
         {% endif %}
     </form>
     {% if created_exam %}
@@ -92,7 +95,7 @@
         <a href="{{ url_for('update_exam', tag=created_exam['tag']) }}" class="bg-green text-white px-6 py-2"
         >修正信息</a>
         <a href="{{ url_for('list_exam') }}" class="bg-green text-white px-6 py-2"
-        >确认</a>
+        >{% if is_read_exam %}返回{% else %}确认{% endif %}</a>
     </div>
     {% endif %}
 </div>

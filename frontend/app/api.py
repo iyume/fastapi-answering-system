@@ -76,6 +76,7 @@ class API():
         self.exam_fetchall_uri = os.path.join(self.exam_uri, '')
         self.exam_get_uri = self.exam_uri
         self.exam_create_uri = os.path.join(self.exam_uri, 'create')
+        self.exam_update_uri = os.path.join(self.exam_uri, 'update')
         self.exam_delete_uri = os.path.join(self.exam_uri, 'delete')
         self.exam_paper_uri = os.path.join(self.exam_uri, 'paper', '')
         self.exam_paper_create_uri = os.path.join(self.exam_paper_uri, 'create')
@@ -129,11 +130,35 @@ class API():
         question_count: int,
         start_time: str,
         end_time: str,
-        tag: Optional[str] = '',
+        tag: str,
         detail: Optional[str] = ''
     ) -> Any:
         result = await post_with_json(
             self.exam_create_uri,
+            title = title,
+            type = type,
+            subject = subject,
+            question_count = question_count,
+            start_time = start_time,
+            end_time = end_time,
+            tag = tag,
+            detail = detail
+        )
+        return result
+
+    async def exam_update(
+        self,
+        title: str,
+        type: str,
+        subject: str,
+        question_count: int,
+        start_time: str,
+        end_time: str,
+        tag: str,
+        detail: Optional[str] = ''
+    ) -> Any:
+        result = await post_with_json(
+            self.exam_update_uri,
             title = title,
             type = type,
             subject = subject,

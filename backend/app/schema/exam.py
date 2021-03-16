@@ -15,6 +15,10 @@ class ExamCreate(BaseModel):
     end_time: datetime
 
 
+class ExamUpdate(ExamCreate):
+    ...
+
+
 class ExamBase(BaseModel):
     user_id: str
     exam_tag: str

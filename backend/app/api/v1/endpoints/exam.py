@@ -37,6 +37,17 @@ async def create_exam(
     return crud.examinfo.create(db, examinfo)
 
 
+@router.post('/update')
+async def update_exam(
+    examupdate: schema.ExamUpdate,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    """
+    update exam info
+    """
+    return crud.examinfo.update(db, examupdate)
+
+
 @router.post('/delete')
 async def delete_exam(
     tag: str,

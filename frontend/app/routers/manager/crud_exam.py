@@ -3,6 +3,7 @@ from typing import Any
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
 from starlette.requests import Request
+from starlette.responses import RedirectResponse
 
 from app.config import templates
 from app.routers import deps
@@ -97,9 +98,21 @@ async def list_exam(
 async def read_exam(
     request: Request,
     tag: str,
+    subjects: Subjects = Depends(deps.get_subjects),
     current_user: schema.UserDetail = Depends(deps.get_current_user)
 ) -> Any:
-    ...
+    if not await apifunc.exam_get_by_tag(tag=tag):
+        raise HTTPException(status_code=400, detail='无此考试标签')
+    exam = await apifunc.exam_get_by_tag(tag)
+    return templates.TemplateResponse(
+        'manager/create-exam.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            'subjects': subjects,
+            'created_exam': exam,
+            'is_read_exam': True,
+        }
+    )
 
 
 @router.get('/{tag}/update')
@@ -107,10 +120,22 @@ async def read_exam(
 async def update_exam(
    request: Request,
    tag: str,
+   subjects: Subjects = Depends(deps.get_subjects),
    current_user: schema.UserPayload = Depends(deps.get_current_user) 
 ) -> Any:
     if not await apifunc.exam_get_by_tag(tag=tag):
         raise HTTPException(status_code=400, detail='无此考试标签')
+    to_update = await apifunc.exam_get_by_tag(tag)
+    to_update['start_time_date'], to_update['start_time_time'] = to_update['start_time'].split('T', 1)
+    to_update['end_time_date'], to_update['end_time_time'] = to_update['end_time'].split('T', 1)
+    return templates.TemplateResponse(
+        'manager/create-exam.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            'subjects': subjects,
+            'to_update': to_update
+        }
+    )
 
 
 @router.post('/{tag}/update')
@@ -123,7 +148,22 @@ async def update_exam_action(
     """
     update do not revise tag
     """
-    ...
+    if not await apifunc.exam_get_by_tag(tag=tag):
+        raise HTTPException(status_code=400, detail='无此考试标签')
+    form = await request.form()
+    start_time = form['start_time_date'] + 'T' + form['start_time_time']
+    end_time = form['end_time_date'] + 'T' + form['end_time_time']
+    await apifunc.exam_update(
+        title = form['title'],
+        tag = tag,
+        type = form['type'],
+        subject = form['subject'],
+        question_count = int(form['question_count']),
+        start_time = start_time,
+        end_time = end_time,
+        detail = form['detail']
+    )
+    return RedirectResponse(request.url_for('list_exam'), status_code=303)
 
 
 @router.post('/{tag}/delete')
