@@ -43,6 +43,7 @@ class UserDB(Base):
 
 
 class User():
+    # temporary the implement in flask
     def __init__(self, name: str, password: Optional[str] = None) -> None:
         db = next(deps.get_db())
         self.current_user = crud.user.get_by_name(db, name)

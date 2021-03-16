@@ -70,6 +70,7 @@ async def create_exam_action(
 
 
 @router.get('/list')
+@superuser_required
 async def list_exam(
     request: Request,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
@@ -77,10 +78,22 @@ async def list_exam(
     """
     list exams like a dashboard contains `full_info`, `revise`, `delete` button
     """
-    ...
+    exams: list = await apifunc.exam_fetchall()
+    if exams:
+        for exam in exams:
+            exam['start_time'] = exam['start_time'].replace('T', ' ')
+            exam['end_time'] = exam['end_time'].replace('T', ' ')
+    return templates.TemplateResponse(
+        'manager/list-exam.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            'exams': exams,
+        }
+    )
 
 
 @router.get('/{tag}/read')
+@superuser_required
 async def read_exam(
     request: Request,
     tag: str,

@@ -14,7 +14,7 @@ class CRUDExamInfo():
         self,
         db: Session
     ) -> list[ExamInfo]:
-        return db.query(self.model).all()
+        return db.query(self.model).order_by(self.model.created_time.desc()).all()
 
     def get_by_tag(
         self,

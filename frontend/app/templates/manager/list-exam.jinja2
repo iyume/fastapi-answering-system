@@ -1,0 +1,24 @@
+{% extends "user/homepage.jinja2" %}
+
+{% block user_main %}
+<div class="m-12 w-full">
+    <table class="w-full">
+        <tr class="text-white text-left">
+            <th class="bg-green p-2 border border-ddd">标题</th>
+            <th class="bg-green p-2 border border-ddd">开始时间</th>
+            <th class="bg-green p-2 border border-ddd">结束时间</th>
+            <th class="bg-green p-2 border border-ddd">编辑</th>
+            <th class="bg-green p-2 border border-ddd">详情</th>
+        </tr>
+        {% for exam in exams %}
+        <tr class="font-light">
+            <td class="p-2 border border-ddd">{{ exam['title'] }}</td>
+            <td class="p-2 border border-ddd">{{ exam['start_time'] }}</td>
+            <td class="p-2 border border-ddd">{{ exam['end_time'] }}</td>
+            <td class="p-2 border border-ddd"><a href="{{ url_for('update_exam', tag=exam['tag']) }}" class="w-full h-full text-blue-500">编辑</a></td>
+            <td class="p-2 border border-ddd"><a href="{{ url_for('read_exam', tag=exam['tag']) }}" class="w-full h-full text-blue-500">详情</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock user_main %}
