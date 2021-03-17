@@ -16,3 +16,6 @@
 - [x] add exam page
 - [x] logout utility
 - [ ] use Redis to store user refresh token and replace `one-token` pattern
+
+## Known Bugs
+- path_params contains space like `?tag=test%20tag` will be redirect as `?tag=test+tag` which do not urldecode, will turn to a wrong page
