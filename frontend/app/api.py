@@ -221,7 +221,7 @@ class API():
             self.exam_paper_finish_uri,
             user_id = user_id,
             exam_tag = exam_tag,
-            status = 1
+            status = 2
         )
         return result
 
@@ -340,12 +340,19 @@ class USER():
     def __init__(self, endpoint: str) -> None:
         self.user_uri = os.path.join(host_url, endpoint)
         self.user_change_password_uri = os.path.join(self.user_uri, 'change-password')
+        self.read_exams_uri = os.path.join(self.user_uri, 'exams')
 
     async def change_password(self, id: str, password: str) -> None:
         await post_with_json(
             self.user_change_password_uri,
             id = id,
             password_new = password
+        )
+
+    async def read_exams(self, user_id: str) -> Any:
+        return await get(
+            self.read_exams_uri,
+            user_id = user_id
         )
 
 

@@ -1,4 +1,5 @@
 from typing import Any
+from datetime import datetime
 
 from fastapi import APIRouter, Depends
 from starlette.requests import Request
@@ -29,6 +30,37 @@ async def homepage(
             }
         )
     return RedirectResponse(request.url_for('index'))
+
+
+@router.get('/{username}/exams')
+@login_required
+async def my_exams(
+    request: Request,
+    username: str,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
+    if not current_user.name == username:
+        return RedirectResponse(request.url_for('homepage'))
+    myexams = await userfunc.read_exams(current_user.id)
+    for exam in myexams:
+        start_time = datetime.fromisoformat(exam['start_time'])
+        end_time = datetime.fromisoformat(exam['end_time'])
+        exam['start_time'] = exam['start_time'].replace('T', ' ')
+        exam['end_time'] = exam['end_time'].replace('T', ' ')
+        if timenow := datetime.now():
+            if start_time < timenow < end_time:
+                exam['opening_status'] = '进行中'
+            elif timenow > end_time:
+                exam['opening_status'] = '已结束'
+            else:
+                exam['opening_status'] = '未开始'
+    return templates.TemplateResponse(
+        'user/myexams.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            'myexams': myexams
+        }
+    )
 
 
 @router.get('/{username}/change-password')

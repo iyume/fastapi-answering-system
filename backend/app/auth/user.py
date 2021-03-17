@@ -28,6 +28,14 @@ async def query_user_by_id(
     return user
 
 
+@router.get('/exams')
+async def user_all_exams(
+    user_id: str,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.examquerycomplex.read_user_all_exams(db, user_id)
+
+
 @router.post('/change-password')
 async def change_password(
     password_in: schema.UserChangePassword,

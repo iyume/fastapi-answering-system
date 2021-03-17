@@ -33,5 +33,5 @@ class ExamStatus(Base):
 
     user_id = Column(String(36), ForeignKey('user.id'))
     exam_tag = Column(String(20), ForeignKey('exam_info.tag'))
-    status = Column(Integer, default=0) # 0: created & doing, 1: done
+    status = Column(Integer, default=0) # 0: created, 1: doing, 2: done
     fade_key = Column(Integer, primary_key=True) # autoincrement

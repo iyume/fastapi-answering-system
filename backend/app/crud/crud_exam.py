@@ -90,6 +90,11 @@ class CRUDExamCache():
         db.commit()
         for i in db_obj_list:
             db.refresh(i)
+        examstatus.update(db, schema.ExamStatusUpdate(
+            user_id = obj_in.user_id,
+            exam_tag = obj_in.exam_tag,
+            status = 1
+        ))
         return None
 
     def paper_status(
@@ -280,6 +285,23 @@ class CRUDExamStatus():
         db.commit()
 
 
+class ComplexQuery():
+    def read_user_all_exams(
+        self,
+        db: Session,
+        user_id: str
+    ) -> list:
+        # I cannot read how to implement join query
+        exam_statuses = [i.__dict__ for i in db.query(ExamStatus).filter(ExamStatus.user_id == user_id).all()]
+        exam_infoes = [i.__dict__ for i in db.query(ExamInfo).filter(ExamInfo.tag.in_([i['exam_tag'] for i in exam_statuses])).all()]
+        return [
+            {**i, **v} for i, v in zip(
+                sorted(exam_statuses, key=lambda k: k['exam_tag']), sorted(exam_infoes, key=lambda k: k['tag'])
+            )
+        ]
+
+
 examinfo = CRUDExamInfo()
 examcache = CRUDExamCache()
 examstatus = CRUDExamStatus() # only for extrapi
+examquerycomplex = ComplexQuery()

@@ -24,10 +24,10 @@ async def get_answer(
 
 @router.post('/many')
 async def get_answer_many(
-    id_list: schema.ItemIdMany,
+    id_list_obj: schema.ItemIdMany,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     """
     get question by id list
     """
-    return crud.item.get_by_id_many(db, id_list)
+    return crud.item.get_by_id_many(db, id_list_obj)

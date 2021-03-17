@@ -50,9 +50,9 @@ class CRUDQuestion():
     def get_by_id_many(
         self,
         db: Session,
-        id_list: schema.ItemIdMany
+        obj_in: schema.ItemIdMany
     ) -> list[Item]:
-        return db.query(self.model).filter(self.model.id.in_(id_list.id_list)).all()
+        return db.query(self.model).filter(self.model.id.in_(obj_in.id_list)).all()
 
 
 item = CRUDQuestion()

@@ -118,8 +118,11 @@ async def exam_paper_answering(
     if q_num > exam['question_count']:
         raise HTTPException(status_code=404)
     exam_status = await apifunc.exam_paper_status(current_user.id, tag)
-    if exam_status and exam_status.get('status', None):
-        raise HTTPException(status_code=200, detail='您已完成此考试，请去个人中心查看考试记录')
+    if exam_status and exam_status.get('status') == 2:
+        return RedirectResponse(
+            request.url_for('exam_answer', tag=tag, q_num=1),
+            status_code = 303
+        )
     if not await apifunc.exam_paper_fetchone(user_id=current_user.id, exam_tag=tag):
         await apifunc.exam_paper_create(user_id=current_user.id, exam_tag=tag)
     # update database picked
