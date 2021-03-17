@@ -3,10 +3,12 @@ from typing import Optional, Any
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
-from app import crud
+from app import crud, schema
 from app.api import deps
 
+
 router = APIRouter(prefix='/answer')
+
 
 @router.get('/')
 async def get_answer(
@@ -18,3 +20,14 @@ async def get_answer(
     """
     answer = crud.item.get_by_id(db, id=id)
     return answer
+
+
+@router.post('/many')
+async def get_answer_many(
+    id_list: schema.ItemIdMany,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    """
+    get question by id list
+    """
+    return crud.item.get_by_id_many(db, id_list)

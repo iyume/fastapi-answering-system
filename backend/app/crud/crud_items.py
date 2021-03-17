@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import random
 
 from app.models.item import Item
+from app import schema
 
 
 class CRUDQuestion():
@@ -45,6 +46,13 @@ class CRUDQuestion():
         id: str
     ) -> Optional[Item]:
         return db.query(self.model).filter(self.model.id == id).first()
+
+    def get_by_id_many(
+        self,
+        db: Session,
+        id_list: schema.ItemIdMany
+    ) -> list[Item]:
+        return db.query(self.model).filter(self.model.id.in_(id_list.id_list)).all()
 
 
 item = CRUDQuestion()

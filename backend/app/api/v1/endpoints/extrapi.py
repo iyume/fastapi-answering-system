@@ -25,3 +25,12 @@ async def delete_exam_status(
 ) -> Any:
     crud.examstatus.delete_by_fadekey(db, fade_key=fade_key)
     return 'success'
+
+
+@router.delete('/exam-cache/delete')
+async def delete_exam_cache(
+    exam_tag: str,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    crud.examcache.delete_exam_cache(db, exam_tag)
+    return 'success'

@@ -73,7 +73,8 @@ async def exam_complete(
                         'exam_paper_answering',
                         tag = i['exam_tag'],
                         q_num = i['question_order']
-                    )
+                    ),
+                    status_code = 303
                 )
         await apifunc.exam_paper_finish(current_user.id, tag)
     return RedirectResponse(
@@ -168,7 +169,6 @@ async def exam_answer(
     request: Request,
     tag: str,
     q_num: int,
-    subjects: Subjects = Depends(deps.get_subjects),
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     exam: dict = await apifunc.exam_get_by_tag(tag)
@@ -184,19 +184,14 @@ async def exam_answer(
         exam_tag = tag
     )
     question = await apifunc.get_answer(exam_record['question_id'])
-    question_list = []
-    for i in exam_records:
-        question_list.append(await apifunc.get_answer(i['question_id']))
+    question_list = await apifunc.get_answer_many([i['question_id'] for i in exam_records])
     return templates.TemplateResponse(
         'exam/answer.jinja2', {
             'request': request,
             'current_user': current_user,
-            'subjects': subjects,
             'question': question,
             'question_list': question_list,
             'exam': exam,
-            'exam_records': exam_records,
-            'picked': exam_record['picked']
-
+            'exam_records': exam_records
         }
     )

@@ -72,6 +72,7 @@ class API():
         self.api_uri = os.path.join(host_url, 'api', version)
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
+        self.answer_many_uri = os.path.join(self.answer_uri, 'many')
         self.exam_uri = os.path.join(self.api_uri, 'exam')
         self.exam_fetchall_uri = os.path.join(self.exam_uri, '')
         self.exam_get_uri = self.exam_uri
@@ -104,6 +105,13 @@ class API():
         )
         if not result:
             raise HTTPException(status_code=400, detail='incorrect question id')
+        return result
+
+    async def get_answer_many(self, id_list: list[str]) -> list[dict]:
+        result = await post_with_json(
+            self.answer_many_uri,
+            id_list = id_list
+        )
         return result
 
     async def exam_fetchall(
