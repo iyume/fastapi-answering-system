@@ -76,7 +76,7 @@
             <!-- <span>a for a.m. while p for p.m.</span> -->
         </label>
         <label class="block">
-            <span class="pr-4">标签 <span class="text-red-500 font-bold">*</span>：(20 字之内，用于区分考试的唯一标签，不可修改)</span>
+            <span class="pr-4">标签 <span class="text-red-500 font-bold">*</span>：(20 字之内，用于区分考试的唯一标签，不允许空格)</span>
             {% if not created_exam and not to_update %}
             <input type="text" name="tag" class="form-input border h-10 w-2/5" maxlength="20" placeholder="比如：基金春季第一次考试" required/>
             {% else %}

@@ -61,7 +61,7 @@ async def exam_complete(
     if not exam:
         raise HTTPException(status_code=404)
     exam_paper_status = await apifunc.exam_paper_status(user_id=current_user.id, exam_tag=tag)
-    if exam_paper_status and not exam_paper_status.get('status', None):
+    if exam_paper_status and exam_paper_status.get('status', None):
         exam_records = await apifunc.exam_paper_fetchall(
             user_id = current_user.id,
             exam_tag = tag
@@ -177,6 +177,13 @@ async def exam_answer(
     exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
         raise HTTPException(status_code=404)
+    if q_num > exam['question_count']:
+        raise HTTPException(status_code=404)
+    exam_status = await apifunc.exam_paper_status(current_user.id, tag)
+    if not (exam_status or exam_status.get('status') != 2):
+        return RedirectResponse(
+            request.url_for('exam_paper_answering', tag=tag, q_num=q_num)
+        )
     exam_record = await apifunc.exam_paper_get_by_order(
         user_id = current_user.id,
         exam_tag = tag,
@@ -186,8 +193,8 @@ async def exam_answer(
         user_id = current_user.id,
         exam_tag = tag
     )
-    question = await apifunc.get_answer(exam_record['question_id'])
     question_list = await apifunc.get_answer_many([i['question_id'] for i in exam_records])
+    question = question_list[q_num-1]
     return templates.TemplateResponse(
         'exam/answer.jinja2', {
             'request': request,
@@ -195,6 +202,7 @@ async def exam_answer(
             'question': question,
             'question_list': question_list,
             'exam': exam,
-            'exam_records': exam_records
+            'exam_records': exam_records,
+            'picked': exam_record['picked']
         }
     )

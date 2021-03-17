@@ -1,4 +1,5 @@
 from typing import Optional, Union
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 
@@ -36,7 +37,8 @@ class CRUDExamInfo():
             subject = obj_in.subject,
             question_count = obj_in.question_count,
             start_time = obj_in.start_time,
-            end_time = obj_in.end_time
+            end_time = obj_in.end_time,
+            created_time = datetime.now()
         )
         db.add(db_obj)
         db.commit()

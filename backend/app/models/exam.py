@@ -15,6 +15,7 @@ class ExamInfo(Base):
     subject = Column('subject', String(10))
     question_count = Column('question_count', Integer)
     created_time = Column('created_time', TIMESTAMP, default=datetime.now())
+    # the default datetime now do not affect so I implement again on creating
     start_time = Column('start_time', TIMESTAMP, nullable=False)
     end_time = Column('end_time', TIMESTAMP, nullable=False)
 
