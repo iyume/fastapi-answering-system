@@ -8,6 +8,7 @@
     <table class="w-full">
         <tr class="text-white text-left">
             <th class="bg-green p-2 border border-ddd">标题</th>
+            <th class="bg-green p-2 border border-ddd">开放状态</th>
             <th class="bg-green p-2 border border-ddd">开始时间</th>
             <th class="bg-green p-2 border border-ddd">结束时间</th>
             <th class="bg-green p-2 border border-ddd">编辑</th>
@@ -16,6 +17,16 @@
         {% for exam in exams %}
         <tr class="font-light">
             <td class="p-2 border border-ddd">{{ exam['title'] }}</td>
+            <td class="p-2 border border-ddd">
+                {% if exam['opening_status'] == '进行中' %}
+                <svg class="inline-block w-5 h-5" t="1615968209915" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2849" width="200" height="200"><path d="M938.666667 512A426.666667 426.666667 0 1 1 512 85.333333a426.666667 426.666667 0 0 1 426.666667 426.666667z" p-id="2850" fill="#1afa29"></path></svg>
+                {% elif exam['opening_status'] == '已结束' %}
+                <svg class="inline-block w-5 h-5" t="1615968493855" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3196" width="200" height="200"><path d="M938.666667 512A426.666667 426.666667 0 1 1 512 85.333333a426.666667 426.666667 0 0 1 426.666667 426.666667z" p-id="3197" fill="#515151"></path></svg>
+                {% elif exam['opening_status'] == '未开始' %}
+                <svg class="inline-block w-5 h-5" t="1615968493855" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3196" width="200" height="200"><path d="M938.666667 512A426.666667 426.666667 0 1 1 512 85.333333a426.666667 426.666667 0 0 1 426.666667 426.666667z" p-id="3197" fill="#f4ea2a"></path></svg>
+                {% endif %}
+                <span>{{ exam['opening_status'] }}</span>
+            </td>
             <td class="p-2 border border-ddd">{{ exam['start_time'] }}</td>
             <td class="p-2 border border-ddd">{{ exam['end_time'] }}</td>
             <td class="p-2 border border-ddd"><a href="{{ url_for('update_exam', tag=exam['tag']) }}" class="w-full h-full text-blue-500">编辑</a></td>
@@ -23,5 +34,6 @@
         </tr>
         {% endfor %}
     </table>
+    <span class="font-light text-xs">注：默认按照创建时间倒序排列</span>
 </div>
 {% endblock user_main %}
