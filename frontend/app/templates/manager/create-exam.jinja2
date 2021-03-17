@@ -93,7 +93,7 @@
     </form>
     {% if created_exam %}
     <div class="pt-8">
-        <a href="{{ url_for('update_exam', tag=created_exam['tag']) }}" class="bg-green text-white px-6 py-2"
+        <a href="{{ url_for('update_exam', tag=created_exam['tag']) }}" class="bg-main text-white px-6 py-2"
         >修正信息</a>
         <a href="{{ url_for('list_exam') }}" class="bg-green text-white px-6 py-2"
         >{% if is_read_exam %}返回{% else %}确认{% endif %}</a>

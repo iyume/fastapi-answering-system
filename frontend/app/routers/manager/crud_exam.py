@@ -173,6 +173,22 @@ async def delete_exam(
     tag: str,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
+    return templates.TemplateResponse(
+        'manager/check.jinja2', {
+            'request': request,
+            'current_user': current_user,
+            'check_delete_exam': True
+        }
+    )
+
+
+@router.post('/{tag}/delete')
+@superuser_required
+async def delete_exam_action(
+    request: Request,
+    tag: str,
+    current_user: schema.UserPayload = Depends(deps.get_current_user)
+) -> Any:
     await apifunc.exam_delete(tag)
     exams = await apifunc.exam_fetchall()
     return templates.TemplateResponse(

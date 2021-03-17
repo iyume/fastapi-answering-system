@@ -135,6 +135,7 @@ class CRUDExamCache():
             db.query(self.model)
             .filter(self.model.user_id == obj_in.user_id)
             .filter(self.model.exam_tag == obj_in.exam_tag)
+            .order_by(self.model.fade_key.desc())
             .all()
         )
 
@@ -201,7 +202,19 @@ class CRUDExamStatus():
         self,
         db: Session
     ) -> list[ExamStatus]:
-        return db.query(self.model).all()
+        return db.query(self.model).order_by(self.model.fade_key.desc()).all()
+
+    def query_user_all(
+        self,
+        db: Session,
+        user_id: str
+    ) -> list[ExamStatus]:
+        return (
+            db.query(self.model)
+            .filter(self.model.user_id == user_id)
+            .order_by(self.model.fade_key.desc())
+            .all()
+        )
 
     def query_status(
         self,

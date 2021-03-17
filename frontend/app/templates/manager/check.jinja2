@@ -1,0 +1,13 @@
+{% extends "user/homepage.jinja2" %}
+
+{% block user_main %}
+<div class="m-12 w-full">
+    {% if check_delete_exam %}
+    <form method="post" action="{{ url_for('delete_exam_action', tag=request.path_params['tag']) }}" class="pb-4">
+        <span class="block pb-4">确认删除考试 "{{ request.path_params['tag'] }}"？</span>
+        <button type="submit" class="bg-red-500 w-24 h-9">确认删除</button>
+    </form>
+    <a href="{{ url_for('update_exam', tag=request.path_params['tag']) }}" class="px-6 py-2 bg-green">返回</a>
+    {% endif %}
+</div>
+{% endblock user_main %}
