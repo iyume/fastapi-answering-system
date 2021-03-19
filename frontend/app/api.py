@@ -190,36 +190,36 @@ class API():
 
     async def exam_paper_create(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_create_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag
         )
         return result
 
     async def exam_paper_status(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_status_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag
         )
         return result
 
     async def exam_paper_finish(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_finish_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag,
             status = 2
         )
@@ -227,37 +227,37 @@ class API():
 
     async def exam_paper_fetchone(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_fetchone_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag
         )
         return result
 
     async def exam_paper_fetchall(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag
         )
         return result
 
     async def exam_paper_get_by_order(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str,
         question_order: int
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag,
             question_order = question_order
         )
@@ -265,26 +265,26 @@ class API():
 
     async def exam_paper_get_first_not_picked(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_get_first_not_picked_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag
         )
         return result
 
     async def exam_paper_update_picked(
         self,
-        user_id: str,
+        username: str,
         exam_tag: str,
         question_id: str,
         picked: str
     ) -> Any:
         result = await post_with_json(
             self.exam_paper_update_picked_uri,
-            user_id = user_id,
+            username = username,
             exam_tag = exam_tag,
             question_id = question_id,
             picked = picked
@@ -349,10 +349,10 @@ class USER():
             password_new = password
         )
 
-    async def read_exams(self, user_id: str) -> Any:
+    async def read_exams(self, username: str) -> Any:
         return await get(
             self.read_exams_uri,
-            user_id = user_id
+            username = username
         )
 
 

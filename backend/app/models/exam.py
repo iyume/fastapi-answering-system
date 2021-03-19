@@ -22,7 +22,7 @@ class ExamInfo(Base):
 class ExamCache(Base):
     __tablename__ = 'exam_cache'
 
-    user_id = Column(String(36), ForeignKey('user.id'))
+    username = Column(String(36))
     question_id = Column(String(36), ForeignKey('questions.id'))
     picked = Column(String(1))
     exam_tag = Column(String(20), ForeignKey('exam_info.tag'))
@@ -32,7 +32,7 @@ class ExamCache(Base):
 class ExamStatus(Base):
     __tablename__ = 'exam_status'
 
-    user_id = Column(String(36), ForeignKey('user.id'))
+    username = Column(String(36))
     exam_tag = Column(String(20), ForeignKey('exam_info.tag'))
     status = Column(Integer, default=0) # 0: created, 1: doing, 2: done
     fade_key = Column(Integer, primary_key=True) # autoincrement

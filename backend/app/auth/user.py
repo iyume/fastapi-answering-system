@@ -11,7 +11,7 @@ from app import schema
 router = APIRouter(prefix='/user')
 
 
-@router.post('/')
+@router.get('/')
 async def list_users(
     db: Session = Depends(deps.get_db)
 ) -> Any:
@@ -19,7 +19,7 @@ async def list_users(
     return result
 
 
-@router.post('')
+@router.get('')
 async def query_user_by_id(
     id: str,
     db: Session = Depends(deps.get_db)
@@ -30,10 +30,10 @@ async def query_user_by_id(
 
 @router.get('/exams')
 async def user_all_exams(
-    user_id: str,
+    username: str,
     db: Session = Depends(deps.get_db)
 ) -> Any:
-    return crud.examquerycomplex.read_user_all_exams(db, user_id)
+    return crud.examquerycomplex.read_user_all_exams(db, username)
 
 
 @router.post('/change-password')

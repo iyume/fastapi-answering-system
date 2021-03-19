@@ -68,8 +68,8 @@ async def create_exam_paper(
     exam = crud.examinfo.get_by_tag(db, tag=obj_in.exam_tag)
     if not exam:
         raise HTTPException(status_code=400, detail='Bad exam_tag')
-    if not crud.user.get_by_id(db, obj_in.user_id):
-        raise HTTPException(status_code=400, detail='Bad user_id')
+    if not (user := crud.user.get_by_name(db, obj_in.username)) or not user.is_active:
+        raise HTTPException(status_code=400, detail='Bad username')
     if crud.examcache.fetchone(db, obj_in):
         return 'exists'
     questions = crud.item.get_by_random_many(

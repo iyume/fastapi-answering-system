@@ -26,7 +26,7 @@ CREATE TABLE exam_info (
 );
 
 CREATE TABLE exam_cache (
-    user_id CHAR(36) REFERENCES user(id),
+    username CHAR(36),
     question_id CHAR(36) REFERENCES questions(id),
     picked CHAR(1),
     exam_tag CHAR(20) REFERENCES exam_info(tag),
@@ -35,7 +35,7 @@ CREATE TABLE exam_cache (
 );
 
 CREATE TABLE exam_status (
-    user_id CHAR(36) REFERENCES user(id),
+    username CHAR(36),
     exam_tag CHAR(20) REFERENCES exam_info(tag),
     status INT DEFAULT 0,
     fade_key INTEGER PRIMARY KEY AUTOINCREMENT

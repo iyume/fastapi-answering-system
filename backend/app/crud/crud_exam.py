@@ -83,7 +83,7 @@ class CRUDExamCache():
         db_obj_list = []
         for i in range(len(question_id_list)):
             db_obj_list.append(self.model(
-                user_id = obj_in.user_id,
+                username = obj_in.username,
                 exam_tag = obj_in.exam_tag,
                 question_id = question_id_list[i],
                 question_order = i + 1
@@ -93,7 +93,7 @@ class CRUDExamCache():
         for i in db_obj_list:
             db.refresh(i)
         examstatus.update(db, schema.ExamStatusUpdate(
-            user_id = obj_in.user_id,
+            username = obj_in.username,
             exam_tag = obj_in.exam_tag,
             status = 1
         ))
@@ -120,7 +120,7 @@ class CRUDExamCache():
     ) -> Optional[ExamCache]:
         return (
             db.query(self.model)
-            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.username == obj_in.username)
             .filter(self.model.exam_tag == obj_in.exam_tag)
             .first()
         )
@@ -133,14 +133,14 @@ class CRUDExamCache():
         if obj_in.question_order:
             return (
                 db.query(self.model)
-                .filter(self.model.user_id == obj_in.user_id)
+                .filter(self.model.username == obj_in.username)
                 .filter(self.model.exam_tag == obj_in.exam_tag)
                 .filter(self.model.question_order == obj_in.question_order)
                 .first()
             )
         return (
             db.query(self.model)
-            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.username == obj_in.username)
             .filter(self.model.exam_tag == obj_in.exam_tag)
             .all()
         )
@@ -152,7 +152,7 @@ class CRUDExamCache():
     ) -> Optional[ExamCache]:
         return (
             db.query(self.model)
-            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.username == obj_in.username)
             .filter(self.model.exam_tag == obj_in.exam_tag)
             .filter(self.model.picked != None)
             .first()
@@ -165,7 +165,7 @@ class CRUDExamCache():
     ) -> None:
         (db
         .query(self.model)
-        .filter(self.model.user_id == obj_in.user_id)
+        .filter(self.model.username == obj_in.username)
         .filter(self.model.exam_tag == obj_in.exam_tag)
         .filter(self.model.question_id == obj_in.question_id)
         .update({self.model.picked: obj_in.picked})
@@ -193,7 +193,7 @@ class CRUDExamStatus():
         db_obj_list = []
         for user in users:
             db_obj_list.append(self.model(
-                user_id = user.id,
+                username = user.name,
                 exam_tag = exam_tag
             ))
         db.add_all(db_obj_list)
@@ -207,7 +207,7 @@ class CRUDExamStatus():
         db: Session,
         obj_in: schema.ExamBase
     ) -> None:
-        exam_status = self.model(user_id = obj_in.user_id, exam_tag = obj_in.exam_tag)
+        exam_status = self.model(username = obj_in.username, exam_tag = obj_in.exam_tag)
         db.add(exam_status)
         db.commit()
         db.refresh(exam_status)
@@ -221,11 +221,11 @@ class CRUDExamStatus():
     def query_user_all(
         self,
         db: Session,
-        user_id: str
+        username: str
     ) -> list[ExamStatus]:
         return (
             db.query(self.model)
-            .filter(self.model.user_id == user_id)
+            .filter(self.model.username == username)
             .order_by(self.model.fade_key.desc())
             .all()
         )
@@ -237,7 +237,7 @@ class CRUDExamStatus():
     ) -> Optional[ExamStatus]:
         return (
             db.query(self.model)
-            .filter(self.model.user_id == obj_in.user_id)
+            .filter(self.model.username == obj_in.username)
             .filter(self.model.exam_tag == obj_in.exam_tag)
             .first()
         )
@@ -249,7 +249,7 @@ class CRUDExamStatus():
     ) -> None:
         (db
         .query(self.model)
-        .filter(self.model.user_id == obj_in.user_id)
+        .filter(self.model.username == obj_in.username)
         .filter(self.model.exam_tag == obj_in.exam_tag)
         .update({self.model.status: obj_in.status})
         )
@@ -262,7 +262,7 @@ class CRUDExamStatus():
     ) -> None:
         db_exam_status = (db
         .query(self.model)
-        .filter(self.model.user_id == obj_in.user_id)
+        .filter(self.model.username == obj_in.username)
         .filter(self.model.exam_tag == obj_in.exam_tag)
         .first()
         )
@@ -291,10 +291,10 @@ class ComplexQuery():
     def read_user_all_exams(
         self,
         db: Session,
-        user_id: str
+        username: str
     ) -> list:
         # I cannot read how to implement join query
-        exam_statuses = [i.__dict__ for i in db.query(ExamStatus).filter(ExamStatus.user_id == user_id).all()]
+        exam_statuses = [i.__dict__ for i in db.query(ExamStatus).filter(ExamStatus.username == username).all()]
         exam_infoes = [i.__dict__ for i in db.query(ExamInfo).filter(ExamInfo.tag.in_([i['exam_tag'] for i in exam_statuses])).all()]
         return [
             {**i, **v} for i, v in zip(

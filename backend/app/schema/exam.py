@@ -20,7 +20,7 @@ class ExamUpdate(ExamCreate):
 
 
 class ExamBase(BaseModel):
-    user_id: str
+    username: str
     exam_tag: str
 
 

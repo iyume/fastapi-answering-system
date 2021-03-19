@@ -60,10 +60,10 @@ async def exam_complete(
     exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
         raise HTTPException(status_code=404)
-    exam_paper_status = await apifunc.exam_paper_status(user_id=current_user.id, exam_tag=tag)
+    exam_paper_status = await apifunc.exam_paper_status(username=current_user.name, exam_tag=tag)
     if exam_paper_status and exam_paper_status.get('status', None):
         exam_records = await apifunc.exam_paper_fetchall(
-            user_id = current_user.id,
+            username = current_user.name,
             exam_tag = tag
         )
         for i in exam_records:
@@ -76,7 +76,7 @@ async def exam_complete(
                     ),
                     status_code = 303
                 )
-        await apifunc.exam_paper_finish(current_user.id, tag)
+        await apifunc.exam_paper_finish(current_user.name, tag)
     return RedirectResponse(
         request.url_for('exam_answer', tag = tag, q_num = 1), status_code = 303
     )
@@ -117,19 +117,19 @@ async def exam_paper_answering(
         raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')
     if q_num > exam['question_count']:
         raise HTTPException(status_code=404)
-    exam_status = await apifunc.exam_paper_status(current_user.id, tag)
+    exam_status = await apifunc.exam_paper_status(current_user.name, tag)
     if exam_status and exam_status.get('status') == 2:
         return RedirectResponse(
             request.url_for('exam_answer', tag=tag, q_num=1),
             status_code = 303
         )
-    if not await apifunc.exam_paper_fetchone(user_id=current_user.id, exam_tag=tag):
-        await apifunc.exam_paper_create(user_id=current_user.id, exam_tag=tag)
+    if not await apifunc.exam_paper_fetchone(username=current_user.name, exam_tag=tag):
+        await apifunc.exam_paper_create(username=current_user.name, exam_tag=tag)
     # update database picked
     if request.method == 'POST':
         form = await request.form()
         await apifunc.exam_paper_update_picked(
-            user_id = current_user.id,
+            username = current_user.name,
             exam_tag = tag,
             question_id = form['id'],
             picked = form['picked']
@@ -145,12 +145,12 @@ async def exam_paper_answering(
             status_code = 303
         )
     exam_record = await apifunc.exam_paper_get_by_order(
-        user_id = current_user.id,
+        username = current_user.name,
         exam_tag = tag,
         question_order = q_num
     )
     exam_records = await apifunc.exam_paper_fetchall(
-        user_id = current_user.id,
+        username = current_user.name,
         exam_tag = tag
     )
     question = await apifunc.get_answer(id=exam_record['question_id'])
@@ -179,18 +179,18 @@ async def exam_answer(
         raise HTTPException(status_code=404)
     if q_num > exam['question_count']:
         raise HTTPException(status_code=404)
-    exam_status = await apifunc.exam_paper_status(current_user.id, tag)
+    exam_status = await apifunc.exam_paper_status(current_user.name, tag)
     if not (exam_status or exam_status.get('status') != 2):
         return RedirectResponse(
             request.url_for('exam_paper_answering', tag=tag, q_num=q_num)
         )
     exam_record = await apifunc.exam_paper_get_by_order(
-        user_id = current_user.id,
+        username = current_user.name,
         exam_tag = tag,
         question_order = q_num
     )
     exam_records = await apifunc.exam_paper_fetchall(
-        user_id = current_user.id,
+        username = current_user.name,
         exam_tag = tag
     )
     question_list = await apifunc.get_answer_many([i['question_id'] for i in exam_records])
