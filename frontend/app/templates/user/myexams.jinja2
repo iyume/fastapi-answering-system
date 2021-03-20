@@ -12,6 +12,7 @@
             <th class="bg-green p-2 border border-ddd">开始时间</th>
             <th class="bg-green p-2 border border-ddd">结束时间</th>
             <th class="bg-green p-2 border border-ddd">完成情况</th>
+            <th class="bg-green p-2 border border-ddd">考试入口</th>
         </tr>
         {% for exam in myexams %}
         <tr class="font-light">
@@ -28,11 +29,21 @@
             <td class="p-2 border border-ddd">{{ exam['title'] }}</td>
             <td class="p-2 border border-ddd">{{ exam['start_time'] }}</td>
             <td class="p-2 border border-ddd">{{ exam['end_time'] }}</td>
+            <td class="p-2 border border-ddd font-normal">
+                {% if exam['status'] == 0 %}
+                <span class="text-yellow-500">未答题</span>
+                {% elif exam['status'] == 1 %}
+                <span class="text-green">进行中</span>
+                {% else %}
+                <span class="text-gray-500">已完成</span>
+                {% endif %}
+            </td>
             <td class="p-2 border border-ddd">
-                <a href="{{ url_for('exam_paper_answering', tag=exam['tag'], q_num=1) }}">{% if exam['status'] == 0 %}未开始{% elif exam['status'] == 1 %}进行中{% else %}已完成{% endif %}</a>
+                <a href="{{ url_for('exam_paper_answering', tag=exam['tag'], q_num=1) }}" class="text-blue-500 font-normal">考试入口</a>
             </td>
         </tr>
         {% endfor %}
     </table>
+    <span class="font-light text-xs">注：默认按照开始时间倒序排列</span>
 </div>
 {% endblock user_main %}

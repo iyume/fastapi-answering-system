@@ -350,6 +350,9 @@ class USER():
         )
 
     async def read_exams(self, username: str) -> Any:
+        """
+        return exams ordered on tag
+        """
         return await get(
             self.read_exams_uri,
             username = username

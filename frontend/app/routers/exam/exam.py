@@ -57,6 +57,8 @@ async def exam_complete(
     tag: str,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
+    if current_user.is_superuser:
+        raise HTTPException(status_code=200, detail='管理员无法考试')
     exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
         raise HTTPException(status_code=404)
@@ -108,6 +110,8 @@ async def exam_paper_answering(
     """
     select question from database according to the question_order column
     """
+    if current_user.is_superuser:
+        raise HTTPException(status_code=200, detail='管理员无法考试')
     exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
         raise HTTPException(status_code=404)
@@ -174,6 +178,8 @@ async def exam_answer(
     q_num: int,
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
+    if current_user.is_superuser:
+        raise HTTPException(status_code=200, detail='管理员无法考试')
     exam: dict = await apifunc.exam_get_by_tag(tag)
     if not exam:
         raise HTTPException(status_code=404)

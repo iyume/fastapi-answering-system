@@ -274,7 +274,7 @@ class CRUDExamStatus():
         db: Session,
         exam_tag: str
     ) -> None:
-        db_list = db.query(self.model).filter(self.model.exam_tag == exam_tag).delete()
+        db.query(self.model).filter(self.model.exam_tag == exam_tag).delete()
         db.commit()
 
     def delete_by_fadekey(
@@ -293,12 +293,13 @@ class ComplexQuery():
         db: Session,
         username: str
     ) -> list:
-        # I cannot read how to implement join query
+        # I cannot read how to implement joining query with orm model...
         exam_statuses = [i.__dict__ for i in db.query(ExamStatus).filter(ExamStatus.username == username).all()]
         exam_infoes = [i.__dict__ for i in db.query(ExamInfo).filter(ExamInfo.tag.in_([i['exam_tag'] for i in exam_statuses])).all()]
         return [
             {**i, **v} for i, v in zip(
-                sorted(exam_statuses, key=lambda k: k['exam_tag']), sorted(exam_infoes, key=lambda k: k['tag'])
+                sorted(exam_statuses, key=lambda k: k['exam_tag']),
+                sorted(exam_infoes, key=lambda k: k['tag'])
             )
         ]
 

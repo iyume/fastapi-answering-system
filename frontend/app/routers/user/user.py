@@ -41,7 +41,8 @@ async def my_exams(
 ) -> Any:
     if not current_user.name == username:
         return RedirectResponse(request.url_for('homepage'))
-    myexams = await userfunc.read_exams(current_user.id)
+    myexams = await userfunc.read_exams(username)
+    myexams = sorted(myexams, key=lambda k:k['start_time'], reverse=True)
     for exam in myexams:
         start_time = datetime.fromisoformat(exam['start_time'])
         end_time = datetime.fromisoformat(exam['end_time'])

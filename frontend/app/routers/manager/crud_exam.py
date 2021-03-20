@@ -201,6 +201,19 @@ async def delete_exam_action(
 ) -> Any:
     await apifunc.exam_delete(tag)
     exams = await apifunc.exam_fetchall()
+    if exams:
+        for exam in exams:
+            start_time = datetime.fromisoformat(exam['start_time'])
+            end_time = datetime.fromisoformat(exam['end_time'])
+            exam['start_time'] = exam['start_time'].replace('T', ' ')
+            exam['end_time'] = exam['end_time'].replace('T', ' ')
+            if timenow := datetime.now():
+                if start_time < timenow < end_time:
+                    exam['opening_status'] = '进行中'
+                elif timenow > end_time:
+                    exam['opening_status'] = '已结束'
+                else:
+                    exam['opening_status'] = '未开始'
     return templates.TemplateResponse(
         'manager/list-exam.jinja2', {
             'request': request,
