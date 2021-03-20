@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import RedirectResponse
 
-from .endpoints import area, paper, answer
+from . import area, paper, answer
 
 
 router = APIRouter(prefix='/tiku')
