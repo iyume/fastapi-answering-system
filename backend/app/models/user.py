@@ -21,7 +21,6 @@ class UserDB(Base):
     is_superuser = Column('is_superuser', Boolean, default=False)
     created_time = Column('created_time', DateTime, default=datetime.now())
     first_login = Column('first_login', DateTime)
-    exam = relationship('ExamCache')    
 
     def validate_password(self, password: str) -> bool:
         return authfunc.verify_password(password, self.hashed_password)
