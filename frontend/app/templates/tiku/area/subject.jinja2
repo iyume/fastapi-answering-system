@@ -11,7 +11,7 @@
                         <span class="text-gray-400"> / 共 ∞ 题</span>
                     </div>
                     <div class="ml-4 text-blue-400 text-base">
-                        <a href="{{ url_for('tiku_paper', subject=request.path_params['subject']) }}?type=random">随机选题</a>
+                        <a href="{{ url_for('tiku_paper', subject=request.path_params['subject']) }}?qtype=random">随机选题</a>
                     </div>
                 </div>
 {% endblock %}

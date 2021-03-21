@@ -12,7 +12,7 @@
             <th class="bg-green p-2 border border-ddd">开始时间</th>
             <th class="bg-green p-2 border border-ddd">结束时间</th>
             <th class="bg-green p-2 border border-ddd">完成情况</th>
-            <th class="bg-green p-2 border border-ddd">考试入口</th>
+            <th class="bg-green p-2 border border-ddd">入口</th>
         </tr>
         {% for exam in myexams %}
         <tr class="font-light">
@@ -39,7 +39,11 @@
                 {% endif %}
             </td>
             <td class="p-2 border border-ddd">
+                {% if exam['status'] != 2 %}
                 <a href="{{ url_for('exam_paper_answering', tag=exam['tag'], q_num=1) }}" class="text-blue-500 font-normal">考试入口</a>
+                {% else %}
+                <a href="{{ url_for('exam_answer', tag=exam['tag'], q_num=1) }}" class="text-blue-500 font-normal">答题记录</a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

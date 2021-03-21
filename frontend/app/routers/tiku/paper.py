@@ -20,7 +20,7 @@ router = APIRouter(prefix='/paper')
 async def tiku_paper(
     request: Request,
     subject: str,
-    type: str,
+    qtype: str,
     subjects: Subjects = Depends(deps.get_subjects),
     current_user: UserPayload = Depends(deps.get_current_user)
 ) -> Any:
@@ -29,7 +29,7 @@ async def tiku_paper(
     """
     if subject not in subjects.aliases:
         raise HTTPException(status_code=404, detail='Subject not found')
-    if type == 'random':
+    if qtype == 'random':
         question = await apifunc.get_question_by_subject(subject)
         return templates.TemplateResponse(
             'paper/practice.jinja2', {
@@ -39,5 +39,7 @@ async def tiku_paper(
                 'subjects': subjects
             }
         )
+    if qtype == 'order':
+        raise HTTPException(status_code=200, detail='进行中的工作')
     else:
         raise HTTPException(status_code=400, detail='Bad request')
