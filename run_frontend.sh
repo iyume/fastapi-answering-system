@@ -1,3 +1,2 @@
 #!/bin/bash
-source ~/.virtualenvs/fastapi/bin/activate
-cd frontend && uvicorn app.main:app --host=0.0.0.0 --port=9090
+cd frontend && /path/to/your/python -m uvicorn app.main:app --host=0.0.0.0 --port=9090
