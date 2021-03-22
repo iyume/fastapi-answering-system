@@ -352,6 +352,8 @@ class USER():
         self.user_change_password_uri = os.path.join(self.user_uri, 'change-password')
         self.read_done_uri = os.path.join(self.user_uri, 'done')
         self.read_exams_uri = os.path.join(self.user_uri, 'exams')
+        self.answer_cache_uri = os.path.join(self.user_uri, 'answer-cache', '')
+        self.answer_cache_refresh_uri = os.path.join(self.answer_cache_uri, 'refresh')
 
     async def change_password(self, id: str, password: str) -> None:
         await post_with_json(
@@ -375,6 +377,37 @@ class USER():
         """
         return await get(
             self.read_exams_uri,
+            username = username
+        )
+
+    async def read_answer_caches(
+        self,
+        username: str
+    ) -> Any:
+        return await get(
+            self.answer_cache_uri,
+            username = username
+        )
+
+    async def create_answer_cache(
+        self,
+        username: str,
+        question_id: str,
+        picked: str
+    ) -> Any:
+        return await post_with_json(
+            self.answer_cache_uri,
+            username = username,
+            question_id = question_id,
+            picked = picked
+        )
+
+    async def refresh_answer_cache(
+        self,
+        username: str
+    ) -> Any:
+        return await post_with_params(
+            self.answer_cache_refresh_uri,
             username = username
         )
 

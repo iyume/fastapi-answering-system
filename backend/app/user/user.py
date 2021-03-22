@@ -7,8 +7,12 @@ from app import crud
 from app.auth import deps, authfunc
 from app import schema
 
+from .endpoints import answer_cache
 
-router = APIRouter(prefix='/user')
+
+router = APIRouter(prefix='/user', tags=['user'])
+
+router.include_router(answer_cache.router)
 
 
 @router.get('/')
