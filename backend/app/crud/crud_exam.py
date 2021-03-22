@@ -293,15 +293,12 @@ class ComplexQuery():
         db: Session,
         username: str
     ) -> list:
-        # I cannot read how to implement joining query with orm model...
-        exam_statuses = [i.__dict__ for i in db.query(ExamStatus).filter(ExamStatus.username == username).all()]
-        exam_infoes = [i.__dict__ for i in db.query(ExamInfo).filter(ExamInfo.tag.in_([i['exam_tag'] for i in exam_statuses])).all()]
-        return [
-            {**i, **v} for i, v in zip(
-                sorted(exam_statuses, key=lambda k: k['exam_tag']),
-                sorted(exam_infoes, key=lambda k: k['tag'])
-            )
-        ]
+        return (
+            db.query(ExamInfo.tag, ExamInfo.start_time, ExamInfo.end_time, ExamInfo.title, ExamStatus.status)
+            .filter(ExamInfo.tag == ExamStatus.exam_tag)
+            .filter(ExamStatus.username == username)
+            .all()
+        )
 
 
 examinfo = CRUDExamInfo()

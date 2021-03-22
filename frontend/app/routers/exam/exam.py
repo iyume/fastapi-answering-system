@@ -157,7 +157,7 @@ async def exam_paper_answering(
         username = current_user.name,
         exam_tag = tag
     )
-    question = await apifunc.get_answer(id=exam_record['question_id'])
+    question = await apifunc.get_question_by_id(id=exam_record['question_id'])
     return templates.TemplateResponse(
         'paper/exam.jinja2', {
             'request': request,
@@ -200,7 +200,7 @@ async def exam_answer(
         exam_tag = tag
     )
     question_list = await apifunc.get_answer_many([i['question_id'] for i in exam_records])
-    question = question_list[q_num-1]
+    question = await apifunc.get_answer(question_list[q_num-1]['question_id'])
     return templates.TemplateResponse(
         'exam/answer.jinja2', {
             'request': request,

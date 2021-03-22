@@ -33,7 +33,17 @@ async def user_all_exams(
     username: str,
     db: Session = Depends(deps.get_db)
 ) -> Any:
-    return crud.examquerycomplex.read_user_all_exams(db, username)
+    results = crud.examquerycomplex.read_user_all_exams(db, username)
+    return [
+        {
+            "exam_tag": result.tag,
+            "start_time": result.start_time,
+            "end_time": result.end_time,
+            "exam_title": result.title,
+            "exam_status": result.status
+        }
+        for result in results
+    ]
 
 
 @router.post('/change-password')

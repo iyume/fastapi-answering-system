@@ -13,11 +13,14 @@ router = APIRouter(prefix='/question')
 @router.get('/')
 async def get_question(
     subject: Optional[str] = None,
+    qid: Optional[str] = None,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     """
     get question
     """
+    if qid:
+        return crud.item.get_by_id(db, qid)
     if subject:
         question = crud.item.get_by_random(db, subject=subject)
     else:

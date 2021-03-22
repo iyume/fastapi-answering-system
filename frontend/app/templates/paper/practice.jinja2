@@ -45,8 +45,8 @@
 {% block paper_body_option_d %}{{ question['option_d'] }}{% endblock paper_body_option_d %}
 
 
-{% block paper_tail_previous %}{{ url_for('tiku_paper', subject=current_subject) }}?type=random{% endblock %}
-{% block paper_tail_next %}{{ url_for('tiku_paper', subject=current_subject) }}?type=random{% endblock %}
+{% block paper_tail_previous %}{{ url_for('tiku_paper', subject=current_subject) }}?qtype=random{% endblock %}
+{% block paper_tail_next %}{{ url_for('tiku_paper', subject=current_subject) }}?qtype=random{% endblock %}
 
 
 {% block back_to_link %}{{ url_for('tiku_area', subject=current_subject) }}{% endblock %}

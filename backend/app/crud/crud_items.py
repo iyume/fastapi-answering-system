@@ -54,5 +54,16 @@ class CRUDQuestion():
     ) -> list[Item]:
         return db.query(self.model).filter(self.model.id.in_(obj_in.id_list)).all()
 
+    def get_answer_by_id_many(
+        self,
+        db: Session,
+        obj_in: schema.ItemIdMany
+    ) -> list[Item]:
+        return (
+            db.query(self.model.id, self.model.answer)
+            .filter(self.model.id.in_(obj_in.id_list))
+            .all()
+        )
+
 
 item = CRUDQuestion()

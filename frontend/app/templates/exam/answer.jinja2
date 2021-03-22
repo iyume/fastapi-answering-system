@@ -6,13 +6,6 @@
 
 {% set exam_tag = request.path_params['tag'] %}
 {% set exam_question_order = request.path_params['q_num']|int %}
-{% set question_done_sum = [] %}
-{% for i in exam_records %}
-{% if i['picked'] %}
-{% set _ = question_done_sum.append(1) %}
-{# due to scoping rules, I use some trick #}
-{% endif %}
-{% endfor %}
 
 {% block nav_first_link %}
 <a href="{{ url_for('exam_entry') }}">考试</a>
@@ -26,13 +19,13 @@
 
 {% block paper_header_title %}{{ exam['title'] }}{% endblock paper_header_title %}
 
-{% block paper_header_qdone %}已做 {{ question_done_sum|length }} 题{% endblock paper_header_qdone %}
+{% block paper_header_qdone %}已做 {{ exam['question_count'] }} 题{% endblock paper_header_qdone %}
 {% block paper_header_qcount %}共 {{ exam['question_count'] }} 题{% endblock paper_header_qcount %}
 
 
 {% block paper_body %}
                     <div class="container">
-                        <p class="font-medium text-base py-3">{{ 1 }}、{% if question %}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
+                        <p class="font-medium text-base py-3">{{ exam_question_order }}、{% if question %}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
                         {% if question %}
                         <ul class="font-light text-sm">
                             <li class="block px-2 py-2 cursor-pointer {% if 'A' not in [question['answer'], picked] %}hover:{% endif %}bg-gray-100">

@@ -26,23 +26,23 @@
                 {% endif %}
                 <span>{{ exam['opening_status'] }}</span>
             </td>
-            <td class="p-2 border border-ddd">{{ exam['title'] }}</td>
+            <td class="p-2 border border-ddd">{{ exam['exam_title'] }}</td>
             <td class="p-2 border border-ddd">{{ exam['start_time'] }}</td>
             <td class="p-2 border border-ddd">{{ exam['end_time'] }}</td>
             <td class="p-2 border border-ddd font-normal">
-                {% if exam['status'] == 0 %}
+                {% if exam['exam_status'] == 0 %}
                 <span class="text-yellow-500">未答题</span>
-                {% elif exam['status'] == 1 %}
+                {% elif exam['exam_status'] == 1 %}
                 <span class="text-green">进行中</span>
                 {% else %}
                 <span class="text-gray-500">已完成</span>
                 {% endif %}
             </td>
             <td class="p-2 border border-ddd">
-                {% if exam['status'] != 2 %}
-                <a href="{{ url_for('exam_paper_answering', tag=exam['tag'], q_num=1) }}" class="text-blue-500 font-normal">考试入口</a>
+                {% if exam['exam_status'] != 2 %}
+                <a href="{{ url_for('exam_paper_answering', tag=exam['exam_tag'], q_num=1) }}" class="text-blue-500 font-normal">考试入口</a>
                 {% else %}
-                <a href="{{ url_for('exam_answer', tag=exam['tag'], q_num=1) }}" class="text-blue-500 font-normal">答题记录</a>
+                <a href="{{ url_for('exam_answer', tag=exam['exam_tag'], q_num=1) }}" class="text-blue-500 font-normal">答题记录</a>
                 {% endif %}
             </td>
         </tr>

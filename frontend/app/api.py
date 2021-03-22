@@ -98,6 +98,16 @@ class API():
             raise HTTPException(status_code=500)
         return result
 
+    async def get_question_by_id(
+        self,
+        id: str
+    ) -> Any:
+        result = await get(
+            self.question_uri,
+            qid = id
+        )
+        return result
+
     async def get_answer(self, id: str) -> dict:
         result = await get(
             self.answer_uri,

@@ -28,6 +28,13 @@ async def get_answer_many(
     db: Session = Depends(deps.get_db)
 ) -> Any:
     """
-    get question by id list
+    get question by id list, only return question_id with question_answer
     """
-    return crud.item.get_by_id_many(db, id_list_obj)
+    results = crud.item.get_answer_by_id_many(db, id_list_obj)
+    return [
+        {
+            "question_id": result.id,
+            "answer": result.answer
+        }
+        for result in results
+    ]
