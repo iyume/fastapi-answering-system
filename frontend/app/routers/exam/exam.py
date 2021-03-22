@@ -1,5 +1,6 @@
 from typing import Any
 from datetime import datetime
+import asyncio
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
@@ -11,7 +12,6 @@ from app.security import login_required
 from app.routers import deps
 from app import schema
 from app.api import apifunc
-from app.models.subject import Subjects
 
 
 router = APIRouter()
@@ -112,7 +112,11 @@ async def exam_paper_answering(
     """
     if current_user.is_superuser:
         raise HTTPException(status_code=200, detail='管理员无法考试')
-    exam: dict = await apifunc.exam_get_by_tag(tag)
+    exam, exam_status, exam_cache_one = await asyncio.gather(
+        apifunc.exam_get_by_tag(tag),
+        apifunc.exam_paper_status(current_user.name, tag),
+        apifunc.exam_paper_fetchone(username=current_user.name, exam_tag=tag)
+    )
     if not exam:
         raise HTTPException(status_code=404)
     start_time = datetime.fromisoformat(exam['start_time'])
@@ -121,13 +125,12 @@ async def exam_paper_answering(
         raise HTTPException(status_code=403, detail='考试尚未开始或已经结束')
     if q_num > exam['question_count']:
         raise HTTPException(status_code=404)
-    exam_status = await apifunc.exam_paper_status(current_user.name, tag)
     if exam_status and exam_status.get('status') == 2:
         return RedirectResponse(
             request.url_for('exam_answer', tag=tag, q_num=1),
             status_code = 303
         )
-    if not await apifunc.exam_paper_fetchone(username=current_user.name, exam_tag=tag):
+    if not exam_cache_one:
         await apifunc.exam_paper_create(username=current_user.name, exam_tag=tag)
     # update database picked
     if request.method == 'POST':
@@ -148,15 +151,11 @@ async def exam_paper_answering(
             request.url_for('exam_paper_answering', tag=tag, q_num=q_num+1),
             status_code = 303
         )
-    exam_record = await apifunc.exam_paper_get_by_order(
-        username = current_user.name,
-        exam_tag = tag,
-        question_order = q_num
-    )
     exam_records = await apifunc.exam_paper_fetchall(
         username = current_user.name,
         exam_tag = tag
     )
+    exam_record = exam_records[q_num-1]
     question = await apifunc.get_question_by_id(id=exam_record['question_id'])
     return templates.TemplateResponse(
         'paper/exam.jinja2', {
@@ -180,25 +179,24 @@ async def exam_answer(
 ) -> Any:
     if current_user.is_superuser:
         raise HTTPException(status_code=200, detail='管理员无法考试')
-    exam: dict = await apifunc.exam_get_by_tag(tag)
+    exam, exam_status = await asyncio.gather(
+        apifunc.exam_get_by_tag(tag),
+        apifunc.exam_paper_status(current_user.name, tag)
+    )
     if not exam:
         raise HTTPException(status_code=404)
     if q_num > exam['question_count']:
         raise HTTPException(status_code=404)
-    exam_status = await apifunc.exam_paper_status(current_user.name, tag)
     if not (exam_status or exam_status.get('status') != 2):
         return RedirectResponse(
-            request.url_for('exam_paper_answering', tag=tag, q_num=q_num)
+            request.url_for('exam_paper_answering', tag=tag, q_num=q_num),
+            status_code = 303
         )
-    exam_record = await apifunc.exam_paper_get_by_order(
-        username = current_user.name,
-        exam_tag = tag,
-        question_order = q_num
-    )
     exam_records = await apifunc.exam_paper_fetchall(
         username = current_user.name,
         exam_tag = tag
     )
+    exam_record = exam_records[q_num-1]
     question_list = await apifunc.get_answer_many([i['question_id'] for i in exam_records])
     question = await apifunc.get_answer(question_list[q_num-1]['question_id'])
     return templates.TemplateResponse(
