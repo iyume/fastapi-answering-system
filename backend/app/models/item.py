@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, Boolean
+from sqlalchemy import Column, String, Integer, Boolean, DateTime
 
 from app.db.base_class import Base
 
@@ -26,4 +26,5 @@ class ItemCache(Base):
     question_id = Column(String(36))
     picked = Column(String(1))
     refreshed = Column(Boolean, default=False)
+    created_time = Column(DateTime, nullable=False)
     fade_key = Column(Integer, primary_key=True, autoincrement=True)

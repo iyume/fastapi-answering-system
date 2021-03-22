@@ -46,5 +46,6 @@ CREATE TABLE answer_cache (
     question_id CHAR(36) NOT NULL REFERENCES questions(id),
     picked CHAR(1) NOT NULL,
     refreshed BOOL DEFAULT false,
+    created_time TIMESTAMP DEFAULT (datetime('now', 'localtime')),
     fade_key INTEGER PRIMARY KEY AUTOINCREMENT
 );

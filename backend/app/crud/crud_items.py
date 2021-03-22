@@ -1,9 +1,10 @@
 from typing import Optional
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import random
 
-from app.models.item import Item
+from app.models.item import Item, ItemCache
 from app import schema
 
 
@@ -66,4 +67,65 @@ class CRUDQuestion():
         )
 
 
+class CRUDItemCache():
+    model = ItemCache
+
+    def create(
+        self,
+        db: Session,
+        obj_in: schema.ItemCacheCreate,
+    ) -> None:
+        db_obj = self.model(
+            username = obj_in.username,
+            question_id = obj_in.question_id,
+            picked = obj_in.picked,
+            created_time = datetime.now()
+        )
+        db.add(db_obj)
+        db.commit()
+        db.refresh(db_obj)
+
+    def query_userall_unique(
+        self,
+        db: Session,
+        username: str
+    ) -> list[dict]:
+        db_objs = (
+            db.query(self.model)
+            .filter(self.model.username == username)
+            .filter(self.model.refreshed == False)
+            .all()
+        )
+        qid_set = set()
+        results = []
+        while db_objs:
+            handler = db_objs[0]
+            if handler.question_id not in qid_set:
+                qid_set.add(handler.question_id)
+                results.append(handler)
+                db_objs.pop(0)
+            else:
+                if to_replace_index := [
+                    i for i, val in enumerate(results)
+                    if val.question_id == handler.question_id
+                    if val.created_time < handler.created_time
+                ]:
+                    results[to_replace_index[0]] = handler
+                db_objs.pop(0)
+        return results
+
+    def refresh(
+        self,
+        db: Session,
+        username: str
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.username == username)
+        .update({self.model.refreshed: True})
+        )
+        db.commit()
+
+
 item = CRUDQuestion()
+itemcache = CRUDItemCache()
