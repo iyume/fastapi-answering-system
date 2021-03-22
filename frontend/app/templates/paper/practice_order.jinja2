@@ -3,7 +3,7 @@
 {% set subject = subjects.get_item(request.path_params['subject']) %}
 
 {% block title %}
-{{ super() }} - {{ subject['name_zh'] }}
+顺序做题 - {{ subject['name_zh'] }}
 {% endblock title %}
 
 {% block nav_first_link %}
@@ -11,13 +11,13 @@
 {% endblock nav_first_link %}
 
 {% block nav_second_link %}
-<a href="{{ url_for('tiku_area', subject=subject['alias']) }}">{{ subject_dict['name_zh'] }}</a>
+<a href="{{ url_for('tiku_area', subject=subject['alias']) }}">{{ subject['name_zh'] }}</a>
 {% endblock %}
 
 {% block paper_type %}顺序做题{% endblock %}
 
 {% block paper_header_title %}
-{{ subject_dict['name_zh'] }}顺序做题
+{{ subject['name_zh'] }}顺序做题
 {% endblock paper_header_title %}
 
 {% block paper_header_qdone %}
@@ -25,7 +25,7 @@
 {% endblock paper_header_qdone %}
 
 {% block paper_header_qcount %}
-共 {{ subject_dict }} 题
+共 {{ subject }} 题
 {% endblock paper_header_qcount %}
 
 
@@ -34,7 +34,7 @@
 {% block paper_body_hidden1_name %}id{% endblock %}
 {% block paper_body_hidden1_value %}{{ question.id }}{% endblock %}
 {% block paper_body_hidden2_name %}subject{% endblock %}
-{% block paper_body_hidden2_value %}{{ current_subject }}{% endblock %}
+{% block paper_body_hidden2_value %}{{ subject['alias'] }}{% endblock %}
 
 {% block paper_body_option_a %}{{ question['option_a'] }}{% endblock paper_body_option_a %}
 {% block paper_body_option_b %}{{ question['option_b'] }}{% endblock paper_body_option_b %}
@@ -42,11 +42,11 @@
 {% block paper_body_option_d %}{{ question['option_d'] }}{% endblock paper_body_option_d %}
 
 
-{% block paper_tail_previous %}{{ url_for('tiku_paper', subject=current_subject) }}?qtype=random{% endblock %}
-{% block paper_tail_next %}{{ url_for('tiku_paper', subject=current_subject) }}?qtype=random{% endblock %}
+{% block paper_tail_previous %}{{ url_for('tiku_paper', subject=subject['alias']) }}?qtype=random{% endblock %}
+{% block paper_tail_next %}{{ url_for('tiku_paper', subject=subject['alias']) }}?qtype=random{% endblock %}
 
 
-{% block back_to_link %}{{ url_for('tiku_area', subject=current_subject) }}{% endblock %}
+{% block back_to_link %}{{ url_for('tiku_area', subject=subject['alias']) }}{% endblock %}
 
 
 {% block question_list_nav %}

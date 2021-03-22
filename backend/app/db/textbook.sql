@@ -45,5 +45,6 @@ CREATE TABLE answer_cache (
     username CHAR(16) NOT NULL,
     question_id CHAR(36) NOT NULL REFERENCES questions(id),
     picked CHAR(1) NOT NULL,
+    refreshed BOOL DEFAULT false,
     fade_key INTEGER PRIMARY KEY AUTOINCREMENT
 );

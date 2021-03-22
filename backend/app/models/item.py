@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Boolean
 
 from app.db.base_class import Base
 
@@ -25,4 +25,5 @@ class ItemCache(Base):
     username = Column(String(16))
     question_id = Column(String(36))
     picked = Column(String(1))
+    refreshed = Column(Boolean, default=False)
     fade_key = Column(Integer, primary_key=True, autoincrement=True)
