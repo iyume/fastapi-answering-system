@@ -1,17 +1,34 @@
 {% extends 'tiku/area/base.jinja2' %}
 
+{% set subject = subjects.get_item(request.path_params['subject']) %}
+
 {% block title %}
-{{ super() }} - {{ subjects.get_item(request.path_params['subject'])['name_zh'] }}
+{{ super() }} - {{ subject['name_zh'] }}
 {% endblock title %}
 
 {% block paperentry %}
-                <div class="flex bg-white rounded-lg p-4">
+                {# <div class="flex bg-white rounded-lg p-6 justify-between">
                     <div class="font-light text-base">
-                        <span class="text-gray-700">已做 {{ 1 }} 题</span>
+                        <span class="text-gray-700">已做 * 题</span>
                         <span class="text-gray-400"> / 共 ∞ 题</span>
                     </div>
                     <div class="ml-4 text-blue-400 text-base">
-                        <a href="{{ url_for('tiku_paper', subject=request.path_params['subject']) }}?qtype=random">随机选题</a>
+                        <a
+                            href="{{ url_for('tiku_paper', subject=request.path_params['subject']) }}?qtype=random"
+                            class="bg-main font-normal text-white px-4 py-2 rounded-sm"
+                        >随机选题</a>
+                    </div>
+                </div> #}
+                <div class="flex bg-white rounded-lg p-6 justify-between">
+                    <div class="font-light text-base">
+                        <span class="text-gray-700">已做 {{ 1 }} 题</span>
+                        <span class="text-gray-400"> / 共 {{ subject['question_count'] }} 题</span>
+                    </div>
+                    <div class="ml-4 text-blue-400 text-base">
+                        <a
+                            href="{{ url_for('tiku_paper', subject=request.path_params['subject']) }}?qtype=order"
+                            class="bg-main font-normal text-white px-4 py-2 rounded-sm"
+                        >顺序做题</a>
                     </div>
                 </div>
 {% endblock %}

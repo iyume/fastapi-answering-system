@@ -350,6 +350,7 @@ class USER():
     def __init__(self, endpoint: str) -> None:
         self.user_uri = os.path.join(host_url, endpoint)
         self.user_change_password_uri = os.path.join(self.user_uri, 'change-password')
+        self.read_done_uri = os.path.join(self.user_uri, 'done')
         self.read_exams_uri = os.path.join(self.user_uri, 'exams')
 
     async def change_password(self, id: str, password: str) -> None:
@@ -357,6 +358,15 @@ class USER():
             self.user_change_password_uri,
             id = id,
             password_new = password
+        )
+
+    async def read_done(self, username: str) -> Any:
+        """
+        return user done question count in subject
+        """
+        return await get(
+            self.read_done_uri,
+            username = username
         )
 
     async def read_exams(self, username: str) -> Any:

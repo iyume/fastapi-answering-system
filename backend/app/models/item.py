@@ -18,3 +18,11 @@ class Item(Base):
     difficulty = Column('difficulty', String(10))
     year = Column('year', Integer)
     subject = Column('subject', String(10))
+
+class ItemCache(Base):
+    __tablename__ = 'answer_cache'
+
+    username = Column(String(16))
+    question_id = Column(String(36))
+    picked = Column(String(1))
+    fade_key = Column(Integer, primary_key=True, autoincrement=True)

@@ -44,7 +44,7 @@
                                 <li>
                                     <div class="block cursor-pointer hover:bg-gray-100 {% if exam_picked == 'A' %}bg-gray-100{% endif %}">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="A">
-                                            {% if exam_picked == 'A' %}
+                                            {% if exam_picked == 'A' or picked == 'A' %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613557019322" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1124" width="200" height="200"><path d="M512 64C264.58 64 64 264.58 64 512s200.58 448 448 448 448-200.57 448-448S759.42 64 512 64z m238 359.1L478.42 694.63a32 32 0 0 1-45.26 0l-135.79-135.8a32 32 0 0 1 45.26-45.25l113.16 113.16 248.9-248.9A32 32 0 0 1 750 423.1z" p-id="1125" fill="#00e25a"></path></svg>
                                             {% else %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
@@ -56,7 +56,7 @@
                                 <li>
                                     <div class="block cursor-pointer hover:bg-gray-100 {% if exam_picked == 'B' %}bg-gray-100{% endif %}">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="B">
-                                            {% if exam_picked == 'B' %}
+                                            {% if exam_picked == 'B' or picked == 'B' %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613557019322" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1124" width="200" height="200"><path d="M512 64C264.58 64 64 264.58 64 512s200.58 448 448 448 448-200.57 448-448S759.42 64 512 64z m238 359.1L478.42 694.63a32 32 0 0 1-45.26 0l-135.79-135.8a32 32 0 0 1 45.26-45.25l113.16 113.16 248.9-248.9A32 32 0 0 1 750 423.1z" p-id="1125" fill="#00e25a"></path></svg>
                                             {% else %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
@@ -67,7 +67,7 @@
                                 <li>
                                     <div class="block cursor-pointer hover:bg-gray-100 {% if exam_picked == 'C' %}bg-gray-100{% endif %}">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="C">
-                                            {% if exam_picked == 'C' %}
+                                            {% if exam_picked == 'C' or picked == 'C' %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613557019322" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1124" width="200" height="200"><path d="M512 64C264.58 64 64 264.58 64 512s200.58 448 448 448 448-200.57 448-448S759.42 64 512 64z m238 359.1L478.42 694.63a32 32 0 0 1-45.26 0l-135.79-135.8a32 32 0 0 1 45.26-45.25l113.16 113.16 248.9-248.9A32 32 0 0 1 750 423.1z" p-id="1125" fill="#00e25a"></path></svg>
                                             {% else %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
@@ -78,7 +78,7 @@
                                 <li>
                                     <div class="block cursor-pointer hover:bg-gray-100 {% if exam_picked == 'D' %}bg-gray-100{% endif %}">
                                         <button type="submit" class="w-full px-2 py-2 focus:outline-none" name="picked" value="D">
-                                            {% if exam_picked == 'D' %}
+                                            {% if exam_picked == 'D' or picked == 'D' %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613557019322" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1124" width="200" height="200"><path d="M512 64C264.58 64 64 264.58 64 512s200.58 448 448 448 448-200.57 448-448S759.42 64 512 64z m238 359.1L478.42 694.63a32 32 0 0 1-45.26 0l-135.79-135.8a32 32 0 0 1 45.26-45.25l113.16 113.16 248.9-248.9A32 32 0 0 1 750 423.1z" p-id="1125" fill="#00e25a"></path></svg>
                                             {% else %}
                                             <svg class="inline-block w-6 h-6 float-left" t="1613029274773" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1744" width="250" height="250"><path d="M512 85.333333C276.48 85.333333 85.333333 276.48 85.333333 512S276.48 938.666667 512 938.666667 938.666667 747.52 938.666667 512 747.52 85.333333 512 85.333333z m0 796.444445c-203.662222 0-369.777778-166.115556-369.777778-369.777778S308.337778 142.222222 512 142.222222 881.777778 308.337778 881.777778 512 715.662222 881.777778 512 881.777778z" p-id="1745" fill="#cdcdcd"></path></svg>
@@ -114,8 +114,8 @@
                 <div class="bg-white rounded-lg px-7 py-5">
                     <a href="{% block back_to_link %}{% endblock %}" class="text-blue-400">后退</a>
                 </div>
-                {% block question_list %}
-                {% endblock question_list %}
+                {% block question_list_nav %}
+                {% endblock question_list_nav %}
             </div>
         </div>
 {% endblock %}

@@ -28,6 +28,19 @@ async def query_user_by_id(
     return user
 
 
+@router.get('/done')
+async def user_done_sample(
+    username: str,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    user = crud.user.get_by_name(db, username)
+    return {
+        "fb_done_count": user.fb_done_count,
+        "fr_done_count": user.fr_done_count,
+        "sr_done_count": user.sr_done_count
+    }
+
+
 @router.get('/exams')
 async def user_all_exams(
     username: str,

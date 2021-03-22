@@ -4,7 +4,7 @@ CREATE TABLE questions (
 
 CREATE TABLE user (
     id CHAR(36) PRIMARY KEY,
-    name CHAR(16),
+    name CHAR(16) UNIQUE,
     email CHAR(254) UNIQUE,
     wechat CHAR(16),
     hashed_password CHAR(60) NOT NULL,
@@ -38,5 +38,12 @@ CREATE TABLE exam_status (
     username CHAR(36),
     exam_tag CHAR(20) REFERENCES exam_info(tag),
     status INT DEFAULT 0,
+    fade_key INTEGER PRIMARY KEY AUTOINCREMENT
+);
+
+CREATE TABLE answer_cache (
+    username CHAR(16) NOT NULL,
+    question_id CHAR(36) NOT NULL REFERENCES questions(id),
+    picked CHAR(1) NOT NULL,
     fade_key INTEGER PRIMARY KEY AUTOINCREMENT
 );

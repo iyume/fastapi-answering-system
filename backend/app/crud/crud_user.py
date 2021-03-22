@@ -50,7 +50,8 @@ class CRUDUser():
             email = obj_in.email,
             hashed_password = obj_in.hashed_password,
             is_active = True,
-            is_superuser = is_superuser
+            is_superuser = is_superuser,
+            created_time = datetime.now()
         )
         db.add(db_obj)
         db.commit()
