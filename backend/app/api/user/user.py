@@ -64,17 +64,17 @@ async def change_password(
     db: Session = Depends(deps.get_db)
 ) -> Any:
     hashed_password = authfunc.encrypt_password(password_in.password_new)
-    crud.user.update_password(db, password_in.id, hashed_password)
+    crud.user.update_password(db, password_in.uid, hashed_password)
     return 'success'
 
 
 @router.post('/delete')
 async def delete_user(
-    id: str,
+    uid: str,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     """
     delete user by id
     """
-    crud.user.delete(db, id=id)
+    crud.user.delete(db, uid)
     return 'success'

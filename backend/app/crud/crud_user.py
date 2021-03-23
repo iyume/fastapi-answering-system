@@ -14,9 +14,9 @@ class CRUDUser():
     def get_by_id(
         self,
         db: Session,
-        id: str
+        uid: str
     ) -> Optional[UserDB]:
-        return db.query(self.model).filter(self.model.id == id).first()
+        return db.query(self.model).filter(self.model.id == uid).first()
 
     def get_by_name(
         self,
@@ -62,11 +62,11 @@ class CRUDUser():
     def update_first_login(
         self,
         db: Session,
-        id: str
+        uid: str
     ) -> None:
         (db
         .query(self.model)
-        .filter(self.model.id == id)
+        .filter(self.model.id == uid)
         .update({self.model.first_login: datetime.now()})
         )
         db.commit()
@@ -74,12 +74,12 @@ class CRUDUser():
     def update_password(
         self,
         db: Session,
-        id: str,
+        uid: str,
         hashed_password: str
     ) -> None:
         (db
         .query(self.model)
-        .filter(self.model.id == id)
+        .filter(self.model.id == uid)
         .update({self.model.hashed_password: hashed_password})
         )
         db.commit()
@@ -87,9 +87,9 @@ class CRUDUser():
     def delete(
         self,
         db: Session,
-        id: str
+        uid: str
     ) -> None:
-        user = db.query(self.model).filter(self.model.id == id).one()
+        user = db.query(self.model).filter(self.model.id == uid).one()
         db.delete(user)
         db.commit()
 

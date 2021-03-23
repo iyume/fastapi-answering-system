@@ -31,7 +31,7 @@ async def access_token(
         crud.user.update_first_login(db, user.id)
     token = jwt.create_access_token(
         schema.UserJWT(
-            id = user.id,
+            uid = user.id,
             iss = user.name,
             email = user.email,
             is_active = user.is_active,
@@ -63,7 +63,7 @@ async def retrieve_detail(
     post jwt and response user detail
     """
     payload = schema.UserJWT(**authfunc.jwt_decode(jwt))
-    user = crud.user.get_by_id(db, payload.id)
+    user = crud.user.get_by_id(db, payload.uid)
     user.__setattr__('exp', payload.exp)
     return user
 
@@ -98,7 +98,7 @@ async def register(
     user = crud.user.create(db, user_in, is_superuser=False)
     token = jwt.create_access_token(
         schema.UserJWT(
-            id = user.id,
+            uid = user.id,
             iss = user.name,
             email = user.email,
             is_active = user.is_active,

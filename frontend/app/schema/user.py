@@ -10,8 +10,8 @@ class UserRegister(BaseModel):
 
 
 class UserPayload(BaseModel):
-    id: str
-    name :str
+    uid: str
+    name :str # iss
     email: EmailStr
     exp: int
     is_active: bool
@@ -19,7 +19,7 @@ class UserPayload(BaseModel):
 
 
 class UserDetail(BaseModel):
-    id: str
+    uid: str
     name: str
     email: EmailStr
     wechat: Optional[str] = None

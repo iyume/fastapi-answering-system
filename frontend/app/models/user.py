@@ -5,7 +5,7 @@ class UserPayload():
     def __init__(self, user_dict: Optional[dict] = None) -> None:
         self.user_dict = user_dict
         if isinstance(user_dict, dict):
-            self.id: str = user_dict.get('id', None)
+            self.uid: str = user_dict.get('uid', None)
             self.name: str = user_dict.get('iss', None)
             self.email: str = user_dict.get('email', None)
             self.exp: int = user_dict.get('exp', 1000000000)

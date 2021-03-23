@@ -348,17 +348,20 @@ class AUTH():
 
 class USER():
     def __init__(self, endpoint: str) -> None:
-        self.user_uri = os.path.join(host_url, endpoint)
+        self.user_uri = os.path.join(host_url, endpoint, '')
         self.user_change_password_uri = os.path.join(self.user_uri, 'change-password')
         self.read_done_uri = os.path.join(self.user_uri, 'done')
         self.read_exams_uri = os.path.join(self.user_uri, 'exams')
         self.answer_cache_uri = os.path.join(self.user_uri, 'answer-cache', '')
         self.answer_cache_refresh_uri = os.path.join(self.answer_cache_uri, 'refresh')
 
-    async def change_password(self, id: str, password: str) -> None:
+    async def get_by_uid(self, uid: str) -> Any:
+        return await get(self.user_uri, uid=uid)
+
+    async def change_password(self, uid: str, password: str) -> None:
         await post_with_json(
             self.user_change_password_uri,
-            id = id,
+            uid = uid,
             password_new = password
         )
 

@@ -9,7 +9,7 @@ class UserAuth(BaseModel):
 
 
 class UserChangePassword(BaseModel):
-    id: str
+    uid: str
     password_new: str
 
 
@@ -18,7 +18,7 @@ class UserBase(BaseModel):
     is_superuser: bool = False
 
 class UserJWT(UserBase):
-    id: str
+    uid: str
     iss: str
     email: EmailStr
     exp: Optional[float]
