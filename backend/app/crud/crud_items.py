@@ -55,15 +55,17 @@ class CRUDQuestion():
     ) -> list[Item]:
         return db.query(self.model).filter(self.model.id.in_(obj_in.id_list)).all()
 
-    def get_answer_by_id_many(
+    def get_by_order(
         self,
         db: Session,
-        obj_in: schema.ItemIdMany
-    ) -> list[Item]:
+        subject: str,
+        order: int
+    ) -> Optional[Item]:
         return (
-            db.query(self.model.id, self.model.answer)
-            .filter(self.model.id.in_(obj_in.id_list))
-            .all()
+            db.query(self.model)
+            .filter(self.model.subject == subject)
+            .offset(order)
+            .first()
         )
 
 

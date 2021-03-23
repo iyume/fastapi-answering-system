@@ -9,6 +9,7 @@
         <tr class="text-white text-left">
             <th class="bg-green p-2 border border-ddd">开放状态</th>
             <th class="bg-green p-2 border border-ddd">考试标题</th>
+            <th class="bg-green p-2 border border-ddd">考试科目</th>
             <th class="bg-green p-2 border border-ddd">开始时间</th>
             <th class="bg-green p-2 border border-ddd">结束时间</th>
             <th class="bg-green p-2 border border-ddd">完成情况</th>
@@ -27,6 +28,7 @@
                 <span>{{ exam['opening_status'] }}</span>
             </td>
             <td class="p-2 border border-ddd">{{ exam['exam_title'] }}</td>
+            <td class="p-2 border border-ddd">{{ subjects.get_item(exam['exam_subject'])['name_zh'] }}</td>
             <td class="p-2 border border-ddd">{{ exam['start_time'] }}</td>
             <td class="p-2 border border-ddd">{{ exam['end_time'] }}</td>
             <td class="p-2 border border-ddd font-normal">

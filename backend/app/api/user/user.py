@@ -52,6 +52,7 @@ async def user_all_exams(
             "start_time": result.start_time,
             "end_time": result.end_time,
             "exam_title": result.title,
+            "exam_subject": result.subject,
             "exam_status": result.status
         }
         for result in results

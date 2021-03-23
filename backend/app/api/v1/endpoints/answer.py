@@ -30,7 +30,7 @@ async def get_answer_many(
     """
     get question by id list, only return question_id with question_answer
     """
-    results = crud.item.get_answer_by_id_many(db, id_list_obj)
+    results = crud.item.get_by_id_many(db, id_list_obj)
     return [
         {
             "question_id": result.id,

@@ -156,7 +156,7 @@ async def exam_paper_answering(
         exam_tag = tag
     )
     exam_record = exam_records[q_num-1]
-    question = await apifunc.get_question_by_id(id=exam_record['question_id'])
+    question = await apifunc.get_question_by_id(exam_record['question_id'])
     return templates.TemplateResponse(
         'paper/exam.jinja2', {
             'request': request,

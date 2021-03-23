@@ -32,7 +32,7 @@ async def tiku_paper(
     if qtype == 'random':
         question = await apifunc.get_question_by_subject(subject)
         return templates.TemplateResponse(
-            'paper/practice.jinja2', {
+            'paper/practice_random.jinja2', {
                 'request': request,
                 'current_user': current_user,
                 'question': question,

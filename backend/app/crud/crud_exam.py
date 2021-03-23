@@ -294,7 +294,7 @@ class ComplexQuery():
         username: str
     ) -> list:
         return (
-            db.query(ExamInfo.tag, ExamInfo.start_time, ExamInfo.end_time, ExamInfo.title, ExamStatus.status)
+            db.query(ExamInfo.tag, ExamInfo.subject, ExamInfo.start_time, ExamInfo.end_time, ExamInfo.title, ExamStatus.status)
             .filter(ExamInfo.tag == ExamStatus.exam_tag)
             .filter(ExamStatus.username == username)
             .all()

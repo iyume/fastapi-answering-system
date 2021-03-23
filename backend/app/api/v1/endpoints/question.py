@@ -12,17 +12,30 @@ router = APIRouter(prefix='/question')
 
 @router.get('/')
 async def get_question(
+    qid: str,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.item.get_by_id(db, qid)
+
+
+@router.get('/random')
+async def get_question_random(
     subject: Optional[str] = None,
-    qid: Optional[str] = None,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     """
     get question
     """
-    if qid:
-        return crud.item.get_by_id(db, qid)
     if subject:
-        question = crud.item.get_by_random(db, subject=subject)
+        return crud.item.get_by_random(db, subject)
     else:
-        question = crud.item.get_by_random(db)
-    return question
+        return crud.item.get_by_random(db)
+
+
+@router.get('/order')
+async def get_question_order(
+    subject: str,
+    order: int,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    return crud.item.get_by_order(db, subject, order)

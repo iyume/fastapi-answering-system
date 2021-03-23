@@ -71,6 +71,7 @@ class API():
     def __init__(self, version: str) -> None:
         self.api_uri = os.path.join(host_url, 'api', version)
         self.question_uri = os.path.join(self.api_uri, 'question', '')
+        self.question_random_uri = os.path.join(self.question_uri, 'random')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
         self.answer_many_uri = os.path.join(self.answer_uri, 'many')
         self.exam_uri = os.path.join(self.api_uri, 'exam')
@@ -90,7 +91,7 @@ class API():
     async def get_question_by_subject(
         self, subject: str, random: bool = True) -> dict:
         result = await get(
-            self.question_uri,
+            self.question_random_uri,
             subject = subject,
             random = random
         )
@@ -100,11 +101,11 @@ class API():
 
     async def get_question_by_id(
         self,
-        id: str
+        qid: str
     ) -> Any:
         result = await get(
             self.question_uri,
-            qid = id
+            qid = qid
         )
         return result
 

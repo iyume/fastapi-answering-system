@@ -10,6 +10,7 @@ from app.routers import deps
 from app import schema
 from app.security.func import login_required
 from app.api import userfunc
+from app.models.subject import Subjects
 
 
 router = APIRouter()
@@ -37,6 +38,7 @@ async def homepage(
 async def my_exams(
     request: Request,
     username: str,
+    subjects: Subjects = Depends(deps.get_subjects),
     current_user: schema.UserPayload = Depends(deps.get_current_user)
 ) -> Any:
     if not current_user.name == username:
@@ -58,6 +60,7 @@ async def my_exams(
     return templates.TemplateResponse(
         'user/myexams.jinja2', {
             'request': request,
+            'subjects': subjects,
             'current_user': current_user,
             'myexams': myexams
         }
