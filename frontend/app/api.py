@@ -354,6 +354,7 @@ class USER():
         self.read_exams_uri = os.path.join(self.user_uri, 'exams')
         self.answer_cache_uri = os.path.join(self.user_uri, 'answer-cache', '')
         self.answer_cache_refresh_uri = os.path.join(self.answer_cache_uri, 'refresh')
+        self.answer_cache_count_uri = os.path.join(self.answer_cache_uri, 'count')
 
     async def get_by_uid(self, uid: str) -> Any:
         return await get(self.user_uri, uid=uid)
@@ -383,13 +384,24 @@ class USER():
             username = username
         )
 
-    async def read_answer_caches(
+    async def read_answered_count(
         self,
         username: str
     ) -> Any:
         return await get(
-            self.answer_cache_uri,
+            self.answer_cache_count_uri,
             username = username
+        )
+
+    async def read_answer_caches(
+        self,
+        username: str,
+        unique: bool = True
+    ) -> Any:
+        return await get(
+            self.answer_cache_uri,
+            username = username,
+            unique = unique
         )
 
     async def create_answer_cache(

@@ -85,7 +85,18 @@ class CRUDItemCache():
         db.commit()
         db.refresh(db_obj)
 
-    def query_userall_unique(
+    def query_userall(
+        self,
+        db: Session,
+        username: str
+    ) -> list[ItemCache]:
+        return (
+            db.query(self.model)
+            .filter(self.model.username == username)
+            .all()
+        )
+
+    def query_userall_unique_fresh(
         self,
         db: Session,
         username: str
