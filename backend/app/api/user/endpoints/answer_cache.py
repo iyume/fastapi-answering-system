@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
 from app import crud
-from app.auth import deps
+from app.api.auth import deps
 from app import schema
 
 

@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 
 from .api import api_v1 as api
-from .auth import auth, extrapi
-from .user import user
+from .api import auth, user
 
 app = FastAPI(
     title='后端 API 文档',
@@ -13,4 +12,3 @@ app = FastAPI(
 app.include_router(api.router)
 app.include_router(auth.router)
 app.include_router(user.router)
-app.include_router(extrapi.router)

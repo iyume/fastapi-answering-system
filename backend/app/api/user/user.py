@@ -4,32 +4,27 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
 from app import crud
-from app.auth import deps, authfunc
+from app.api.auth import deps, authfunc
 from app import schema
 
 from .endpoints import answer_cache
 
 
-router = APIRouter(prefix='/user', tags=['user'])
+router = APIRouter()
 
 router.include_router(answer_cache.router)
 
 
 @router.get('/')
 async def list_users(
+    uid: str = None,
     db: Session = Depends(deps.get_db)
 ) -> Any:
+    if uid:
+        user = crud.user.get_by_id(db, uid)
+        return user
     result = crud.user.get_all(db)
     return result
-
-
-@router.get('')
-async def query_user_by_id(
-    id: str,
-    db: Session = Depends(deps.get_db)
-) -> Any:
-    user = crud.user.get_by_id(db, id)
-    return user
 
 
 @router.get('/done')

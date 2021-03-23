@@ -6,10 +6,10 @@ from fastapi.param_functions import Depends
 from sqlalchemy.orm.session import Session
 
 from app import crud, schema
-from app.auth import deps, authfunc
+from app.api.auth import deps, authfunc
 
 
-router = APIRouter(tags=['extrapi'])
+router = APIRouter(prefix='/extra', tags=['extrapi'])
 
 
 @router.post('/test-token')

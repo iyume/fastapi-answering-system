@@ -7,7 +7,7 @@ from sqlalchemy.orm.session import Session
 
 from app import crud
 from app.config import config
-from app.auth.deps import get_db
+from . import deps
 from app.security.jwt import ALG
 
 pwd_cryptor = CryptContext(schemes=['bcrypt'], deprecated='auto')
@@ -20,7 +20,7 @@ def encrypt_password(pwd: str) -> str:
     return pwd_cryptor.encrypt(pwd)
 
 def validate(name: str, password: str) -> bool:
-    db: Session = next(get_db())
+    db: Session = next(deps.get_db())
     user = crud.user.get_by_name(db, name)
     db.close()
     if not user:

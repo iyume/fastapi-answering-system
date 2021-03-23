@@ -4,12 +4,12 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm.session import Session
 
 from app import schema, crud
-from app.auth import deps, authfunc
+from . import deps, authfunc
 from app.security import jwt
 from app.config import config
 
 
-router = APIRouter(prefix='/auth', tags=['auth'])
+router = APIRouter()
 
 
 @router.post('/access-token')
