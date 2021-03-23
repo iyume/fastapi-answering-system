@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any
 from datetime import datetime
 
@@ -9,7 +10,7 @@ from app.config import templates
 from app.routers import deps
 from app import schema
 from app.security.func import login_required
-from app.api import userfunc
+from app.api import userfunc, apifunc
 from app.models.subject import Subjects
 
 
@@ -45,7 +46,17 @@ async def my_exams(
         return RedirectResponse(request.url_for('homepage'))
     myexams = await userfunc.read_exams(username)
     myexams = sorted(myexams, key=lambda k:k['start_time'], reverse=True)
+    processing_exam_entry_coroutines = []
+    processing_exam_entry_index = []
     for exam in myexams:
+        if exam['exam_status'] == 1:
+            processing_exam_entry_coroutines.append(
+                apifunc.exam_paper_get_first_not_picked(
+                    current_user.name,
+                    exam['exam_tag']
+                )
+            )
+            processing_exam_entry_index.append(myexams.index(exam))
         start_time = datetime.fromisoformat(exam['start_time'])
         end_time = datetime.fromisoformat(exam['end_time'])
         exam['start_time'] = exam['start_time'].replace('T', ' ')
@@ -57,6 +68,15 @@ async def my_exams(
                 exam['opening_status'] = '已结束'
             else:
                 exam['opening_status'] = '未开始'
+    processing_exam_entry_coroutines_results = await asyncio.gather(
+        *processing_exam_entry_coroutines
+    )
+    for i, e in zip(
+        processing_exam_entry_index,
+        processing_exam_entry_coroutines_results
+    ):
+        # TODO strict zip in python3.10
+        myexams[i]['exam_entry_num'] = e.get('question_order', 1) if e else 1
     return templates.TemplateResponse(
         'user/myexams.jinja2', {
             'request': request,

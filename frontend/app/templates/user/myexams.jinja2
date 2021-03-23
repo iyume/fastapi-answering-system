@@ -41,9 +41,11 @@
                 {% endif %}
             </td>
             <td class="p-2 border border-ddd">
-                {% if exam['exam_status'] != 2 %}
+                {% if exam['exam_status'] == 0 %}
                 <a href="{{ url_for('exam_paper_answering', tag=exam['exam_tag'], q_num=1) }}" class="text-blue-500 font-normal">考试入口</a>
-                {% else %}
+                {% elif exam['exam_status'] == 1 %}
+                <a href="{{ url_for('exam_paper_answering', tag=exam['exam_tag'], q_num=exam['exam_entry_num']) }}" class="text-blue-500 font-normal">继续答题</a>
+                {% elif exam['exam_status'] == 2 %}
                 <a href="{{ url_for('exam_answer', tag=exam['exam_tag'], q_num=1) }}" class="text-blue-500 font-normal">答题记录</a>
                 {% endif %}
             </td>

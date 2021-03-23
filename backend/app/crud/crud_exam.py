@@ -154,7 +154,7 @@ class CRUDExamCache():
             db.query(self.model)
             .filter(self.model.username == obj_in.username)
             .filter(self.model.exam_tag == obj_in.exam_tag)
-            .filter(self.model.picked != None)
+            .filter(self.model.picked == None)
             .first()
         )
 
