@@ -13,3 +13,4 @@ class ItemCacheBase(BaseModel):
 class ItemCacheCreate(ItemCacheBase):
     question_id: str
     picked: str
+    paper_type: str

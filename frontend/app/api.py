@@ -427,13 +427,15 @@ class USER():
         self,
         username: str,
         question_id: str,
-        picked: str
+        picked: str,
+        paper_type: str
     ) -> Any:
         return await post_with_json(
             self.answer_cache_uri,
             username = username,
             question_id = question_id,
-            picked = picked
+            picked = picked,
+            paper_type = paper_type
         )
 
     async def refresh_answer_cache(

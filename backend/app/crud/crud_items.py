@@ -88,6 +88,7 @@ class CRUDItemCache():
             username = obj_in.username,
             question_id = obj_in.question_id,
             picked = obj_in.picked,
+            paper_type = obj_in.paper_type,
             created_time = datetime.now()
         )
         db.add(db_obj)
@@ -114,6 +115,7 @@ class CRUDItemCache():
             db.query(self.model)
             .filter(self.model.username == username)
             .filter(self.model.refreshed == False)
+            .filter(self.model.paper_type == 'order')
             .all()
         )
         qid_set = set()

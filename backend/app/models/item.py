@@ -25,6 +25,7 @@ class ItemCache(Base):
     username = Column(String(16))
     question_id = Column(String(36))
     picked = Column(String(1))
+    paper_type = Column(String(16), default='default')
     refreshed = Column(Boolean, default=False)
     created_time = Column(DateTime, nullable=False)
     fade_key = Column(Integer, primary_key=True, autoincrement=True)

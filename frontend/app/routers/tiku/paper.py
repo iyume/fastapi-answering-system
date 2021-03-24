@@ -66,11 +66,11 @@ async def tiku_paper_order(
         raise HTTPException(status_code=200, detail='内部数据校对错误')
     return templates.TemplateResponse(
         'paper/practice_order.jinja2', {
-            "request": request,
-            "current_user": current_user,
-            "subjects": subjects,
-            "question": question,
-            "question_list": question_list,
-            "answer_records": answer_records
+            'request': request,
+            'current_user': current_user,
+            'subjects': subjects,
+            'question': question,
+            'question_list': question_list,
+            'answer_records': answer_records
         }
     )
