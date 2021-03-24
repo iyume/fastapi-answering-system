@@ -1,38 +1,43 @@
 {# assigned variable statement #}
 {# `question`: selected question detail #}
-{# `answer_records`: queried user answer_cache fresh unique list #}
+{# `question_list`: queried question list dicted in question_id and answer #}
+{# `answer_records`: queried user answer caches fresh and unique list #}
 
 {% extends "paper/base.jinja2" %}
 
-{% set question_order = request.path_params['q_num']|int %}
+{% set question_order = request.path_params['order']|int %}
 {% set subject = subjects.get_item(request.path_params['subject']) %}
 
 {% block title %}
-{{ super() }} - {{ subject['name_zh'] or subject }}
+顺序做题 - {{ subject['name_zh'] }}
 {% endblock title %}
 
 {% block nav_first_link %}
-<a href="{{ url_for('exam_entry') }}">考试</a>
+<a href="{{ url_for('tiku_area_index') }}">题库</a>
 {% endblock nav_first_link %}
 
 {% block nav_second_link %}
-<a href="{{ url_for('exam_paper', tag=exam_tag) }}">{{ exam['tag'] }}</a>
+<a href="{{ url_for('tiku_area', subject=subject['alias']) }}">{{ subject['name_zh'] }}</a>
 {% endblock %}
 
-{% block paper_type %}{{ exam['title'] }}{% endblock %}
+{% block paper_type %}顺序做题{% endblock %}
 
-{% block paper_header_title %}{{ exam['title'] }}{% endblock paper_header_title %}
+{% block paper_header_title %}
+{{ subject['name_zh'] }}顺序做题练习
+{% endblock paper_header_title %}
 
-{% block paper_header_qdone %}已做 {{ question_done_sum|length }} 题{% endblock paper_header_qdone %}
-{% block paper_header_qcount %}共 {{ exam['question_count'] }} 题{% endblock paper_header_qcount %}
+{% block paper_header_qdone %}已做 {{ answer_records|length }} 题{% endblock paper_header_qdone %}
+{% block paper_header_qcount %}共 {{ subject['question_count'] }} 题{% endblock paper_header_qcount %}
 
 
-{% block question_number %}{{ exam_question_order }}、{% endblock %}
+{% block question_number %}{{ question_order }}、{% endblock %}
 
-{% block paper_body_action %}{% endblock paper_body_action %}
+{% block paper_body_action %}{{ url_for('get_answer') }}{% endblock paper_body_action %}
 
-{% block paper_body_hidden1_name %}id{% endblock %}
+{% block paper_body_hidden1_name %}qid{% endblock %}
 {% block paper_body_hidden1_value %}{{ question.id }}{% endblock %}
+{% block paper_body_hidden2_name %}subject{% endblock paper_body_hidden2_name %}
+{% block paper_body_hidden2_value %}{{ subject['alias'] }}{% endblock paper_body_hidden2_value %}
 
 {% block paper_body_option_a %}{{ question['option_a'] }}{% endblock paper_body_option_a %}
 {% block paper_body_option_b %}{{ question['option_b'] }}{% endblock paper_body_option_b %}
@@ -41,36 +46,34 @@
 
 
 {% block paper_tail_previous %}
-{% if exam_question_order - 1 != 0 %}
-{{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order-1) }}
+{% if question_order - 1 != 0 %}
+{{ url_for('tiku_paper_order', subject=subject['alias'], order=question_order-1) }}
 {% endif %}
 {% endblock %}
 {% block paper_tail_next %}
-{% if exam_question_order + 1 != exam['question_count'] + 1 %}
-{{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order+1) }}
-{% else %}
-{{ url_for('exam_complete', tag=exam_tag) }}
+{% if question_order != subject['question_count'] %}
+{{ url_for('tiku_paper_order', subject=subject['alias'], order=question_order+1) }}
 {% endif %}
 {% endblock %}
 
 
 {% block question_list_nav %}
-<div class="bg-white rounded-lg px-7 py-5">
-    <span class="block pb-3">答题情况</span>
+<div class="bg-white rounded-lg px-4 py-5">
+    <span class="block pb-3 px-2">答题情况</span>
     <div>
-        <div class="h-full grid grid-cols-7 gap-1.5">
-            {% for i in range(exam['question_count']) %}
-            <a href="{{ url_for('exam_paper_answering', tag=exam_tag, q_num=i+1) }}"
-                class="block p-0.5 bg-white border text-center {% if i+1 == exam_question_order %}bg-gray-300 border-gray-300{% endif %} {% if exam_records[i]['picked'] %}bg-green{% endif %}"
+        <div class="h-96 grid grid-cols-7 gap-1.5 overflow-y-auto">
+            {% for i in range(subject['question_count']) %}
+            <a href="{{ url_for('tiku_paper_order', subject=subject['alias'], order=i+1) }}"
+                class="block p-0.5 bg-white border text-center {% if i+1 == question_order %}bg-gray-300 border-gray-300{% endif %}"
             >{{ i + 1 }}</a>
             {% endfor %}
         </div>
     </div>
     <div class="pt-4 leading-8">
-        <a href="{{ url_for('exam_complete', tag=exam_tag) }}"
+        <a href=""
             class="block bg-main text-center align-middle w-2/5 h-full mx-auto"
         >
-            <span class="text-center align-middle">完成答题</span>
+            <span class="text-center align-middle">刷新</span>
         </a>
     </div>
 </div>

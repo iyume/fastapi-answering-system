@@ -1,4 +1,5 @@
 from typing import Optional, Any
+import asyncio
 
 from fastapi import APIRouter, Depends
 from fastapi.exceptions import HTTPException
@@ -7,7 +8,7 @@ from starlette.responses import HTMLResponse
 
 from app.config import templates
 from app.routers import deps
-from app.api import apifunc
+from app.api import apifunc, userfunc
 from app.models import Subjects, UserPayload
 from app.security import login_required
 
@@ -28,7 +29,7 @@ async def tiku_paper_random(
     """
     if subject not in subjects.aliases:
         raise HTTPException(status_code=404, detail='Subject not found')
-    question = await apifunc.get_question_by_subject(subject)
+    question = await apifunc.get_question_by_subject(subject, is_random=True)
     return templates.TemplateResponse(
         'paper/practice_random.jinja2', {
             'request': request,
@@ -51,3 +52,25 @@ async def tiku_paper_order(
     """
     order practice page
     """
+    if subject not in subjects.aliases:
+        raise HTTPException(status_code=404, detail='Subject not found')
+    subject_dict = subjects.get_item(subject)
+    if not (0 < order <= subject_dict['question_count']):
+        raise HTTPException(status_code=404, detail='Order exceeded')
+    question_list, question, answer_records = await asyncio.gather(
+        apifunc.get_question_by_subject(subject, full=True, is_simple=True),
+        apifunc.get_question_by_order(subject, order),
+        userfunc.read_answer_caches(current_user.name, unique=True)
+    )
+    if len(question_list) < subject_dict['question_count']:
+        raise HTTPException(status_code=200, detail='内部数据校对错误')
+    return templates.TemplateResponse(
+        'paper/practice_order.jinja2', {
+            "request": request,
+            "current_user": current_user,
+            "subjects": subjects,
+            "question": question,
+            "question_list": question_list,
+            "answer_records": answer_records
+        }
+    )

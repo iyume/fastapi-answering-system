@@ -55,7 +55,7 @@ class CRUDQuestion():
     ) -> list[Item]:
         return db.query(self.model).filter(self.model.id.in_(obj_in.id_list)).all()
 
-    def get_by_order(
+    def get_by_subject_order(
         self,
         db: Session,
         subject: str,
@@ -64,9 +64,16 @@ class CRUDQuestion():
         return (
             db.query(self.model)
             .filter(self.model.subject == subject)
-            .offset(order)
+            .offset(order-1)
             .first()
         )
+
+    def get_by_subject_all(
+        self,
+        db: Session,
+        subject: str
+    ) -> list[Item]:
+        return db.query(self.model).filter(self.model.subject == subject).all()
 
 
 class CRUDItemCache():

@@ -54,7 +54,7 @@
 {% endif %}
 {% endblock %}
 {% block paper_tail_next %}
-{% if exam_question_order + 1 != exam['question_count'] + 1 %}
+{% if exam_question_order != exam['question_count'] %}
 {{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order+1) }}
 {% else %}
 {{ url_for('exam_complete', tag=exam_tag) }}

@@ -27,14 +27,14 @@ async def get_answer(
     Render answer page according to the answer selected in paper
     """
     form = await request.form()
-    if 'id' not in form or 'picked' not in form:
+    if 'qid' not in form or 'picked' not in form:
         return RedirectResponse(request.url_for('index'))
-    id = form['id']
+    qid = form['qid']
     picked = form['picked']
     subject = form['subject']
     if picked not in list('ABCD'):
         raise HTTPException(status_code=400, detail='Bad picked')
-    question = await apifunc.get_answer(id)
+    question = await apifunc.get_answer(qid)
     return templates.TemplateResponse(
         'tiku/answer.jinja2', {
             'request': request,

@@ -30,9 +30,9 @@ async def http_exception_handler(
     exc: Any
 ) -> Any:
     if exc.status_code == 404:
-        return PlainTextResponse('Page not found', status_code=404)
+        return PlainTextResponse(exc.detail or 'Page not found', status_code=404)
     if exc.status_code == 500:
-        return PlainTextResponse('500 Server error', status_code=500)
+        return PlainTextResponse(exc.detail or '500 Server error', status_code=500)
     return templates.TemplateResponse(
         'base.jinja2', {
             'request': request,

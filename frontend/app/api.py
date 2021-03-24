@@ -72,6 +72,7 @@ class API():
         self.api_uri = os.path.join(host_url, 'api', version)
         self.question_uri = os.path.join(self.api_uri, 'question', '')
         self.question_random_uri = os.path.join(self.question_uri, 'random')
+        self.question_order_uri = os.path.join(self.question_uri, 'order')
         self.answer_uri = os.path.join(self.api_uri, 'answer', '')
         self.answer_many_uri = os.path.join(self.answer_uri, 'many')
         self.exam_uri = os.path.join(self.api_uri, 'exam')
@@ -89,15 +90,23 @@ class API():
         self.exam_paper_update_picked_uri = os.path.join(self.exam_paper_uri, 'update-picked')
 
     async def get_question_by_subject(
-        self, subject: str, random: bool = True) -> dict:
-        result = await get(
-            self.question_random_uri,
-            subject = subject,
-            random = random
-        )
-        if not result:
-            raise HTTPException(status_code=500)
-        return result
+        self,
+        subject: str,
+        is_random: bool = False,
+        full: bool = False,
+        is_simple: Optional[bool] = True
+    ) -> Any:
+        if is_random:
+            return await get(
+                self.question_random_uri,
+                subject = subject
+            )
+        if full:
+            return await get(
+                self.question_uri,
+                subject = subject,
+                is_simple = is_simple
+            )
 
     async def get_question_by_id(
         self,
@@ -109,13 +118,22 @@ class API():
         )
         return result
 
+    async def get_question_by_order(
+        self,
+        subject: str,
+        order: int
+    ) -> Any:
+        return await get(
+            self.question_order_uri,
+            subject = subject,
+            order = order
+        )
+
     async def get_answer(self, id: str) -> dict:
         result = await get(
             self.answer_uri,
             id = id
         )
-        if not result:
-            raise HTTPException(status_code=400, detail='incorrect question id')
         return result
 
     async def get_answer_many(self, id_list: list[str]) -> list[dict]:
