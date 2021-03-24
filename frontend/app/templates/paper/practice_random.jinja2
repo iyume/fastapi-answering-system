@@ -1,6 +1,8 @@
 {% extends 'paper/base.jinja2' %}
 
+{% if subjects %}
 {% set subject = subjects.get_item(request.path_params['subject'] or subject) %}
+{% endif %}
 
 {% block title %}
 随机选题 - {{ subject['name_zh'] }}
