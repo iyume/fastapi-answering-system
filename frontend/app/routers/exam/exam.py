@@ -200,7 +200,7 @@ async def exam_answer(
     question_list = await apifunc.get_answer_many([i['question_id'] for i in exam_records])
     question = await apifunc.get_answer(question_list[q_num-1]['question_id'])
     return templates.TemplateResponse(
-        'exam/answer.jinja2', {
+        'answer/exam.jinja2', {
             'request': request,
             'current_user': current_user,
             'question': question,
