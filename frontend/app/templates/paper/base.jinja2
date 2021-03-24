@@ -1,8 +1,6 @@
 {% extends 'base.jinja2' %}
 
-{% block title %}
-随机选题
-{% endblock title %}
+{% block title %}{% endblock title %}
 
 {% block content %}
         <div class="h-12 pt-4 pb-8 text-sm">
@@ -34,7 +32,7 @@
                 <div class="bg-white rounded-lg px-7 py-5">
                     {% block paper_body %}
                     <div class="container">
-                        <p class="font-medium text-base py-3">{% if question %}{% block question_number %}1、{% endblock %}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
+                        <p class="font-medium text-base py-3">{% block question_number %}NaN、{% endblock %}{% if question %}{{ question['question'] }}{% else %}题目拉取出错{% endif %}</p>
                         {% if question %}
                         <form action="{% block paper_body_action %}{% endblock %}" method="post">
                             <input type="hidden" name="{% block paper_body_hidden1_name %}{% endblock %}" value="{% block paper_body_hidden1_value %}{% endblock %}">

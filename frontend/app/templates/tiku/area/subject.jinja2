@@ -7,18 +7,18 @@
 {% endblock title %}
 
 {% block paperentry %}
-                {# <div class="flex bg-white rounded-lg p-6 justify-between">
+                <div class="flex bg-white rounded-lg p-6 justify-between">
                     <div class="font-light text-base">
                         <span class="text-gray-700">已做 * 题</span>
                         <span class="text-gray-400"> / 共 ∞ 题</span>
                     </div>
                     <div class="ml-4 text-blue-400 text-base">
                         <a
-                            href="{{ url_for('tiku_paper', subject=request.path_params['subject']) }}?qtype=random"
+                            href="{{ url_for('tiku_paper_random', subject=request.path_params['subject']) }}"
                             class="bg-main font-normal text-white px-4 py-2 rounded-sm"
                         >随机选题</a>
                     </div>
-                </div> #}
+                </div>
                 <div class="flex bg-white rounded-lg p-6 justify-between">
                     <div class="font-light text-base">
                         <span class="text-gray-700">已做 {{ done_count['fb_done_count'] }} 题</span>
@@ -26,7 +26,7 @@
                     </div>
                     <div class="ml-4 text-blue-400 text-base">
                         <a
-                            href="{{ url_for('tiku_paper', subject=request.path_params['subject']) }}?qtype=order"
+                            href="{{ url_for('tiku_paper_order', subject=request.path_params['subject'], order=1) }}"
                             class="bg-main font-normal text-white px-4 py-2 rounded-sm"
                         >顺序做题</a>
                     </div>

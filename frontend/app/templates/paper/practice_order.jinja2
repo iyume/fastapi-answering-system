@@ -1,40 +1,38 @@
-{% extends 'paper/base.jinja2' %}
+{# assigned variable statement #}
+{# `question`: selected question detail #}
+{# `answer_records`: queried user answer_cache fresh unique list #}
 
+{% extends "paper/base.jinja2" %}
+
+{% set question_order = request.path_params['q_num']|int %}
 {% set subject = subjects.get_item(request.path_params['subject']) %}
 
 {% block title %}
-顺序做题 - {{ subject['name_zh'] }}
+{{ super() }} - {{ subject['name_zh'] or subject }}
 {% endblock title %}
 
 {% block nav_first_link %}
-<a href="{{ url_for('tiku_area_index') }}">题库</a>
+<a href="{{ url_for('exam_entry') }}">考试</a>
 {% endblock nav_first_link %}
 
 {% block nav_second_link %}
-<a href="{{ url_for('tiku_area', subject=subject['alias']) }}">{{ subject['name_zh'] }}</a>
+<a href="{{ url_for('exam_paper', tag=exam_tag) }}">{{ exam['tag'] }}</a>
 {% endblock %}
 
-{% block paper_type %}顺序做题{% endblock %}
+{% block paper_type %}{{ exam['title'] }}{% endblock %}
 
-{% block paper_header_title %}
-{{ subject['name_zh'] }}顺序做题
-{% endblock paper_header_title %}
+{% block paper_header_title %}{{ exam['title'] }}{% endblock paper_header_title %}
 
-{% block paper_header_qdone %}
-已做 {{ done_count }} 题
-{% endblock paper_header_qdone %}
-
-{% block paper_header_qcount %}
-共 {{ subject }} 题
-{% endblock paper_header_qcount %}
+{% block paper_header_qdone %}已做 {{ question_done_sum|length }} 题{% endblock paper_header_qdone %}
+{% block paper_header_qcount %}共 {{ exam['question_count'] }} 题{% endblock paper_header_qcount %}
 
 
-{% block paper_body_action %}{{ url_for('get_answer') }}{% endblock paper_body_action %}
+{% block question_number %}{{ exam_question_order }}、{% endblock %}
+
+{% block paper_body_action %}{% endblock paper_body_action %}
 
 {% block paper_body_hidden1_name %}id{% endblock %}
 {% block paper_body_hidden1_value %}{{ question.id }}{% endblock %}
-{% block paper_body_hidden2_name %}subject{% endblock %}
-{% block paper_body_hidden2_value %}{{ subject['alias'] }}{% endblock %}
 
 {% block paper_body_option_a %}{{ question['option_a'] }}{% endblock paper_body_option_a %}
 {% block paper_body_option_b %}{{ question['option_b'] }}{% endblock paper_body_option_b %}
@@ -42,13 +40,41 @@
 {% block paper_body_option_d %}{{ question['option_d'] }}{% endblock paper_body_option_d %}
 
 
-{% block paper_tail_previous %}{{ url_for('tiku_paper', subject=subject['alias']) }}?qtype=random{% endblock %}
-{% block paper_tail_next %}{{ url_for('tiku_paper', subject=subject['alias']) }}?qtype=random{% endblock %}
-
-
-{% block back_to_link %}{{ url_for('tiku_area', subject=subject['alias']) }}{% endblock %}
+{% block paper_tail_previous %}
+{% if exam_question_order - 1 != 0 %}
+{{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order-1) }}
+{% endif %}
+{% endblock %}
+{% block paper_tail_next %}
+{% if exam_question_order + 1 != exam['question_count'] + 1 %}
+{{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order+1) }}
+{% else %}
+{{ url_for('exam_complete', tag=exam_tag) }}
+{% endif %}
+{% endblock %}
 
 
 {% block question_list_nav %}
-
+<div class="bg-white rounded-lg px-7 py-5">
+    <span class="block pb-3">答题情况</span>
+    <div>
+        <div class="h-full grid grid-cols-7 gap-1.5">
+            {% for i in range(exam['question_count']) %}
+            <a href="{{ url_for('exam_paper_answering', tag=exam_tag, q_num=i+1) }}"
+                class="block p-0.5 bg-white border text-center {% if i+1 == exam_question_order %}bg-gray-300 border-gray-300{% endif %} {% if exam_records[i]['picked'] %}bg-green{% endif %}"
+            >{{ i + 1 }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="pt-4 leading-8">
+        <a href="{{ url_for('exam_complete', tag=exam_tag) }}"
+            class="block bg-main text-center align-middle w-2/5 h-full mx-auto"
+        >
+            <span class="text-center align-middle">完成答题</span>
+        </a>
+    </div>
+</div>
 {% endblock question_list_nav %}
+
+
+{% block back_to_link %}{{ url_for('exam_entry') }}{% endblock back_to_link %}
