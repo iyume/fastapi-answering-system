@@ -36,7 +36,7 @@ async def get_answer(
         raise HTTPException(status_code=400, detail='Bad picked')
     question = await apifunc.get_answer(qid)
     return templates.TemplateResponse(
-        'tiku/answer.jinja2', {
+        'answer/practice_random.jinja2', {
             'request': request,
             'subjects': subjects,
             'current_user': current_user,

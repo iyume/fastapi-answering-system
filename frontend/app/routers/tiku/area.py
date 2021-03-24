@@ -9,6 +9,7 @@ from app.config import templates
 from app.routers import deps
 from app.models import Subjects, UserPayload
 from app.api import userfunc
+from app.security import login_required
 
 
 router = APIRouter(prefix='/area')
@@ -25,7 +26,7 @@ async def tiku_area_index(
     Render index page, but not the final index page
     """
     return templates.TemplateResponse(
-        'tiku/area/base.jinja2',
+        'area/base.jinja2',
         {
             'request': request,
             'current_user': current_user,
@@ -36,6 +37,7 @@ async def tiku_area_index(
 
 @router.get('/{subject}', response_class=HTMLResponse)
 @router.post('/{subject}', response_class=HTMLResponse)
+@login_required
 async def tiku_area(
     request: Request,
     subject: str,
@@ -49,7 +51,7 @@ async def tiku_area(
         raise HTTPException(status_code=404, detail='Subject not found')
     done_count: dict = await userfunc.read_answered_count(current_user.name)
     return templates.TemplateResponse(
-        'tiku/area/subject.jinja2',
+        'area/subject.jinja2',
         {
             'request': request,
             'current_user': current_user,
