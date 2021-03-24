@@ -5,7 +5,7 @@ from app.config import config
 
 engine = create_engine(
     config.DATABASE_URI,
-    echo=True,
+    echo=False,
     connect_args={
         'check_same_thread': False
     }
