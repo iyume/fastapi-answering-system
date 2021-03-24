@@ -64,6 +64,10 @@ async def tiku_paper_order(
     )
     if len(question_list) < subject_dict['question_count']:
         raise HTTPException(status_code=200, detail='内部数据校对错误')
+    done_qid_set = set({d['question_id'] for d in answer_records})
+    for d in question_list:
+        if d['question_id'] in done_qid_set:
+            d.update(('picked', i['picked']) for i in answer_records)
     return templates.TemplateResponse(
         'paper/practice_order.jinja2', {
             'request': request,

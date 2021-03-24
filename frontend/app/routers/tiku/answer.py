@@ -82,6 +82,10 @@ async def get_answer_order(
         apifunc.get_answer(qid),
         userfunc.read_answer_caches(current_user.name, unique=True)
     )
+    done_qid_set = set({d['question_id'] for d in answer_records})
+    for d in question_list:
+        if d['question_id'] in done_qid_set:
+            d.update(('picked', i['picked']) for i in answer_records)
     return templates.TemplateResponse(
         'answer/practice_order.jinja2', {
             'request': request,

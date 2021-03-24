@@ -70,7 +70,7 @@
         <div class="h-96 grid grid-cols-7 gap-1.5 overflow-y-auto">
             {% for i in range(subject['question_count']) %}
             <a href="{{ url_for('tiku_paper_order', subject=subject['alias'], order=i+1) }}"
-                class="block p-0.5 bg-white border text-center {% if i+1 == question_order %}bg-gray-300 border-gray-300{% endif %}"
+                class="block p-0.5 bg-white border rounded text-center {% if i+1 == question_order %}bg-gray-300 border-gray-300{% endif %} {% if question_list[i]['picked'] %}{% if question_list[i]['picked'] == question_list[i]['answer'] %}bg-green{% else %}bg-red-500{% endif %}{% endif %}"
             >{{ i + 1 }}</a>
             {% endfor %}
         </div>
