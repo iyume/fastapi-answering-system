@@ -85,7 +85,13 @@ async def get_answer_order(
     done_qid_set = set({d['question_id'] for d in answer_records})
     for d in question_list:
         if d['question_id'] in done_qid_set:
-            d.update(('picked', i['picked']) for i in answer_records)
+            d.update(
+                {
+                    'picked': i['picked']
+                    for i in answer_records
+                    if i['question_id'] == d['question_id']
+                }
+            )
     return templates.TemplateResponse(
         'answer/practice_order.jinja2', {
             'request': request,

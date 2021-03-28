@@ -121,19 +121,13 @@ class CRUDItemCache():
         qid_set = set()
         results = []
         while db_objs:
-            handler = db_objs[0]
+            handler = db_objs[-1]
             if handler.question_id not in qid_set:
                 qid_set.add(handler.question_id)
                 results.append(handler)
-                db_objs.pop(0)
+                db_objs.pop()
             else:
-                if to_replace_index := [
-                    i for i, val in enumerate(results)
-                    if val.question_id == handler.question_id
-                    if val.created_time < handler.created_time
-                ]:
-                    results[to_replace_index[0]] = handler
-                db_objs.pop(0)
+                db_objs.pop()
         return results
 
     def refresh(
