@@ -14,3 +14,4 @@ class ItemCacheCreate(ItemCacheBase):
     question_id: str
     picked: str
     paper_type: str
+    subject: str # for userinfo increase counter

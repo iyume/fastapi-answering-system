@@ -1,10 +1,12 @@
 from typing import Optional
 from datetime import datetime
 
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.sql.functions import random
 
 from app.models.item import Item, ItemCache
+from app.models.user import UserDB
 from app import schema
 
 
@@ -84,6 +86,19 @@ class CRUDItemCache():
         db: Session,
         obj_in: schema.ItemCacheCreate,
     ) -> None:
+        if not db.query(self.model).filter(self.model.question_id == obj_in.question_id).first():
+            # increase amount of question in userinfo
+            db_obj = db.query(UserDB).filter(UserDB.name == obj_in.username).first()
+            if obj_in.subject == 'fb':
+                update_dict = {UserDB.fb_done_count: db_obj.fb_done_count + 1}
+            elif obj_in.subject == 'fr':
+                update_dict = {UserDB.fr_done_count: db_obj.fr_done_count + 1}
+            elif obj_in.subject == 'sr':
+                update_dict = {UserDB.sr_done_count: db_obj.sr_done_count + 1}
+            else:
+                raise HTTPException(status_code=400, detail='invalid subject in creating answer cache')
+            db.query(UserDB).filter(UserDB.name == obj_in.username).update(update_dict)
+            db.commit()
         db_obj = self.model(
             username = obj_in.username,
             question_id = obj_in.question_id,

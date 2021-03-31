@@ -40,7 +40,8 @@ async def get_answer_random(
         username = current_user.name,
         question_id = question['id'],
         picked = picked,
-        paper_type = 'random'
+        paper_type = 'random',
+        subject = subject
     )
     return templates.TemplateResponse(
         'answer/practice_random.jinja2', {
@@ -75,7 +76,8 @@ async def get_answer_order(
         username = current_user.name,
         question_id = qid,
         picked = picked,
-        paper_type = 'order'
+        paper_type = 'order',
+        subject = subject
     )
     question_list, question, answer_records = await asyncio.gather(
         apifunc.get_question_by_subject(subject, full=True, is_simple=True),

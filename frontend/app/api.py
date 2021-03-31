@@ -375,6 +375,9 @@ class USER():
         self.answer_cache_refresh_uri = os.path.join(self.answer_cache_uri, 'refresh')
         self.answer_cache_count_uri = os.path.join(self.answer_cache_uri, 'count')
 
+    async def get_all_user(self) -> Any:
+        return await get(self.user_uri)
+
     async def get_by_uid(self, uid: str) -> Any:
         return await get(self.user_uri, uid=uid)
 
@@ -428,14 +431,16 @@ class USER():
         username: str,
         question_id: str,
         picked: str,
-        paper_type: str
+        paper_type: str,
+        subject: str
     ) -> Any:
         return await post_with_json(
             self.answer_cache_uri,
             username = username,
             question_id = question_id,
             picked = picked,
-            paper_type = paper_type
+            paper_type = paper_type,
+            subject = subject
         )
 
     async def refresh_answer_cache(
