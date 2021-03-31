@@ -18,7 +18,7 @@ async def user_answer_cache(
     db: Session = Depends(deps.get_db)
 ) -> Any:
     if unique:
-        return crud.itemcache.query_userall_unique_fresh(db, username)
+        return crud.itemcache.query_userall_unique(db, username)
     else:
         return crud.itemcache.query_userall(db, username)
 
