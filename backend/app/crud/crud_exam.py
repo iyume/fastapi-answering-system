@@ -111,7 +111,17 @@ class CRUDExamCache():
         db: Session,
         obj_in: schema.ExamStatusUpdate
     ) -> None:
+        # update exam status to 2
         examstatus.update(db, obj_in)
+        # update exam status column `finish_time`
+        (db
+        .query(ExamStatus)
+        .filter(ExamStatus.username == obj_in.username)
+        .filter(ExamStatus.exam_tag == obj_in.exam_tag)
+        .update({ExamStatus.finish_time: datetime.now()})
+        )
+        db.commit()
+        # update user recent_done_exam
         (db
         .query(UserDB)
         .filter(UserDB.name == obj_in.username)
