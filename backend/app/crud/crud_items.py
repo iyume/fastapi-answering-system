@@ -166,6 +166,18 @@ class CRUDItemCache():
         )
         db.commit()
 
+    def clear(
+        self,
+        db: Session,
+        username: str
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.username == username)
+        .delete()
+        )
+        db.commit()
+
 
 item = CRUDQuestion()
 itemcache = CRUDItemCache()

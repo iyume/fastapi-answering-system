@@ -10,6 +10,21 @@ from app import crud
 router = APIRouter(prefix='/extra', tags=['extrapi'])
 
 
+@router.post('/clear-answer-cache')
+async def user_clear_answer_cache(
+    username: str,
+    db: Session = Depends(deps.get_db)
+) -> Any:
+    crud.itemcache.clear(db, username)
+    crud.user.update_done_counter(
+        db,
+        username,
+        fb_done_count=0,
+        fr_done_count=0,
+        sr_done_count=0
+    )
+
+
 @router.post('/refresh-info')
 async def refresh_user_info(
     db: Session = Depends(deps.get_db)

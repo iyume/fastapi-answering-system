@@ -97,6 +97,25 @@ class CRUDUser():
         )
         db.commit()
 
+    def update_done_counter(
+        self,
+        db: Session,
+        username: str,
+        fb_done_count: int,
+        fr_done_count: int,
+        sr_done_count: int
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.name == username)
+        .update({
+            self.model.fb_done_count: fb_done_count,
+            self.model.fr_done_count: fr_done_count,
+            self.model.sr_done_count: sr_done_count})
+        )
+        db.commit()
+
+
     def delete(
         self,
         db: Session,
