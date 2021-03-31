@@ -12,13 +12,19 @@
             <th class="bg-green p-2 border border-ddd">最近一场完成的考试</th>
             <th class="bg-green p-2 border border-ddd">所有考试</th>
         </tr>
-        {% for exam in exams %}
+        {% for user in users %}
+        {% if not user['is_superuser'] %}
         <tr class="font-light">
-            <td class="p-2 border border-ddd">{{ '' }}</td>
-            <td class="p-2 border border-ddd">{{ '' }}</td>
-            <td class="p-2 border border-ddd">{{ '' }}</td>
-            <td class="p-2 border border-ddd">{{ '' }}</td>
+            <td class="p-2 border border-ddd">{{ user['name'] }}</td>
+            <td class="p-2 border border-ddd">{{ user['wechat'] or '空' }}</td>
+            <td class="p-2 border border-ddd font-normal">
+                <a href="" class="w-full h-full text-blue-500">{{ user['recent_done_exam'] }}</a>
+            </td>
+            <td class="p-2 border border-ddd font-normal">
+                <a href="{{ url_for('manage_list_user_exams', username=user['name']) }}" class="w-full h-full text-blue-500">查看所有考试</a>
+            </td>
         </tr>
+        {% endif %}
         {% endfor %}
     </table>
 </div>

@@ -381,6 +381,9 @@ class USER():
     async def get_by_uid(self, uid: str) -> Any:
         return await get(self.user_uri, uid=uid)
 
+    async def get_by_name(self, username: str) -> Any:
+        return await get(self.user_uri, username=username)
+
     async def change_password(self, uid: str, password: str) -> None:
         await post_with_json(
             self.user_change_password_uri,

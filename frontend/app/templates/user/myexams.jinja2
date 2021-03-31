@@ -5,6 +5,14 @@
     {% if message %}
     <p class="text-red-500 pb-4">{{ message }}</p>
     {% endif %}
+    {% if current_user.is_superuser %}
+    <div class="pb-6">
+        <a href="{{ url_for('manage_list_userinfo') }}" class="bg-green px-6 py-2 rounded-md hover:shadow-lg">
+            <svg class="w-5 h-5 inline-block" t="1617178787051" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2445" width="200" height="200"><path d="M928 464H247.936L569.984 141.76l-56.56-56.688-418.608 418.56 418.608 418.56 56.56-56.352L247.936 544H928z" fill="#ffffff" p-id="2446"></path></svg>
+        </a>
+    </div>
+    {% endif %}
+    <span class="font-light text-xs">注：默认按照开始时间倒序排列</span>
     <table class="w-full">
         <tr class="text-white text-left">
             <th class="bg-green p-2 border border-ddd">开放状态</th>
@@ -42,16 +50,19 @@
             </td>
             <td class="p-2 border border-ddd">
                 {% if exam['exam_status'] == 0 %}
+                {% if not current_user.is_superuser %}
                 <a href="{{ url_for('exam_paper_answering', tag=exam['exam_tag'], q_num=1) }}" class="text-blue-500 font-normal">考试入口</a>
+                {% endif %}
                 {% elif exam['exam_status'] == 1 %}
+                {% if not current_user.is_superuser %}
                 <a href="{{ url_for('exam_paper_answering', tag=exam['exam_tag'], q_num=exam['exam_entry_num']) }}" class="text-blue-500 font-normal">继续答题</a>
+                {% endif %}
                 {% elif exam['exam_status'] == 2 %}
-                <a href="{{ url_for('exam_answer', tag=exam['exam_tag'], q_num=1) }}" class="text-blue-500 font-normal">答题记录</a>
+                <a href="{% if not current_user.is_superuser %}{{ url_for('exam_answer', tag=exam['exam_tag'], q_num=1) }}{% else %}{{ url_for('manage_inspect_user_exam', username=request.path_params['username'], exam_tag=exam['exam_tag'], q_num=1) }}{% endif %}" class="text-blue-500 font-normal">答题记录</a>
                 {% endif %}
             </td>
         </tr>
         {% endfor %}
     </table>
-    <span class="font-light text-xs">注：默认按照开始时间倒序排列</span>
 </div>
 {% endblock user_main %}

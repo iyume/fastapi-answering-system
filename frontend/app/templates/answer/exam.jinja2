@@ -8,14 +8,23 @@
 {% set exam_question_order = request.path_params['q_num']|int %}
 
 {% block nav_first_link %}
+{% if not current_user.is_superuser %}
 <a href="{{ url_for('exam_entry') }}">考试</a>
+{% else %}
+<a href="{{ url_for('manage_list_userinfo') }}">考生列表</a>
+{% endif %}
 {% endblock nav_first_link %}
 
 {% block nav_second_link %}
+{% if not current_user.is_superuser %}
 <a href="{{ url_for('exam_paper', tag=exam_tag) }}">{{ exam['tag'] }}</a>
+{% else %}
+<a href="{{ url_for('manage_list_user_exams', username=request.path_params['username']) }}">考生所有考试</a>
+{% endif %}
 {% endblock %}
 
 {% block paper_type %}{{ exam['title'] }}{% endblock %}
+
 
 {% block paper_header_title %}{{ exam['title'] }}{% endblock paper_header_title %}
 
@@ -73,17 +82,40 @@
                     </div>
 {% endblock %}
 
+
 {% block paper_tail_previous %}
+
 {% if exam_question_order - 1 != 0 %}
+
+{% if not current_user.is_superuser %}
 {{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order-1) }}
+{% else %}
+{{ url_for('manage_inspect_user_exam', username=request.path_params['username'], exam_tag=request.path_params['exam_tag'], q_num=exam_question_order-1) }}
 {% endif %}
+
+{% endif %}
+
 {% endblock %}
+
+
 {% block paper_tail_next %}
-{% if exam_question_order + 1 != exam['question_count'] + 1 %}
+
+{% if not current_user.is_superuser %}
+
+{% if exam_question_order != exam['question_count'] %}
 {{ url_for('exam_paper_answering', tag=exam_tag, q_num=exam_question_order+1) }}
 {% else %}
 {{ url_for('exam_complete', tag=exam_tag) }}
 {% endif %}
+
+{% else %}
+
+{% if exam_question_order != exam['question_count'] %}
+{{ url_for('manage_inspect_user_exam', username=request.path_params['username'], exam_tag=request.path_params['exam_tag'], q_num=exam_question_order+1) }}
+{% endif %}
+
+{% endif %}
+
 {% endblock %}
 
 
@@ -93,14 +125,14 @@
     <div>
         <div class="h-full grid grid-cols-7 gap-1.5">
             {% for i in range(exam['question_count']) %}
-            <a href="{{ url_for('exam_answer', tag=exam_tag, q_num=i+1) }}"
+            <a href="{% if not current_user.is_superuser %}{{ url_for('exam_answer', tag=exam_tag, q_num=i+1) }}{% else %}{{ url_for('manage_inspect_user_exam', username=request.path_params['username'], exam_tag=request.path_params['exam_tag'], q_num=i+1) }}{% endif %}"
                 class="block p-0.5 bg-white border text-center {% if exam_records[i]['picked'] == question_list[i]['answer'] %}bg-green{% else %}bg-red-500{% endif %}"
             >{{ i + 1 }}</a>
             {% endfor %}
         </div>
     </div>
     <div class="pt-4 leading-8">
-        <a href="{{ url_for('exam_entry') }}"
+        <a href="{% if not current_user.is_superuser %}{{ url_for('exam_entry') }}{% else %}{{ url_for('manage_list_user_exams', username=request.path_params['username']) }}{% endif %}"
             class="block bg-green text-center align-middle w-2/5 h-full mx-auto"
         >
             <span class="text-center align-middle">返回</span>

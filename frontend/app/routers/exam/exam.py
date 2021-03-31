@@ -185,7 +185,7 @@ async def exam_answer(
     )
     if not exam:
         raise HTTPException(status_code=404)
-    if q_num > exam['question_count']:
+    if not (0 < q_num <= exam['question_count']):
         raise HTTPException(status_code=404)
     if not (exam_status or exam_status.get('status') != 2):
         return RedirectResponse(

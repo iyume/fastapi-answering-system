@@ -14,11 +14,13 @@ router = APIRouter()
 @router.get('/')
 async def list_users(
     uid: str = None,
+    username: str = None,
     db: Session = Depends(deps.get_db)
 ) -> Any:
     if uid:
-        user = crud.user.get_by_id(db, uid)
-        return user
+        return crud.user.get_by_id(db, uid)
+    if username:
+        return crud.user.get_by_name(db, username)
     result = crud.user.get_all(db)
     return result
 
