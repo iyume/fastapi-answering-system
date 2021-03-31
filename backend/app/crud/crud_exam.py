@@ -112,6 +112,12 @@ class CRUDExamCache():
         obj_in: schema.ExamStatusUpdate
     ) -> None:
         examstatus.update(db, obj_in)
+        (db
+        .query(UserDB)
+        .filter(UserDB.name == obj_in.username)
+        .update({UserDB.recent_done_exam: obj_in.exam_tag})
+        )
+        db.commit()
 
     def fetchone(
         self,

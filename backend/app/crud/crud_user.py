@@ -84,6 +84,19 @@ class CRUDUser():
         )
         db.commit()
 
+    def update_recent_done_exam(
+        self,
+        db: Session,
+        username: str,
+        exam_tag: str
+    ) -> None:
+        (db
+        .query(self.model)
+        .filter(self.model.name == username)
+        .update({self.model.recent_done_exam: exam_tag})
+        )
+        db.commit()
+
     def delete(
         self,
         db: Session,

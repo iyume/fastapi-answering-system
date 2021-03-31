@@ -20,3 +20,4 @@ class UserDB(Base):
     fb_done_count = Column(Integer, default=0)
     fr_done_count = Column(Integer, default=0)
     sr_done_count = Column(Integer, default=0)
+    recent_done_exam = Column(String(20))

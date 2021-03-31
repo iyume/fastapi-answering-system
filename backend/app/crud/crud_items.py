@@ -121,18 +121,27 @@ class CRUDItemCache():
             .all()
         )
 
-    def query_userall_unique_fresh(
+    def query_userall_unique(
         self,
         db: Session,
-        username: str
+        username: str,
+        is_fresh: bool = True
     ) -> list[dict]:
-        db_objs = (
-            db.query(self.model)
-            .filter(self.model.username == username)
-            .filter(self.model.refreshed == False)
-            .filter(self.model.paper_type == 'order')
-            .all()
-        )
+        if is_fresh:
+            db_objs = (
+                db.query(self.model)
+                .filter(self.model.username == username)
+                .filter(self.model.refreshed == False)
+                .filter(self.model.paper_type == 'order')
+                .all()
+            )
+        else:
+            db_objs = (
+                db.query(self.model)
+                .filter(self.model.username == username)
+                .filter(self.model.paper_type == 'order')
+                .all()
+            )
         qid_set = set()
         results = []
         while db_objs:
